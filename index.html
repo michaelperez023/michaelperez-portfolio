@@ -1,12 +1,42 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/jpeg" href="/images/headshot.jpg">
+    <link rel="icon" type="image/jpeg" href="/images/headshot.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-    <script type="module" crossorigin src="/assets/index-ClYy6wmH.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-D4dAzXwE.css">
+
+    <title>Michael Pérez — ML / HCI Researcher</title>
+    <meta
+      name="description"
+      content="Michael Pérez is a PhD candidate at the University of Florida studying deep learning, human–computer interaction, and computer vision. Selected publications, research, and projects."
+    />
+    <meta name="author" content="Michael Pérez" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Michael Pérez — ML / HCI Researcher" />
+    <meta
+      property="og:description"
+      content="PhD candidate at the University of Florida studying deep learning and its applications across HCI, computer vision, and graphics."
+    />
+    <meta property="og:image" content="/images/headshot.jpg" />
+
+    <!-- Avoid a light/dark flash before React mounts -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("theme");
+          if (!t) {
+            t = window.matchMedia("(prefers-color-scheme: light)").matches
+              ? "light"
+              : "dark";
+          }
+          document.documentElement.setAttribute("data-theme", t);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-Cprc6U25.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Dpejj0bQ.css">
   </head>
   <body>
     <div id="root"></div>
