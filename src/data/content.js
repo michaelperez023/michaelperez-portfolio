@@ -250,11 +250,15 @@ export const coursework = [
 export const skillGroups = [
   {
     title: "Machine Learning & CV",
-    items: ["PyTorch", "TensorFlow", "Hugging Face", "Transformers", "OpenCV", "scikit-learn"],
+    items: ["PyTorch", "TensorFlow", "OpenCV", "scikit-learn"],
+  },
+  {
+    title: "LLMs & Agents",
+    items: ["LangChain", "Hugging Face", "Transformers"],
   },
   {
     title: "Systems & Deployment",
-    items: ["Docker", "FastAPI", "Flask", "Linux", "SLURM", "HPC", "Git"],
+    items: ["Docker", "FastAPI", "Flask", "Pydantic", "Linux", "SLURM", "HPC", "Git"],
   },
   {
     title: "Data Science",
