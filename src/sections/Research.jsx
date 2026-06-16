@@ -41,7 +41,15 @@ export default function Research() {
             <Reveal as="li" className="pub-item" key={pub.id}>
               <span className="pub-year">{pub.year}</span>
               <div>
-                <h4>{pub.title}</h4>
+                <h4>
+                  {pub.link ? (
+                    <a className="pub-title-link" href={pub.link} target="_blank" rel="noreferrer">
+                      {pub.title}
+                    </a>
+                  ) : (
+                    pub.title
+                  )}
+                </h4>
                 <p className="pub-meta">
                   <span className="pub-venue-sm">{pub.venue}</span>
                   {" · "}
@@ -63,7 +71,15 @@ export default function Research() {
             <Reveal as="li" className="pub-item" key={pub.id}>
               <span className="pub-year">{pub.year}</span>
               <div>
-                <h4>{pub.title}</h4>
+                <h4>
+                  {pub.link ? (
+                    <a className="pub-title-link" href={pub.link} target="_blank" rel="noreferrer">
+                      {pub.title}
+                    </a>
+                  ) : (
+                    pub.title
+                  )}
+                </h4>
                 <p className="pub-meta">{pub.note}</p>
               </div>
               {pub.link && (
@@ -83,7 +99,15 @@ export default function Research() {
               <Reveal as="li" className="pub-item" key={pub.id}>
                 <span className="pub-year">{pub.year}</span>
                 <div>
-                  <h4>{pub.title}</h4>
+                  <h4>
+                    {href ? (
+                      <a className="pub-title-link" href={href} target="_blank" rel="noreferrer">
+                        {pub.title}
+                      </a>
+                    ) : (
+                      pub.title
+                    )}
+                  </h4>
                   <p className="pub-meta">{pub.note}</p>
                 </div>
                 {href && (
