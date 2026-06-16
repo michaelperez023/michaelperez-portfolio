@@ -258,7 +258,7 @@ export const skillGroups = [
   },
   {
     title: "Systems & Deployment",
-    items: ["Docker", "FastAPI", "Flask", "Pydantic", "Linux", "ROS", "SLURM", "HPC", "Git"],
+    items: ["Docker", "FastAPI", "Flask", "Pydantic", "Linux", "Bash", "ROS", "SLURM", "HPC", "Git"],
   },
   {
     title: "Data Science",
