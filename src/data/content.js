@@ -277,6 +277,50 @@ export const skillGroups = [
   },
 ];
 
+export const honors = [
+  {
+    id: 1,
+    year: "2022",
+    title: "L3Harris Corporation Graduate Fellowship",
+    note: "Awarded to five UF CISE graduate students for academic performance, research activity, and service.",
+  },
+  {
+    id: 2,
+    year: "2020 – Present",
+    title: "Graduate School Preeminence Award",
+    note: "Competitive research-assistantship stipend offered to UF CISE's strongest PhD applicants.",
+  },
+  {
+    id: 3,
+    year: "2021 – Present",
+    title: "GenerationNext Grant",
+    note: "Cohort-based support program for PhD students in the UF CISE department.",
+  },
+];
+
+export const service = [
+  { id: 1, year: "2026", role: "Peer Reviewer", venue: "ACM ICMR 2026" },
+  { id: 2, year: "2025", role: "Peer Reviewer", venue: "ACM Multimedia 2025" },
+  {
+    id: 3,
+    year: "2025",
+    role: "Co-Chair",
+    venue: "UF Human-Centered Data Science Seminar",
+  },
+  {
+    id: 4,
+    year: "2024",
+    role: "Peer Reviewer",
+    venue: "IEEE Conference on Virtual Reality and 3D User Interfaces",
+  },
+  {
+    id: 5,
+    year: "2023",
+    role: "Panelist",
+    venue: "Black Male Computer Scientist Panel · Reichert House Youth Academy",
+  },
+];
+
 export const projects = [
   {
     id: 1,

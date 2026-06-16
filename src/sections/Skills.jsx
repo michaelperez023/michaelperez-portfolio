@@ -7,7 +7,7 @@ export default function Skills() {
     <section id="skills" className="section">
       <div className="container">
         <SectionHead
-          index="05 — Skills"
+          index="06 — Skills"
           title="Tools & Techniques"
           lead="What I reach for across research and engineering."
         />
