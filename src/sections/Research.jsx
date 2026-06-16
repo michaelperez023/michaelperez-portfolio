@@ -3,6 +3,15 @@ import SectionHead from "../components/SectionHead";
 import Reveal from "../components/Reveal";
 import { publications, workingPapers, preprints } from "../data/content";
 
+// Bold the author's own name within an author list (standard academic convention).
+const ME = "Michael Perez";
+function withMe(authors) {
+  if (!authors || !authors.includes(ME)) return authors;
+  return authors.split(ME).flatMap((part, i) =>
+    i === 0 ? [part] : [<strong className="author-me" key={i}>{ME}</strong>, part]
+  );
+}
+
 function LeadPublication({ pub }) {
   return (
     <Reveal>
@@ -11,7 +20,7 @@ function LeadPublication({ pub }) {
         <div>
           <span className="pub-venue">{pub.venue}</span>
           <h3>{pub.title}</h3>
-          <p className="pub-authors">{pub.authors}</p>
+          <p className="pub-authors">{withMe(pub.authors)}</p>
           <p className="pub-note">{pub.note}</p>
           <span className="text-link">
             Read paper <FiArrowUpRight size={15} />
@@ -53,7 +62,7 @@ export default function Research() {
                 <p className="pub-meta">
                   <span className="pub-venue-sm">{pub.venue}</span>
                   {" · "}
-                  {pub.authors}
+                  {withMe(pub.authors)}
                 </p>
               </div>
               {pub.link && (

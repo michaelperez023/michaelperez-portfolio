@@ -40,7 +40,7 @@ export const publications = [
     title:
       "CReLeRI: Explainable, Concept-centric Representation, Learning, Reasoning, and Interaction Video Analysis System",
     authors:
-      "Michael Francis Perez, Yichi Yang, Yuheng Zha, Enze Ma, Danish Tamboli, Haodi Ma, Reza Shahriari, Vyom Pathak, Dzmitry Kasinets, Rohith Venkatakrishnan, Daisy (Zhe) Wang, Jaime Ruiz, Eric D. Ragan, Zhiting Hu, Eric Xing, Jun-Yan Zhu",
+      "Michael Perez, Yichi Yang, Yuheng Zha, Enze Ma, Danish Tamboli, Haodi Ma, Reza Shahriari, Vyom Pathak, Dzmitry Kasinets, Rohith Venkatakrishnan, Daisy (Zhe) Wang, Jaime Ruiz, Eric D. Ragan, Zhiting Hu, Eric Xing, Jun-Yan Zhu",
     note: "Proceedings of the 33rd ACM International Conference on Multimedia",
     link: "https://dl.acm.org/doi/10.1145/3746027.3754479",
     lead: true,
@@ -250,15 +250,15 @@ export const coursework = [
 export const skillGroups = [
   {
     title: "Machine Learning & CV",
-    items: ["PyTorch", "TensorFlow", "OpenCV", "scikit-learn"],
+    items: ["PyTorch", "TensorFlow", "Hugging Face", "Transformers", "OpenCV", "scikit-learn"],
   },
   {
     title: "Systems & Deployment",
-    items: ["Docker", "FastAPI", "Linux", "Git"],
+    items: ["Docker", "FastAPI", "Flask", "Linux", "SLURM", "HPC", "Git"],
   },
   {
     title: "Data Science",
-    items: ["NumPy", "pandas", "SciPy", "MATLAB"],
+    items: ["NumPy", "pandas", "SciPy", "MATLAB", "Jupyter"],
   },
   {
     title: "Graphics & 3D Audio",
@@ -269,12 +269,16 @@ export const skillGroups = [
     items: ["React", "JavaScript", "HTML", "CSS", "WordPress"],
   },
   {
+    title: "Mobile",
+    items: ["Flutter", "Dart"],
+  },
+  {
     title: "Scientific Writing",
-    items: ["LaTeX", "Illustrator", "Photoshop", "SigmaPlot"],
+    items: ["LaTeX", "Illustrator", "Photoshop", "Premiere", "SigmaPlot"],
   },
   {
     title: "Languages & Tooling",
-    items: ["Python", "C++", "SQL", "C", "C#", "Java", "F#", "Julia", "CMake"],
+    items: ["Python", "C++", "SQL", "C", "C#", "Java", "F#", "Julia", "Akka.NET", "CMake"],
   },
 ];
 

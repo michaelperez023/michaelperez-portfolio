@@ -521,6 +521,10 @@ a {
   color: var(--accent);
   font-weight: 600;
 }
+.author-me {
+  color: var(--text);
+  font-weight: 700;
+}
 .pub-item-link {
   color: var(--text-faint);
   align-self: center;
