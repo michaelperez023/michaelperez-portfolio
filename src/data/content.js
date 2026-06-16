@@ -101,14 +101,14 @@ export const publications = [
   },
 ];
 
-// Manuscripts currently under review at top venues.
-export const inSubmission = [
+// Active manuscripts being revised for submission.
+export const workingPapers = [
   {
     id: 1,
     year: "2026",
     title:
       "ENKIx: An Intelligent AR Task Guidance System with Cognitive Load-Adaptive Capabilities",
-    note: "Under review · IEEE Transactions on Human-Machine Systems",
+    note: "Manuscript in preparation",
     link: null,
   },
   {
@@ -116,7 +116,7 @@ export const inSubmission = [
     year: "2026",
     title:
       "Temporal Granularity as a Design Variable in Zero-Shot Video Retrieval",
-    note: "Under review · ACM Int. Conference on Multimedia Retrieval (ICMR)",
+    note: "Manuscript in preparation",
     link: null,
   },
 ];

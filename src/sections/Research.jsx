@@ -1,7 +1,7 @@
 import { FiArrowUpRight, FiFileText } from "react-icons/fi";
 import SectionHead from "../components/SectionHead";
 import Reveal from "../components/Reveal";
-import { publications, inSubmission, preprints } from "../data/content";
+import { publications, workingPapers, preprints } from "../data/content";
 
 function LeadPublication({ pub }) {
   return (
@@ -65,9 +65,9 @@ export default function Research() {
           ))}
         </ul>
 
-        <p className="pub-subhead">In submission</p>
+        <p className="pub-subhead">Working papers</p>
         <ul className="pub-list">
-          {inSubmission.map((pub) => (
+          {workingPapers.map((pub) => (
             <Reveal as="li" className="pub-item" key={pub.id}>
               <span className="pub-year">{pub.year}</span>
               <div>
