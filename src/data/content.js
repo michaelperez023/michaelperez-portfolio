@@ -334,6 +334,16 @@ export const projects = [
     tags: ["FastAPI", "Web", "Video"],
   },
   {
+    id: 11,
+    title: "Gossip & Push-Sum Simulator",
+    subtitle:
+      "Distributed-systems simulator modeling gossip and push-sum convergence across full, line, 3D, and imperfect-3D topologies, scaling past 2M nodes.",
+    image: "/images/gossip-simulator.svg",
+    url: null,
+    githubLink: "https://github.com/michaelperez023/gossip-simulator",
+    tags: ["F#", "Distributed Systems"],
+  },
+  {
     id: 2,
     title: "Mario Graphics Game",
     subtitle: "2.5D Mario-style game built with WebGL, HTML, and JavaScript.",

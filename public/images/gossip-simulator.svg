@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" role="img" aria-label="Gossip protocol network propagation">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="75%">
+      <stop offset="0%" stop-color="#15151e"/>
+      <stop offset="100%" stop-color="#0b0b0f"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff5a3c" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#ff5a3c" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+
+  <!-- propagation glow behind the active core -->
+  <circle cx="800" cy="500" r="320" fill="url(#glow)"/>
+
+  <!-- edges: dim mesh -->
+  <g stroke="#262631" stroke-width="2" fill="none">
+    <path d="M800 500 L620 500"/><path d="M800 500 L980 500"/>
+    <path d="M800 500 L800 320"/><path d="M800 500 L800 680"/>
+    <path d="M800 500 L673 373"/><path d="M800 500 L927 373"/>
+    <path d="M800 500 L673 627"/><path d="M800 500 L927 627"/>
+    <path d="M620 500 L440 500"/><path d="M620 500 L488 680"/>
+    <path d="M980 500 L1160 500"/><path d="M980 500 L1112 320"/>
+    <path d="M800 320 L800 140"/><path d="M800 320 L620 188"/><path d="M800 320 L980 188"/>
+    <path d="M800 680 L800 860"/><path d="M800 680 L620 812"/><path d="M800 680 L980 812"/>
+    <path d="M927 373 L1112 320"/><path d="M673 627 L488 680"/>
+    <path d="M927 627 L980 812"/><path d="M673 373 L620 188"/>
+  </g>
+
+  <!-- edges: active propagation path (accent) -->
+  <g stroke="#ff5a3c" stroke-width="2.5" stroke-opacity="0.7" fill="none">
+    <path d="M800 500 L980 500"/><path d="M800 500 L800 320"/>
+    <path d="M800 500 L673 627"/><path d="M980 500 L1112 320"/>
+    <path d="M800 320 L800 140"/><path d="M673 627 L488 680"/>
+  </g>
+
+  <!-- dim nodes -->
+  <g fill="#14141c" stroke="#34343f" stroke-width="2">
+    <circle cx="620" cy="500" r="11"/><circle cx="800" cy="680" r="11"/>
+    <circle cx="673" cy="373" r="11"/><circle cx="927" cy="373" r="11"/>
+    <circle cx="927" cy="627" r="11"/>
+    <circle cx="440" cy="500" r="9"/><circle cx="1160" cy="500" r="9"/>
+    <circle cx="800" cy="860" r="9"/><circle cx="620" cy="812" r="9"/>
+    <circle cx="980" cy="812" r="9"/><circle cx="620" cy="188" r="9"/>
+    <circle cx="980" cy="188" r="9"/>
+  </g>
+
+  <!-- active (reached) nodes -->
+  <g fill="#ff5a3c">
+    <circle cx="980" cy="500" r="12"/><circle cx="800" cy="320" r="12"/>
+    <circle cx="673" cy="627" r="12"/><circle cx="1112" cy="320" r="10"/>
+    <circle cx="800" cy="140" r="10"/><circle cx="488" cy="680" r="10"/>
+  </g>
+
+  <!-- core node -->
+  <circle cx="800" cy="500" r="22" fill="#ff5a3c"/>
+  <circle cx="800" cy="500" r="22" fill="none" stroke="#ff5a3c" stroke-opacity="0.35" stroke-width="10"/>
+
+  <!-- caption -->
+  <text x="80" y="930" font-family="'Space Mono', monospace" font-size="34" fill="#6a6a78" letter-spacing="2">gossip · push-sum · 2M+ nodes</text>
+</svg>
