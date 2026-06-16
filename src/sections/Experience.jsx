@@ -19,6 +19,7 @@ export default function Experience() {
               <div>
                 <h3 className="exp-position">{exp.position}</h3>
                 <p className="exp-company">{exp.company}</p>
+                {exp.location && <p className="exp-location">{exp.location}</p>}
                 <p className="exp-details">{exp.details}</p>
               </div>
             </Reveal>

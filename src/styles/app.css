@@ -571,6 +571,11 @@ a {
 .exp-company {
   color: var(--text-dim);
   font-weight: 500;
+  margin-bottom: 0.15rem;
+}
+.exp-location {
+  color: var(--text-faint);
+  font-size: 0.85rem;
   margin-bottom: 0.7rem;
 }
 .exp-details {
