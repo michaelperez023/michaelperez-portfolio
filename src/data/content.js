@@ -334,6 +334,7 @@ export const projects = [
       "Long-video analysis tool with an HTML/JS/CSS front end and FastAPI backend.",
     image: "/images/creleri_screenshot.png",
     url: "https://youtu.be/XDCue9EYNTU",
+    githubLink: "https://github.com/michaelperez023/creleri-video",
     tags: ["FastAPI", "Web", "Video"],
   },
   {
@@ -360,6 +361,7 @@ export const projects = [
       "Twitter clone using the Akka.NET actor model and Suave web framework in F#.",
     image: "/images/twitter-clone-square.jpg",
     url: "https://youtube.com/watch?v=-I0TTJJyyog",
+    githubLink: "https://github.com/michaelperez023/twitter-clone",
     tags: ["F#", "Akka.NET"],
   },
   {
@@ -377,6 +379,7 @@ export const projects = [
       "Flutter app for tracking mail and packages at Florida Poly's mail center.",
     image: "/images/hermes-app-square.jpg",
     url: null,
+    githubLink: "https://github.com/michaelperez023/hermes-tracker",
     tags: ["Flutter", "Mobile"],
   },
   {
@@ -410,7 +413,7 @@ export const projects = [
     subtitle: "Built with React and Vite.",
     image: "/images/portfolio-website-square.jpg",
     url: null,
-    githubLink: "https://github.com/michaelperez023/michaelperez",
+    githubLink: "https://github.com/michaelperez023/michaelperez-portfolio",
     tags: ["React", "Vite"],
   },
 ];
