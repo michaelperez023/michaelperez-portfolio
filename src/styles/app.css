@@ -531,6 +531,13 @@ a {
   transform: translate(3px, -3px);
 }
 
+.pub-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-top: 0.55rem;
+}
+
 .pub-subhead {
   font-family: "Space Mono", monospace;
   text-transform: uppercase;

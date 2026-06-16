@@ -1,4 +1,4 @@
-import { FiArrowUpRight, FiFileText } from "react-icons/fi";
+import { FiArrowUpRight, FiFileText, FiGithub } from "react-icons/fi";
 import SectionHead from "../components/SectionHead";
 import Reveal from "../components/Reveal";
 import { publications, workingPapers, preprints } from "../data/content";
@@ -93,37 +93,31 @@ export default function Research() {
 
         <p className="pub-subhead">Preprints & technical reports</p>
         <ul className="pub-list">
-          {preprints.map((pub) => {
-            const href = pub.link || pub.file;
-            return (
-              <Reveal as="li" className="pub-item" key={pub.id}>
-                <span className="pub-year">{pub.year}</span>
-                <div>
-                  <h4>
-                    {href ? (
-                      <a className="pub-title-link" href={href} target="_blank" rel="noreferrer">
-                        {pub.title}
-                      </a>
-                    ) : (
-                      pub.title
-                    )}
-                  </h4>
-                  <p className="pub-meta">{pub.note}</p>
+          {preprints.map((pub) => (
+            <Reveal as="li" className="pub-item" key={pub.id}>
+              <span className="pub-year">{pub.year}</span>
+              <div>
+                <h4>{pub.title}</h4>
+                <p className="pub-meta">{pub.note}</p>
+                <div className="pub-actions">
+                  {pub.file ? (
+                    <a className="text-link" href={pub.file} target="_blank" rel="noreferrer">
+                      <FiFileText size={14} /> Report
+                    </a>
+                  ) : pub.link ? (
+                    <a className="text-link" href={pub.link} target="_blank" rel="noreferrer">
+                      <FiArrowUpRight size={14} /> Paper
+                    </a>
+                  ) : null}
+                  {pub.githubLink && (
+                    <a className="text-link" href={pub.githubLink} target="_blank" rel="noreferrer">
+                      <FiGithub size={14} /> Code
+                    </a>
+                  )}
                 </div>
-                {href && (
-                  <a
-                    className="pub-item-link"
-                    href={href}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label="Open report"
-                  >
-                    {pub.file ? <FiFileText size={19} /> : <FiArrowUpRight size={20} />}
-                  </a>
-                )}
-              </Reveal>
-            );
-          })}
+              </div>
+            </Reveal>
+          ))}
         </ul>
       </div>
     </section>
