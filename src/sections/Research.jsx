@@ -29,9 +29,9 @@ export default function Research() {
     <section id="research" className="section">
       <div className="container">
         <SectionHead
-          index="02 — Research"
+          index="02 / Research"
           title="Selected Publications"
-          lead="Peer-reviewed work across multimodal video analysis, HCI, and medical imaging — including ACM Multimedia and IEEE CG&A."
+          lead="Peer-reviewed work across multimodal video analysis, HCI, and medical imaging, including ACM Multimedia and IEEE CG&A."
         />
 
         <LeadPublication pub={lead} />

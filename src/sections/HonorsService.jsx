@@ -7,7 +7,7 @@ export default function HonorsService() {
     <section id="honors" className="section">
       <div className="container">
         <SectionHead
-          index="04 — Honors"
+          index="04 / Honors"
           title="Honors & Service"
           lead="Fellowships and awards, plus service to the research community."
         />

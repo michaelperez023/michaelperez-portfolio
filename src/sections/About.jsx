@@ -6,7 +6,7 @@ export default function About() {
   return (
     <section id="about" className="section">
       <div className="container">
-        <SectionHead index="01 — About" title="From video research to real-time ML systems" />
+        <SectionHead index="01 / About" title="From video research to real-time ML systems" />
         <div className="about-grid">
           <Reveal className="about-body">
             {about.paragraphs.map((p, i) => (

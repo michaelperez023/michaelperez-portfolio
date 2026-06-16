@@ -1,14 +1,14 @@
 // Single source of truth for site content.
-// Plain data — imported directly, no fake HTTP layer.
+// Plain data, imported directly, no fake HTTP layer.
 
 export const information = {
   name: "Michael Pérez",
   fullName: "Michael Francis Pérez",
   role: "ML & Computer Vision Researcher",
   tagline:
-    "PhD candidate at the University of Florida specializing in video understanding, computer vision, and real-time ML systems — I build end-to-end pipelines for video analysis, detection, and retrieval.",
+    "PhD candidate at the University of Florida specializing in video understanding, computer vision, and real-time ML systems. I build end-to-end pipelines for video analysis, detection, and retrieval.",
   location: "Gainesville, Florida",
-  // Left blank intentionally — your original data omitted it. Set a string to surface a contact link.
+  // Left blank intentionally; original data omitted it. Set a string to surface a contact link.
   email: "",
   headshot: "/images/headshot.jpg",
   cvFile: "/files/CV.pdf",
@@ -21,7 +21,7 @@ export const information = {
 
 export const about = {
   paragraphs: [
-    "I'm a PhD candidate in Computer Science at the University of Florida specializing in video understanding, computer vision, and real-time ML systems. I design and deploy end-to-end pipelines for video analysis — detection, segmentation, and retrieval — across both real-time and offline settings.",
+    "I'm a PhD candidate in Computer Science at the University of Florida specializing in video understanding, computer vision, and real-time ML systems. I design and deploy end-to-end pipelines for video analysis, including detection, segmentation, and retrieval, across both real-time and offline settings.",
     "My research spans two DARPA-funded programs at the Ruiz HCI Lab: CReLeRI, an explainable long-video analysis system published at ACM Multimedia 2025, and ENKIx, a real-time AR task-guidance system. I also build scalable systems for processing and indexing large-scale video data.",
   ],
   facts: [
@@ -31,7 +31,7 @@ export const about = {
   ],
 };
 
-// Featured research — the differentiator. Venue + role surfaced up front.
+// Featured research. Venue and role surfaced up front.
 export const publications = [
   {
     id: 1,
@@ -52,7 +52,7 @@ export const publications = [
     title:
       "Super-Resolution for Improving Vehicle Recognition at Large Standoffs",
     authors: "Michael Perez et al. (with CoVar)",
-    note: "MSS — BSD, Materials & Detectors, and Passive Sensors Conference",
+    note: "MSS (BSD, Materials & Detectors, and Passive Sensors) Conference",
     link: null,
   },
   {
@@ -121,7 +121,7 @@ export const inSubmission = [
   },
 ];
 
-// Preprints & class projects — secondary, with downloadable reports.
+// Preprints and class projects, secondary, with downloadable reports.
 export const preprints = [
   {
     id: 0,
@@ -155,7 +155,7 @@ export const preprints = [
   {
     id: 4,
     year: "2021",
-    title: "From Here to There — 3D Audio Project",
+    title: "From Here to There: 3D Audio Project",
     note: "3D Audio",
     file: "/files/Visual_3D_Audio_Project_Report.pdf",
   },
@@ -175,7 +175,7 @@ export const workingExperience = [
     position: "Machine Learning Engineer Intern",
     company: "CoVar · Durham, NC",
     details:
-      "Applied infrared video super-resolution models to improve long-range object classification — published with CoVar collaborators at the Military Sensing Symposium 2026. Trained lightweight RGB object-detection models for real-time drone detection under resource-constrained deployment, and built offline computer-vision evaluation pipelines spanning preprocessing, inference, and metric analysis.",
+      "Applied infrared video super-resolution models to improve long-range object classification, published with CoVar collaborators at the Military Sensing Symposium 2026. Trained lightweight RGB object-detection models for real-time drone detection under resource-constrained deployment, and built offline computer-vision evaluation pipelines spanning preprocessing, inference, and metric analysis.",
   },
   {
     id: 2,
@@ -183,7 +183,7 @@ export const workingExperience = [
     position: "Graduate Research Assistant",
     company: "Ruiz HCI Lab, CISE Department, University of Florida",
     details:
-      "Develop and evaluate ML models for video understanding — action recognition, segmentation, and retrieval — and build scalable pipelines for video processing, training, and inference. Across two DARPA-funded programs: CReLeRI, an explainable long-video analysis system (ACM Multimedia 2025), and ENKIx, a real-time AR task-guidance system that reached 34% F1 in a multi-team DARPA evaluation. Designed computer-vision systems for AR, web, and neuroscience applications.",
+      "Develop and evaluate ML models for video understanding, including action recognition, segmentation, and retrieval, and build scalable pipelines for video processing, training, and inference. Across two DARPA-funded programs: CReLeRI, an explainable long-video analysis system (ACM Multimedia 2025), and ENKIx, a real-time AR task-guidance system that reached 34% F1 in a multi-team DARPA evaluation. Designed computer-vision systems for AR, web, and neuroscience applications.",
   },
   {
     id: 3,
@@ -191,7 +191,7 @@ export const workingExperience = [
     position: "Graduate Teaching Assistant",
     company: "CISE Department, University of Florida",
     details:
-      "TA across algorithms, systems, and ML courses — Analysis of Algorithms, Data Structures and Algorithms, Operating Systems, Performant Programming in Python, Deep Learning for Computer Graphics, and Computational Structures for Computer Graphics. Developed automated grading tools and supported 100+ students.",
+      "TA across algorithms, systems, and ML courses, including Analysis of Algorithms, Data Structures and Algorithms, Operating Systems, Performant Programming in Python, Deep Learning for Computer Graphics, and Computational Structures for Computer Graphics. Developed automated grading tools and supported 100+ students.",
   },
   {
     id: 4,
