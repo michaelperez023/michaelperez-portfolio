@@ -40,7 +40,7 @@ export const publications = [
     title:
       "CReLeRI: Explainable, Concept-centric Representation, Learning, Reasoning, and Interaction Video Analysis System",
     authors:
-      "Michael Perez, Yichi Yang, Yuheng Zha, Enze Ma, Danish Tamboli, Haodi Ma, Reza Shahriari, Vyom Pathak, Dzmitry Kasinets, Rohith Venkatakrishnan, Daisy (Zhe) Wang, Jaime Ruiz, Eric D. Ragan, Zhiting Hu, Eric Xing, Jun-Yan Zhu",
+      "Michael Pérez, Yichi Yang, Yuheng Zha, Enze Ma, Danish Tamboli, Haodi Ma, Reza Shahriari, Vyom Pathak, Dzmitry Kasinets, Rohith Venkatakrishnan, Daisy (Zhe) Wang, Jaime Ruiz, Eric D. Ragan, Zhiting Hu, Eric Xing, Jun-Yan Zhu",
     note: "Proceedings of the 33rd ACM International Conference on Multimedia",
     link: "https://dl.acm.org/doi/10.1145/3746027.3754479",
     lead: true,
@@ -51,7 +51,7 @@ export const publications = [
     venue: "Military Sensing Symposium",
     title:
       "Super-Resolution for Improving Vehicle Recognition at Large Standoffs",
-    authors: "Michael Perez et al. (with CoVar)",
+    authors: "Michael Pérez et al. (with CoVar)",
     note: "MSS (BSD, Materials & Detectors, and Passive Sensors) Conference",
     link: null,
   },
@@ -62,7 +62,7 @@ export const publications = [
     title:
       "MuCHEx: A Multimodal Conversational Debugging Tool for Interactive Visual Exploration of Hierarchical Object Classification",
     authors:
-      "Reza Shahriari, Yichi Yang, Danish Nisar Ahmed Tamboli, Michael Perez, Yuheng Zha, Jinyu Hou, Mingkai Deng, Eric D. Ragan, Jaime Ruiz, Daisy Zhe Wang, Zhiting Hu, Eric Xing",
+      "Reza Shahriari, Yichi Yang, Danish Nisar Ahmed Tamboli, Michael Pérez, Yuheng Zha, Jinyu Hou, Mingkai Deng, Eric D. Ragan, Jaime Ruiz, Daisy Zhe Wang, Zhiting Hu, Eric Xing",
     note: "IEEE Computer Graphics and Applications, 1–13",
     link: "https://doi.org/10.1109/MCG.2025.3598204",
   },
@@ -73,7 +73,7 @@ export const publications = [
     title:
       "Evaluating the Agreement and Reliability of a Web-Based Facial Analysis Tool for Rhinoplasty",
     authors:
-      "Oguzhan Topsakal, Mustafa Ilhan Akbas, Bria Smith, Michael Perez, Ege Can Guden, Mazhar Mehmet Celikoyar",
+      "Oguzhan Topsakal, Mustafa Ilhan Akbas, Bria Smith, Michael Pérez, Ege Can Guden, Mazhar Mehmet Celikoyar",
     note: "IJCARS 16, 1381–1391",
     link: "https://link.springer.com/article/10.1007/s11548-021-02423-z",
   },
@@ -84,7 +84,7 @@ export const publications = [
     title:
       "Facial Surface Anthropometric Features and Measurements With an Emphasis on Rhinoplasty",
     authors:
-      "Mazhar Celikoyar, Michael Perez, Mustafa Ilhan Akbaş, Oguzhan Topsakal",
+      "Mazhar Celikoyar, Michael Pérez, Mustafa Ilhan Akbaş, Oguzhan Topsakal",
     note: "Aesthetic Surgery Journal",
     link: "https://doi.org/10.1093/asj/sjab190",
   },
@@ -95,7 +95,7 @@ export const publications = [
     title:
       "Digitizing Rhinoplasty: a web application with three-dimensional preoperative evaluation to assist rhinoplasty surgeons with surgical planning",
     authors:
-      "Oguzhan Topsakal, Mustafa Ilhan Akbaş, Doga Demirel, Rafael Nunez, Bria Smith, Michael Perez, Mazhar Celikoyar",
+      "Oguzhan Topsakal, Mustafa Ilhan Akbaş, Doga Demirel, Rafael Nunez, Bria Smith, Michael Pérez, Mazhar Celikoyar",
     note: "IJCARS 15(11):1941–1950",
     link: "https://pubmed.ncbi.nlm.nih.gov/32888163/",
   },

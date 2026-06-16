@@ -4,7 +4,7 @@ import Reveal from "../components/Reveal";
 import { publications, workingPapers, preprints } from "../data/content";
 
 // Bold the author's own name within an author list (standard academic convention).
-const ME = "Michael Perez";
+const ME = "Michael Pérez";
 function withMe(authors) {
   if (!authors || !authors.includes(ME)) return authors;
   return authors.split(ME).flatMap((part, i) =>
