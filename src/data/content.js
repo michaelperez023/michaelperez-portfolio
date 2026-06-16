@@ -137,6 +137,7 @@ export const preprints = [
     title: "Abstractive Urdu Summarization for News Article Dataset",
     note: "Natural Language Processing",
     file: "/files/Urdu_Summarization_Report.pdf",
+    githubLink: "https://github.com/michaelperez023/urdu-abstractive-summarization",
   },
   {
     id: 2,
@@ -144,6 +145,7 @@ export const preprints = [
     title: "An Investigation of ADAM: A Stochastic Optimization Method",
     note: "Advanced Machine Learning",
     file: "/files/ADAM_Investigation_Report.pdf",
+    githubLink: "https://github.com/michaelperez023/ADAM",
   },
   {
     id: 3,
@@ -151,6 +153,7 @@ export const preprints = [
     title: "Investigation of VideoGAN for Video Generation and Recognition",
     note: "Machine Learning",
     file: "/files/VideoGAN_Investigation_Report.pdf",
+    githubLink: "https://github.com/michaelperez023/VideoGAN",
   },
   {
     id: 4,
@@ -343,6 +346,7 @@ export const projects = [
     subtitle: "2.5D Mario-style game built with WebGL, HTML, and JavaScript.",
     image: "/images/mario-game-square.jpg",
     url: "https://www.youtube.com/watch?v=5lfsQRtfBVY",
+    githubLink: "https://github.com/michaelperez023/escape-the-maze",
     tags: ["WebGL", "Graphics"],
   },
   {
@@ -361,7 +365,7 @@ export const projects = [
       "Twitter clone using the Akka.NET actor model and Suave web framework in F#.",
     image: "/images/twitter-clone-square.jpg",
     url: "https://youtube.com/watch?v=-I0TTJJyyog",
-    githubLink: "https://github.com/michaelperez023/twitter-clone",
+    githubLink: "https://github.com/michaelperez023/twitter-clone-part2",
     tags: ["F#", "Akka.NET"],
   },
   {
