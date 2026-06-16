@@ -12,9 +12,9 @@ export default function Footer() {
       <div className="container">
         <div className="footer-grid">
           <h2>
-            Let's build something —{" "}
+            Let's build something.{" "}
             <a href={social.linkedin} target="_blank" rel="noreferrer">
-              get in touch
+              Get in touch
             </a>
             .
           </h2>

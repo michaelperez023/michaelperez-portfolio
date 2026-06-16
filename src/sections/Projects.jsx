@@ -8,7 +8,7 @@ export default function Projects() {
     <section id="projects" className="section">
       <div className="container">
         <SectionHead
-          index="05 — Projects"
+          index="05 / Projects"
           title="Things I've Built"
           lead="A mix of research tooling, graphics, games, and web work."
         />

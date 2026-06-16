@@ -7,7 +7,7 @@ export default function Experience() {
     <section id="experience" className="section">
       <div className="container">
         <SectionHead
-          index="03 — Experience"
+          index="03 / Experience"
           title="Where I've Worked"
           lead="Research and engineering roles spanning DARPA-funded labs, teaching, and industry."
         />
