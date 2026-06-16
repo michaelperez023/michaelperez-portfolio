@@ -4,9 +4,9 @@
 export const information = {
   name: "Michael Pérez",
   fullName: "Michael Francis Pérez",
-  role: "ML / HCI Researcher",
+  role: "ML & Computer Vision Researcher",
   tagline:
-    "PhD candidate at the University of Florida studying deep learning and its applications across human–computer interaction, computer vision, and graphics.",
+    "PhD candidate at the University of Florida specializing in video understanding, computer vision, and real-time ML systems — I build end-to-end pipelines for video analysis, detection, and retrieval.",
   location: "Gainesville, Florida",
   // Left blank intentionally — your original data omitted it. Set a string to surface a contact link.
   email: "",
@@ -21,13 +21,13 @@ export const information = {
 
 export const about = {
   paragraphs: [
-    "I research at the Ruiz Human–Computer Interaction Lab and the Data Science Research Lab at the University of Florida, where I work on two DARPA-funded projects spanning action recognition, AR task guidance, and multimodal video analysis.",
-    "My background bridges machine learning, computer vision, and computer graphics — from training action-segmentation models to building the interfaces that let people make sense of them.",
+    "I'm a PhD candidate in Computer Science at the University of Florida specializing in video understanding, computer vision, and real-time ML systems. I design and deploy end-to-end pipelines for video analysis — detection, segmentation, and retrieval — across both real-time and offline settings.",
+    "My research spans two DARPA-funded programs at the Ruiz HCI Lab: CReLeRI, an explainable long-video analysis system published at ACM Multimedia 2025, and ENKIx, a real-time AR task-guidance system. I also build scalable systems for processing and indexing large-scale video data.",
   ],
   facts: [
-    { label: "Focus", value: "Deep learning · HCI · Computer vision" },
-    { label: "Affiliation", value: "University of Florida" },
-    { label: "Languages", value: "English, Spanish" },
+    { label: "Focus", value: "Video understanding · Computer vision · Real-time ML" },
+    { label: "PhD expected", value: "August 2026 · University of Florida" },
+    { label: "Open to", value: "Full-time ML / AI Engineer roles" },
   ],
 };
 
@@ -44,6 +44,16 @@ export const publications = [
     note: "Proceedings of the 33rd ACM International Conference on Multimedia",
     link: "https://dl.acm.org/doi/10.1145/3746027.3754479",
     lead: true,
+  },
+  {
+    id: 8,
+    year: "2026",
+    venue: "Military Sensing Symposium",
+    title:
+      "Super-Resolution for Improving Vehicle Recognition at Large Standoffs",
+    authors: "Michael Perez et al. (with CoVar)",
+    note: "MSS — BSD, Materials & Detectors, and Passive Sensors Conference",
+    link: null,
   },
   {
     id: 2,
@@ -88,6 +98,26 @@ export const publications = [
       "Oguzhan Topsakal, Mustafa Ilhan Akbaş, Doga Demirel, Rafael Nunez, Bria Smith, Michael Perez, Mazhar Celikoyar",
     note: "IJCARS 15(11):1941–1950",
     link: "https://pubmed.ncbi.nlm.nih.gov/32888163/",
+  },
+];
+
+// Manuscripts currently under review at top venues.
+export const inSubmission = [
+  {
+    id: 1,
+    year: "2026",
+    title:
+      "ENKIx: An Intelligent AR Task Guidance System with Cognitive Load-Adaptive Capabilities",
+    note: "Under review · IEEE Transactions on Human-Machine Systems",
+    link: null,
+  },
+  {
+    id: 2,
+    year: "2026",
+    title:
+      "Temporal Granularity as a Design Variable in Zero-Shot Video Retrieval",
+    note: "Under review · ACM Int. Conference on Multimedia Retrieval (ICMR)",
+    link: null,
   },
 ];
 
@@ -143,18 +173,17 @@ export const workingExperience = [
     id: 1,
     year: "May – Aug 2025",
     position: "Machine Learning Engineer Intern",
-    company: "CoVar",
+    company: "CoVar · Durham, NC",
     details:
-      "Improved infrared video resolution via an open-source super-resolution model to classify distant objects. Developed and trained lightweight RGB object-detection models for real-time drone detection on mobile devices.",
+      "Applied infrared video super-resolution models to improve long-range object classification — published with CoVar collaborators at the Military Sensing Symposium 2026. Trained lightweight RGB object-detection models for real-time drone detection under resource-constrained deployment, and built offline computer-vision evaluation pipelines spanning preprocessing, inference, and metric analysis.",
   },
   {
     id: 2,
     year: "2023 – Present",
-    position: "Research Assistant",
-    company:
-      "Ruiz HCI & Data Science Research Lab, University of Florida",
+    position: "Graduate Research Assistant",
+    company: "Ruiz HCI Lab, CISE Department, University of Florida",
     details:
-      "Working on two DARPA-funded projects with collaborators across institutions and industry. Trained and tested action-recognition models for an AR task-guidance system (34% F1 in task recognition, mid-range among DARPA performers) and ran usability and cognitive-load evaluations. Built UI and image/video-analysis APIs and trained action-segmentation models for the second project.",
+      "Develop and evaluate ML models for video understanding — action recognition, segmentation, and retrieval — and build scalable pipelines for video processing, training, and inference. Across two DARPA-funded programs: CReLeRI, an explainable long-video analysis system (ACM Multimedia 2025), and ENKIx, a real-time AR task-guidance system that reached 34% F1 in a multi-team DARPA evaluation. Designed computer-vision systems for AR, web, and neuroscience applications.",
   },
   {
     id: 3,
@@ -162,15 +191,15 @@ export const workingExperience = [
     position: "Graduate Teaching Assistant",
     company: "CISE Department, University of Florida",
     details:
-      "TA for Analysis of Algorithms, Deep Learning for Computer Graphics, Operating Systems, Performant Python Programming, Computational Structures of Computer Graphics, and Data Structures and Algorithms.",
+      "TA across algorithms, systems, and ML courses — Analysis of Algorithms, Data Structures and Algorithms, Operating Systems, Performant Programming in Python, Deep Learning for Computer Graphics, and Computational Structures for Computer Graphics. Developed automated grading tools and supported 100+ students.",
   },
   {
     id: 4,
     year: "2020 – 2023",
-    position: "Research Assistant",
+    position: "Graduate Research Assistant",
     company: "Graphics, Imaging & Light Measurement Lab, University of Florida",
     details:
-      "Leveraged adversarial approaches to model 3D motion and behavior from videos for biomedical research, with Dr. Corey Toler-Franklin and Dr. Darragh Devine (UF Psychology).",
+      "Developed and evaluated video-based action-recognition models for animal-behavior analysis (NSF-funded), exploring semi-supervised and adversarial approaches to model motion and behavior, with Dr. Corey Toler-Franklin and Dr. Darragh Devine (UF Psychology).",
   },
   {
     id: 5,
@@ -185,7 +214,7 @@ export const workingExperience = [
 export const education = [
   {
     id: 1,
-    year: "2020 – Present",
+    year: "2020 – 2026 (expected)",
     degree: "Ph.D. in Computer Science",
     school: "University of Florida",
   },
@@ -223,6 +252,10 @@ export const skillGroups = [
     items: ["PyTorch", "TensorFlow", "OpenCV", "scikit-learn"],
   },
   {
+    title: "Systems & Deployment",
+    items: ["Docker", "FastAPI", "Linux", "Git"],
+  },
+  {
     title: "Data Science",
     items: ["NumPy", "pandas", "SciPy", "MATLAB"],
   },
@@ -240,7 +273,7 @@ export const skillGroups = [
   },
   {
     title: "Languages & Tooling",
-    items: ["Python", "C", "C++", "C#", "Java", "F#", "Julia", "Git", "CMake"],
+    items: ["Python", "C++", "SQL", "C", "C#", "Java", "F#", "Julia", "CMake"],
   },
 ];
 
