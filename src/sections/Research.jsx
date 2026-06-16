@@ -1,7 +1,7 @@
 import { FiArrowUpRight, FiFileText } from "react-icons/fi";
 import SectionHead from "../components/SectionHead";
 import Reveal from "../components/Reveal";
-import { publications, preprints } from "../data/content";
+import { publications, inSubmission, preprints } from "../data/content";
 
 function LeadPublication({ pub }) {
   return (
@@ -57,26 +57,49 @@ export default function Research() {
           ))}
         </ul>
 
-        <p className="pub-subhead">Preprints & technical reports</p>
+        <p className="pub-subhead">In submission</p>
         <ul className="pub-list">
-          {preprints.map((pub) => (
+          {inSubmission.map((pub) => (
             <Reveal as="li" className="pub-item" key={pub.id}>
               <span className="pub-year">{pub.year}</span>
               <div>
                 <h4>{pub.title}</h4>
                 <p className="pub-meta">{pub.note}</p>
               </div>
-              <a
-                className="pub-item-link"
-                href={pub.link || pub.file}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Open report"
-              >
-                {pub.file ? <FiFileText size={19} /> : <FiArrowUpRight size={20} />}
-              </a>
+              {pub.link && (
+                <a className="pub-item-link" href={pub.link} target="_blank" rel="noreferrer" aria-label="Read manuscript">
+                  <FiArrowUpRight size={20} />
+                </a>
+              )}
             </Reveal>
           ))}
+        </ul>
+
+        <p className="pub-subhead">Preprints & technical reports</p>
+        <ul className="pub-list">
+          {preprints.map((pub) => {
+            const href = pub.link || pub.file;
+            return (
+              <Reveal as="li" className="pub-item" key={pub.id}>
+                <span className="pub-year">{pub.year}</span>
+                <div>
+                  <h4>{pub.title}</h4>
+                  <p className="pub-meta">{pub.note}</p>
+                </div>
+                {href && (
+                  <a
+                    className="pub-item-link"
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Open report"
+                  >
+                    {pub.file ? <FiFileText size={19} /> : <FiArrowUpRight size={20} />}
+                  </a>
+                )}
+              </Reveal>
+            );
+          })}
         </ul>
       </div>
     </section>
