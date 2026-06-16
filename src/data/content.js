@@ -156,13 +156,6 @@ export const preprints = [
     githubLink: "https://github.com/michaelperez023/VideoGAN",
   },
   {
-    id: 4,
-    year: "2021",
-    title: "From Here to There: 3D Audio Project",
-    note: "3D Audio",
-    file: "/files/Visual_3D_Audio_Project_Report.pdf",
-  },
-  {
     id: 5,
     year: "2020",
     title: "Survey of the k-Means Clustering Problem",
@@ -351,11 +344,12 @@ export const projects = [
   },
   {
     id: 3,
-    title: "2D Visual & 3D Audio Experience",
+    title: "From Here to There: 3D Audio Experience",
     subtitle:
-      "Children's experience built with OpenGL, OpenAL, and GLFW in Java.",
+      "2D-visual, 3D-audio children's experience built with OpenGL, OpenAL, and GLFW in Java.",
     image: "/images/audio-game-square.jpg",
     url: "https://www.youtube.com/watch?v=ztOUkMKE2qs",
+    report: "/files/Visual_3D_Audio_Project_Report.pdf",
     tags: ["OpenGL", "OpenAL", "Java"],
   },
   {

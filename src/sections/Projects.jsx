@@ -1,4 +1,4 @@
-import { FiArrowUpRight, FiGithub, FiPlayCircle } from "react-icons/fi";
+import { FiArrowUpRight, FiFileText, FiGithub, FiPlayCircle } from "react-icons/fi";
 import SectionHead from "../components/SectionHead";
 import Reveal from "../components/Reveal";
 import { projects } from "../data/content";
@@ -40,7 +40,12 @@ export default function Projects() {
                       <FiGithub size={15} /> Code
                     </a>
                   )}
-                  {!p.url && !p.githubLink && (
+                  {p.report && (
+                    <a className="text-link" href={p.report} target="_blank" rel="noreferrer">
+                      <FiFileText size={15} /> Report
+                    </a>
+                  )}
+                  {!p.url && !p.githubLink && !p.report && (
                     <span className="text-link" style={{ opacity: 0.5 }}>
                       <FiArrowUpRight size={15} /> Case study
                     </span>
