@@ -269,12 +269,8 @@ export const skillGroups = [
     items: ["OpenGL", "WebGL", "OpenAL", "Blender"],
   },
   {
-    title: "Web Development",
-    items: ["React", "JavaScript", "HTML", "CSS", "WordPress"],
-  },
-  {
-    title: "Mobile",
-    items: ["Flutter", "Dart"],
+    title: "Web & Mobile",
+    items: ["React", "JavaScript", "HTML", "CSS", "Flutter", "Dart", "WordPress"],
   },
   {
     title: "Scientific Writing",
