@@ -173,7 +173,8 @@ export const workingExperience = [
     id: 1,
     year: "May – Aug 2025",
     position: "Machine Learning Engineer Intern",
-    company: "CoVar · Durham, NC",
+    company: "CoVar",
+    location: "Durham, NC",
     details:
       "Applied infrared video super-resolution models to improve long-range object classification, published with CoVar collaborators at the Military Sensing Symposium 2026. Trained lightweight RGB object-detection models for real-time drone detection under resource-constrained deployment, and built offline computer-vision evaluation pipelines spanning preprocessing, inference, and metric analysis.",
   },
@@ -181,7 +182,8 @@ export const workingExperience = [
     id: 2,
     year: "2023 – Present",
     position: "Graduate Research Assistant",
-    company: "Ruiz HCI Lab, CISE Department, University of Florida · Gainesville, FL",
+    company: "Ruiz HCI Lab, CISE Department, University of Florida",
+    location: "Gainesville, FL",
     details:
       "Develop and evaluate ML models for video understanding, including action recognition, segmentation, and retrieval, and build scalable pipelines for video processing, training, and inference. Across two DARPA-funded programs: CReLeRI, an explainable long-video analysis system (ACM Multimedia 2025), and ENKIx, a real-time AR task-guidance system that reached 34% F1 in a multi-team DARPA evaluation. Designed computer-vision systems for AR, web, and neuroscience applications.",
   },
@@ -189,7 +191,8 @@ export const workingExperience = [
     id: 3,
     year: "2020 – Present",
     position: "Graduate Teaching Assistant",
-    company: "CISE Department, University of Florida · Gainesville, FL",
+    company: "CISE Department, University of Florida",
+    location: "Gainesville, FL",
     details:
       "TA across algorithms, systems, and ML courses, including Analysis of Algorithms, Data Structures and Algorithms, Operating Systems, Performant Programming in Python, Deep Learning for Computer Graphics, and Computational Structures for Computer Graphics. Developed automated grading tools and supported 100+ students.",
   },
@@ -197,7 +200,8 @@ export const workingExperience = [
     id: 4,
     year: "2020 – 2023",
     position: "Graduate Research Assistant",
-    company: "Graphics, Imaging & Light Measurement Lab, University of Florida · Gainesville, FL",
+    company: "Graphics, Imaging & Light Measurement Lab, University of Florida",
+    location: "Gainesville, FL",
     details:
       "Developed and evaluated video-based action-recognition models for animal-behavior analysis (NSF-funded), exploring semi-supervised and adversarial approaches to model motion and behavior, with Dr. Corey Toler-Franklin and Dr. Darragh Devine (UF Psychology).",
   },
@@ -205,7 +209,8 @@ export const workingExperience = [
     id: 5,
     year: "2019 – 2020",
     position: "Research Assistant",
-    company: "Rhinoplasty Research Group, Florida Polytechnic University · Lakeland, FL",
+    company: "Rhinoplasty Research Group, Florida Polytechnic University",
+    location: "Lakeland, FL",
     details:
       "Surveyed 50+ papers documenting facial landmarks and measurements relevant to rhinoplasty, and helped build a web interface for importing, exporting, and displaying feature-point coordinates on 3D facial models.",
   },
