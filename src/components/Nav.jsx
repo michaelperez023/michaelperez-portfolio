@@ -7,6 +7,7 @@ const SECTIONS = [
   { to: "about", label: "About" },
   { to: "research", label: "Research" },
   { to: "experience", label: "Experience" },
+  { to: "honors", label: "Honors" },
   { to: "projects", label: "Projects" },
   { to: "skills", label: "Skills" },
 ];
