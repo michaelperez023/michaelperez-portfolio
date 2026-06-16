@@ -48,9 +48,11 @@ export default function Research() {
                   {pub.authors}
                 </p>
               </div>
-              <a className="pub-item-link" href={pub.link} target="_blank" rel="noreferrer" aria-label="Read publication">
-                <FiArrowUpRight size={20} />
-              </a>
+              {pub.link && (
+                <a className="pub-item-link" href={pub.link} target="_blank" rel="noreferrer" aria-label="Read publication">
+                  <FiArrowUpRight size={20} />
+                </a>
+              )}
             </Reveal>
           ))}
         </ul>

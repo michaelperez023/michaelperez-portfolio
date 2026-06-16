@@ -61,7 +61,7 @@ export const publications = [
     year: "2021",
     venue: "Int. J. Computer Assisted Radiology & Surgery",
     title:
-      "Evaluating the Reliability and Agreement of a Web-Based Facial Analysis Tool for Rhinoplasty",
+      "Evaluating the Agreement and Reliability of a Web-Based Facial Analysis Tool for Rhinoplasty",
     authors:
       "Oguzhan Topsakal, Mustafa Ilhan Akbas, Bria Smith, Michael Perez, Ege Can Guden, Mazhar Mehmet Celikoyar",
     note: "IJCARS 16, 1381–1391",
@@ -79,17 +79,6 @@ export const publications = [
     link: "https://doi.org/10.1093/asj/sjab190",
   },
   {
-    id: 5,
-    year: "2021",
-    venue: "CARS Conference",
-    title:
-      "Evaluating Intra and Inter Reliability of a Web-Based Facial Analysis Tool for Rhinoplasty",
-    authors:
-      "Oguzhan Topsakal, Mustafa Ilhan Akbas, Bria Smith, Michael Perez, Ege Can Guden, Mazhar Mehmet Celikoyar",
-    note: "Computer Assisted Radiology and Surgery (CARS) 2021",
-    link: "https://pubmed.ncbi.nlm.nih.gov/34146225/",
-  },
-  {
     id: 6,
     year: "2020",
     venue: "Int. J. Computer Assisted Radiology & Surgery",
@@ -99,17 +88,6 @@ export const publications = [
       "Oguzhan Topsakal, Mustafa Ilhan Akbaş, Doga Demirel, Rafael Nunez, Bria Smith, Michael Perez, Mazhar Celikoyar",
     note: "IJCARS 15(11):1941–1950",
     link: "https://pubmed.ncbi.nlm.nih.gov/32888163/",
-  },
-  {
-    id: 7,
-    year: "2020",
-    venue: "CARS Congress",
-    title:
-      "Digitizing Rhinoplasty: A web application for three-dimensional preoperative planning",
-    authors:
-      "Oguzhan Topsakal, Mustafa Ilhan Akbaş, Doga Demirel, Rafael Nunez, Bria Smith, Michael Perez, Mazhar Celikoyar",
-    note: "Computer Assisted Radiology and Surgery (CARS) Congress 2020",
-    link: "https://www.cars-int.org/fileadmin/templates/downkoad/CARS2020_PreliminaryProgram_17032020.pdf",
   },
 ];
 
