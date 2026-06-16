@@ -506,6 +506,13 @@ a {
   line-height: 1.25;
   margin-bottom: 0.4rem;
 }
+.pub-title-link {
+  color: inherit;
+  transition: color 0.2s ease;
+}
+.pub-title-link:hover {
+  color: var(--accent);
+}
 .pub-item .pub-meta {
   color: var(--text-dim);
   font-size: 0.85rem;
