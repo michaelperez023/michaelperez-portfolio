@@ -14,7 +14,7 @@ export const information = {
   cvFile: "/files/CV.pdf",
   social: {
     github: "https://github.com/michaelperez023",
-    linkedin: "https://www.linkedin.com/in/michael-perez-8b555a43/",
+    linkedin: "https://www.linkedin.com/in/michaelperez023/",
     scholar: "https://scholar.google.com/citations?user=fCzyXhUAAAAJ&hl=en",
   },
 };
