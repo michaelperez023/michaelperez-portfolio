@@ -1,4 +1,4 @@
-import { FiArrowDown, FiDownload, FiGithub } from "react-icons/fi";
+import { FiArrowDown, FiDownload, FiGithub, FiLinkedin } from "react-icons/fi";
 import { SiGooglescholar } from "react-icons/si";
 import { Link } from "react-scroll";
 import { information } from "../data/content";
@@ -22,6 +22,9 @@ export default function Hero() {
             </a>
             <a className="btn btn-ghost" href={information.social.github} target="_blank" rel="noreferrer">
               <FiGithub size={16} /> GitHub
+            </a>
+            <a className="btn btn-ghost" href={information.social.linkedin} target="_blank" rel="noreferrer">
+              <FiLinkedin size={16} /> LinkedIn
             </a>
           </div>
         </div>
