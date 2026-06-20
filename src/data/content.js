@@ -46,6 +46,17 @@ export const publications = [
     lead: true,
   },
   {
+    id: 9,
+    year: "2026",
+    venue: "Int. Conference on Human-Agent Interaction (HAI)",
+    title:
+      "The Effects of Multiple Companion Agents on User Experience and Mental Workload",
+    authors:
+      "Rodrigo Calvo, Christopher Bowers, Michael Pérez, Alexander Barquero, Jaime Ruiz",
+    note: "Proceedings of the 14th Int. Conference on Human-Agent Interaction · Accepted, to appear",
+    link: null,
+  },
+  {
     id: 8,
     year: "2026",
     venue: "Military Sensing Symposium",
