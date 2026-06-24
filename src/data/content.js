@@ -8,8 +8,7 @@ export const information = {
   tagline:
     "PhD candidate at the University of Florida specializing in video understanding, computer vision, and real-time ML systems. I build end-to-end pipelines for video analysis, detection, and retrieval.",
   location: "Gainesville, Florida",
-  // Left blank intentionally; original data omitted it. Set a string to surface a contact link.
-  email: "",
+  email: "michaelperez012@ufl.edu",
   headshot: "/images/headshot.jpg",
   cvFile: "/files/CV.pdf",
   social: {

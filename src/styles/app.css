@@ -760,7 +760,8 @@ a {
   display: flex;
   gap: 0.7rem;
 }
-.footer-social a {
+.footer-social a,
+.footer-social button {
   width: 44px;
   height: 44px;
   display: grid;
@@ -768,12 +769,23 @@ a {
   border-radius: 50%;
   border: 1px solid var(--border-strong);
   color: var(--text-dim);
+  background: none;
+  cursor: pointer;
   transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
-.footer-social a:hover {
+.footer-social a:hover,
+.footer-social button:hover {
   color: var(--accent);
   border-color: var(--accent);
   transform: translateY(-3px);
+}
+.footer-social button.is-copied {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.btn-ghost.is-copied {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 .footer-meta {
   margin-top: 2.5rem;
