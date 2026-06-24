@@ -367,15 +367,15 @@ function ClipStack({ clips, primaryId, edu, onFocus }) {
   if (!clips || !clips.length) return null;
   const main = clips.filter((c) => c.track !== "experience");
   const rail = clips.filter((c) => c.track === "experience");
-  const denseMain = main.length > 1;
+  const hasMain = main.length > 0;
   const hasRail = rail.length > 0 || (edu && edu.length > 0);
   return (
     <div className="cv-zones">
-      <div className={`cv-stack cv-zone-main${denseMain ? " multi" : ""}`}>
-        {denseMain && <p className="cv-stack-head">{main.length} at this moment</p>}
-        {main.length ? (
+      <div className={`cv-stack cv-zone-main${hasMain ? " multi" : ""}`}>
+        {main.length > 1 && <p className="cv-stack-head">{main.length} at this moment</p>}
+        {hasMain ? (
           main.map((c) => (
-            <ClipCard key={c.id} clip={c} dense={denseMain} primary={c.id === primaryId} onFocus={onFocus} />
+            <ClipCard key={c.id} clip={c} dense primary={c.id === primaryId} onFocus={onFocus} />
           ))
         ) : (
           <p className="cv-empty">Nothing published or built at this exact point — scrub or zoom to explore.</p>

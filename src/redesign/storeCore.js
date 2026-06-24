@@ -45,6 +45,7 @@ export const initial = {
   zoom: 1, // temporal zoom (1 = whole span)
   viewStart: START, // left edge of the visible time window
   tlHeight: 300, // timeline panel height (px), user-resizable
+  tlCollapsed: false, // hide the timeline for a full-screen content view
   tagFilter: null, // {type,value} — when set, show all clips with this tag (ignores time)
 };
 
@@ -151,6 +152,8 @@ export function reducer(state, action) {
     }
     case "SET_TL_HEIGHT":
       return { ...state, tlHeight: action.value };
+    case "TOGGLE_TL_COLLAPSE":
+      return { ...state, tlCollapsed: !state.tlCollapsed };
     case "FOCUS_CLIP":
       // highlight a clip (timeline + card) without moving the playhead or
       // changing which clips are shown — used by clicking a coincident card.
