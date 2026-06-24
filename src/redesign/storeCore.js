@@ -58,6 +58,7 @@ function moved(state, playhead, extra) {
     playhead: ph,
     viewStart: panToShow(state.viewStart, state.zoom, ph),
     focusId: extra.activeId ?? state.focusId, // focus follows selection/scrub
+    tagFilter: null, // any playhead move exits the tag filter
     ...extra,
   };
 }
@@ -160,6 +161,10 @@ export function reducer(state, action) {
       const i = SPEEDS.indexOf(state.playSpeed);
       return { ...state, playSpeed: SPEEDS[(i + 1) % SPEEDS.length] };
     }
+    case "SET_TAG_FILTER":
+      return action.value
+        ? { ...state, tagFilter: { value: action.value }, mode: "scrub", answer: null, attended: [] }
+        : { ...state, tagFilter: null };
     case "FOCUS_CLIP":
       // highlight a clip (timeline + card) without moving the playhead or
       // changing which clips are shown — used by clicking a coincident card.
@@ -189,6 +194,7 @@ export function reducer(state, action) {
           confidence: res.confidence,
         },
         attended: [],
+        tagFilter: null,
       };
     }
     case "ATTEND":
@@ -196,7 +202,7 @@ export function reducer(state, action) {
         ? state
         : { ...state, attended: [...state.attended, action.id] };
     case "ESCAPE":
-      return { ...state, mode: "scrub", playing: false, answer: null, attended: [], query: "" };
+      return { ...state, mode: "scrub", playing: false, answer: null, attended: [], query: "", tagFilter: null };
     case "TOGGLE_LISTVIEW":
       return { ...state, listView: !state.listView, playing: false };
     default:

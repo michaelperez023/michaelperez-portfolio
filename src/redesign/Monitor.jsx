@@ -12,7 +12,7 @@ import {
 } from "react-icons/fi";
 import { SiGooglescholar } from "react-icons/si";
 import { useStore, isPanel } from "./storeCore";
-import { allClips, clipById, barActiveAt, eras } from "./timelineData";
+import { allClips, clipById, barActiveAt, eras, clipsMatchingTag } from "./timelineData";
 import { examples } from "./retrieval";
 import { information, about, skillGroups, honors, education } from "../data/content";
 
@@ -147,7 +147,9 @@ export default function Monitor() {
 
       {/* main panel */}
       <div className="mon-stage">
-        {answering ? (
+        {state.tagFilter ? (
+          <TagFiltered />
+        ) : answering ? (
           <Answer tokens={state.answer.tokens} revealed={revealed} matched={state.answer.matched} />
         ) : isPanel(state.activeId) ? (
           <Panel id={state.activeId} />
@@ -296,12 +298,31 @@ function PaperPreview({ clip }) {
   );
 }
 
+// A clickable meta chip (kind / tag / skill) that filters the whole site to
+// everything sharing that tag. stopPropagation so it doesn't also focus the card.
+function TagChip({ label, value = label, className }) {
+  const { actions } = useStore();
+  return (
+    <button
+      type="button"
+      className={`${className} cv-tagbtn`}
+      onClick={(e) => {
+        e.stopPropagation();
+        actions.setTagFilter(value);
+      }}
+      title={`Show everything tagged “${label}”`}
+    >
+      {label}
+    </button>
+  );
+}
+
 function ResearchCard({ clip }) {
   const kindLabel = clip.kind === "working" ? "WORKING PAPER" : clip.kind === "preprint" ? "PREPRINT" : "PUBLICATION";
   const meta = (
     <div className="cv-meta">
-      <span className={`cv-kind ${clip.kind}`}>{kindLabel}</span>
-      {clip.lead && <span className="cv-tag lead">FIRST AUTHOR</span>}
+      <TagChip className={`cv-kind ${clip.kind}`} label={kindLabel} />
+      {clip.lead && <TagChip className="cv-tag lead" label="FIRST AUTHOR" />}
       {clip.upcoming && <span className="cv-tag up">ACCEPTED · TO APPEAR</span>}
       <span className="cv-year">{clip.year}</span>
     </div>
@@ -346,8 +367,8 @@ function ClipCard({ clip, dense, primary, rail, onFocus }) {
     return (
       <article className={base} onClick={onCardClick}>
         <div className="cv-meta">
-          <span className="cv-kind exp">EXPERIENCE</span>
-          {clip.tag && <span className="cv-tag">{clip.tag}</span>}
+          <TagChip className="cv-kind exp" label="EXPERIENCE" />
+          {clip.tag && <TagChip className="cv-tag" label={clip.tag} />}
           <span className="cv-year">{clip.year}</span>
         </div>
         <h2 className="cv-title">{clip.title}</h2>
@@ -360,8 +381,8 @@ function ClipCard({ clip, dense, primary, rail, onFocus }) {
     return (
       <article className={`${base} cv-proj`} onClick={onCardClick}>
         <div className="cv-meta">
-          <span className="cv-kind proj">PROJECT</span>
-          {clip.tags?.map((t) => <span key={t} className="cv-tag">{t}</span>)}
+          <TagChip className="cv-kind proj" label="PROJECT" />
+          {clip.tags?.map((t) => <TagChip key={t} className="cv-tag" label={t} />)}
         </div>
         <h2 className="cv-title">{clip.title}</h2>
         <div className="cv-projbody">
@@ -417,6 +438,37 @@ function ClipStack({ clips, primaryId, edu, onFocus }) {
           ))}
         </aside>
       )}
+    </div>
+  );
+}
+
+// Tag-filter view: every clip sharing the selected tag, ignoring the playhead.
+function TagFiltered() {
+  const { state, actions } = useStore();
+  const value = state.tagFilter.value;
+  const clips = useMemo(
+    () =>
+      clipsMatchingTag(value)
+        .map((id) => clipById[id])
+        .filter(Boolean)
+        .sort((a, b) => (b.t1 ?? b.t0) - (a.t1 ?? a.t0)),
+    [value]
+  );
+  return (
+    <div className="tagfilter">
+      <div className="tagfilter-head">
+        <span className="tagfilter-label">
+          Tagged <b>{value}</b> · {clips.length} {clips.length === 1 ? "result" : "results"}
+        </span>
+        <button className="tagfilter-clear" onClick={() => actions.setTagFilter(null)}>
+          clear ✕
+        </button>
+      </div>
+      <div className="cv-stack cv-zone-main multi tagfilter-grid">
+        {clips.map((c) => (
+          <ClipCard key={c.id} clip={c} dense onFocus={actions.selectClip} />
+        ))}
+      </div>
     </div>
   );
 }
