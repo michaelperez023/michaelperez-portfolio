@@ -162,7 +162,10 @@ export default function Timeline() {
   const renderClip = (c) => {
     const isActive = state.focusId === c.id;
     const isLit = lit.has(c.id);
-    const showLabel = !compact || isActive || isLit;
+    // In compact mode keep everything as dots — a selected dot stays a dot with
+    // a highlight ring (its name is in the monitor card) so it can't expand into
+    // a pill that overlaps neighbouring dots.
+    const showLabel = !compact;
     const tipImg = c.thumb || c.image;
     const tip = (
       <span className="tl-tip" aria-hidden="true">

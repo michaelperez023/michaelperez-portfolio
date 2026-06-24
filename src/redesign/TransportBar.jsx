@@ -1,4 +1,4 @@
-import { FiPlay, FiPause, FiSkipBack, FiSkipForward, FiList, FiDownload } from "react-icons/fi";
+import { FiPlay, FiPause, FiSkipBack, FiSkipForward, FiList, FiDownload, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { useStore, isPanel } from "./storeCore";
 import { clipById, fmtTime } from "./timelineData";
 import { information } from "../data/content";
@@ -29,6 +29,17 @@ export default function TransportBar() {
       </div>
 
       <div className="tp-right">
+        <button
+          className="tp-link"
+          onClick={() => actions.toggleTlCollapse()}
+          aria-label={state.tlCollapsed ? "Show timeline" : "Hide timeline"}
+        >
+          {state.tlCollapsed ? (
+            <><FiChevronUp size={14} /> Timeline</>
+          ) : (
+            <><FiChevronDown size={14} /> Hide</>
+          )}
+        </button>
         <button className="tp-link" onClick={() => actions.toggleListView()}>
           <FiList size={14} /> List view
         </button>

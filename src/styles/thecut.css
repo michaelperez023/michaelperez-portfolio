@@ -542,6 +542,7 @@ kbd {
   min-height: 0;
   display: flex;
   flex-direction: column;
+  touch-action: none; /* we handle scrub + pinch-zoom ourselves (don't let mobile browsers hijack) */
 }
 /* zoom controls (top-right of the timeline) */
 .tl-zoom {
@@ -588,6 +589,24 @@ kbd {
   transition: background 0.15s, width 0.15s;
 }
 .tl-resize:hover .tl-resize-grip { background: var(--signal); width: 56px; }
+/* collapsed timeline -> a tappable "show" bar */
+.cut-timeline.collapsed { padding: 0; cursor: default; touch-action: auto; }
+.tl-show {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  background: var(--panel);
+  border: none;
+  color: var(--dim);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+.tl-show:hover { color: var(--signal); }
 .tl { position: relative; flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; }
 
 .tl-ruler { position: relative; height: 30px; margin-bottom: 4px; }
@@ -686,7 +705,7 @@ kbd {
 .tl-clip.k-working, .tl-clip.k-preprint { color: var(--indigo); }
 .tl-clip.k-project { color: var(--violet); }
 .tl-clip.upcoming { border-style: dashed; opacity: 0.85; }
-.tl-clip:hover { border-color: currentColor; background: var(--panel); }
+.tl-clip:hover { border-color: currentColor; background: var(--panel); z-index: 25; }
 .tl-clip.active {
   border-color: var(--signal);
   color: var(--fg);
@@ -716,7 +735,7 @@ kbd {
 .tl-dot.k-working, .tl-dot.k-preprint { background: var(--indigo); }
 .tl-dot.k-project { background: var(--violet); }
 .tl-dot.upcoming { opacity: 0.7; }
-.tl-dot:hover { transform: translate(-50%, -50%) scale(1.55); z-index: 6; }
+.tl-dot:hover { transform: translate(-50%, -50%) scale(1.55); z-index: 25; }
 .tl-dot.active { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--signal), 0 0 10px var(--signal-glow); z-index: 5; }
 .tl-dot.lit { box-shadow: 0 0 0 2px var(--bg), 0 0 10px var(--signal); z-index: 4; }
 .tl-dot:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
@@ -742,9 +761,14 @@ kbd {
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
 .tl-bar.hub { background: rgba(242, 179, 61, 0.13); }
-.tl-bar:hover { color: var(--fg); border-color: var(--amber); }
+.tl-bar:hover { color: var(--fg); border-color: var(--amber); z-index: 25; }
 .tl-bar.active { color: var(--fg); border-color: var(--amber); box-shadow: 0 0 0 1px var(--amber), 0 0 14px rgba(242, 179, 61, 0.25); z-index: 5; }
 .tl-bar.lit { color: var(--fg); border-color: var(--signal); box-shadow: 0 0 0 1px var(--signal); }
+/* a hovered clip/dot/bar (and its tooltip) must sit above the playhead line —
+   these come after .active/.lit so they win even when the item is also active */
+.tl-clip:hover, .tl-clip.active:hover, .tl-clip.lit:hover,
+.tl-dot:hover, .tl-dot.active:hover, .tl-dot.lit:hover,
+.tl-bar:hover, .tl-bar.active:hover, .tl-bar.lit:hover { z-index: 30; }
 .tl-bar-label { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .tl-bar-pause {
   position: absolute;

@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
+import { FiChevronUp } from "react-icons/fi";
 import { useStore } from "./storeCore";
 import Monitor from "./Monitor";
 import Timeline from "./Timeline";
@@ -14,7 +15,9 @@ export default function TheCut() {
 
   // resizable timeline height (drag the top handle) — height lives in the store
   const resizing = useRef(null);
+  const userResizedTl = useRef(false);
   const onResizeDown = (e) => {
+    userResizedTl.current = true; // stop auto-sizing once the user drags
     resizing.current = { startY: e.clientY, startH: stateRef.current.tlHeight };
     try {
       e.currentTarget.setPointerCapture?.(e.pointerId);
@@ -22,6 +25,34 @@ export default function TheCut() {
       /* pointer already released */
     }
   };
+
+  // On load (and window resize), size the timeline so the intro sits snugly
+  // above it — i.e. the timeline fills everything below the intro hint.
+  useLayoutEffect(() => {
+    const compute = () => {
+      if (userResizedTl.current) return;
+      const intro = document.querySelector(".intro");
+      const topbar = document.querySelector(".cut-topbar");
+      const transport = document.querySelector(".transport");
+      const monitor = document.querySelector(".cut-monitor");
+      if (!intro || !topbar || !transport || !monitor) return;
+      // measure the intro's actual bottom relative to the monitor top — this
+      // captures the console + examples + intro content exactly.
+      const cs = getComputedStyle(monitor);
+      const needed =
+        intro.getBoundingClientRect().bottom -
+        monitor.getBoundingClientRect().top +
+        parseFloat(cs.paddingBottom) +
+        6;
+      const avail = window.innerHeight - topbar.offsetHeight - transport.offsetHeight - needed;
+      const tl = Math.min(Math.round(window.innerHeight * 0.78), Math.max(180, Math.round(avail)));
+      if (Math.abs(tl - stateRef.current.tlHeight) > 2) actions.setTlHeight(tl);
+    };
+    compute();
+    window.addEventListener("resize", compute);
+    document.fonts?.ready.then(compute);
+    return () => window.removeEventListener("resize", compute);
+  }, [actions]);
   const onResizeMove = (e) => {
     const r = resizing.current;
     if (!r) return;
@@ -112,6 +143,48 @@ export default function TheCut() {
     return () => node.removeEventListener("wheel", onWheel);
   }, [actions]);
 
+  // two-finger pinch-to-zoom on the timeline (mobile/touch)
+  useEffect(() => {
+    const node = timelineWrapRef.current;
+    if (!node) return;
+    let pinch = null;
+    const dist = (ts) => Math.hypot(ts[0].clientX - ts[1].clientX, ts[0].clientY - ts[1].clientY);
+    const onStart = (e) => {
+      if (e.touches.length !== 2) return;
+      const area = node.querySelector(".tl-area");
+      if (!area) return;
+      const rect = area.getBoundingClientRect();
+      const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      const frac = Math.min(1, Math.max(0, (cx - rect.left) / rect.width));
+      const span = (END - START) / stateRef.current.zoom;
+      pinch = {
+        startDist: dist(e.touches),
+        startZoom: stateRef.current.zoom,
+        focusTime: stateRef.current.viewStart + frac * span,
+        focusFrac: frac,
+      };
+    };
+    const onMove = (e) => {
+      if (!pinch || e.touches.length !== 2) return;
+      e.preventDefault();
+      const factor = dist(e.touches) / pinch.startDist;
+      actions.setZoomAt(pinch.startZoom * factor, pinch.focusTime, pinch.focusFrac);
+    };
+    const onEnd = (e) => {
+      if (e.touches.length < 2) pinch = null;
+    };
+    node.addEventListener("touchstart", onStart, { passive: false });
+    node.addEventListener("touchmove", onMove, { passive: false });
+    node.addEventListener("touchend", onEnd);
+    node.addEventListener("touchcancel", onEnd);
+    return () => {
+      node.removeEventListener("touchstart", onStart);
+      node.removeEventListener("touchmove", onMove);
+      node.removeEventListener("touchend", onEnd);
+      node.removeEventListener("touchcancel", onEnd);
+    };
+  }, [actions]);
+
   // auto-scrub play loop
   useEffect(() => {
     if (!state.playing) return;
@@ -138,7 +211,7 @@ export default function TheCut() {
   return (
     <div
       className="cut-root"
-      style={{ gridTemplateRows: `auto minmax(0, 1fr) ${state.tlHeight}px auto` }}
+      style={{ gridTemplateRows: `auto minmax(0, 1fr) ${state.tlCollapsed ? 34 : state.tlHeight}px auto` }}
     >
       <header className="cut-topbar">
         <button className="cut-brand" onClick={() => actions.gotoSection(sections.find((s) => s.key === "intro"))}>
@@ -163,26 +236,38 @@ export default function TheCut() {
       <main className="cut-monitor">
         <Monitor />
       </main>
-      <section className="cut-timeline" ref={timelineWrapRef} aria-label="Career timeline (scrub to explore)">
-        <div
-          className="tl-resize"
-          role="separator"
-          aria-orientation="horizontal"
-          aria-label="Drag to resize the timeline"
-          title="Drag to resize"
-          onPointerDown={onResizeDown}
-          onPointerMove={onResizeMove}
-          onPointerUp={onResizeUp}
-          onPointerCancel={onResizeUp}
-        >
-          <span className="tl-resize-grip" />
-        </div>
-        <div className="tl-zoom" role="group" aria-label="Timeline zoom">
-          <button onClick={() => actions.setZoom(state.zoom / 1.5)} disabled={state.zoom <= 1.01} aria-label="Zoom out" title="Zoom out (−)">−</button>
-          <button className="tl-zoom-val" onClick={() => actions.setZoom(1)} title="Reset zoom (0)">{state.zoom.toFixed(1)}×</button>
-          <button onClick={() => actions.setZoom(state.zoom * 1.5)} aria-label="Zoom in" title="Zoom in (+)">+</button>
-        </div>
-        <Timeline />
+      <section
+        className={`cut-timeline${state.tlCollapsed ? " collapsed" : ""}`}
+        ref={timelineWrapRef}
+        aria-label="Career timeline (scrub to explore)"
+      >
+        {state.tlCollapsed ? (
+          <button className="tl-show" onClick={() => actions.toggleTlCollapse()}>
+            <FiChevronUp size={15} /> Show timeline
+          </button>
+        ) : (
+          <>
+            <div
+              className="tl-resize"
+              role="separator"
+              aria-orientation="horizontal"
+              aria-label="Drag to resize the timeline"
+              title="Drag to resize"
+              onPointerDown={onResizeDown}
+              onPointerMove={onResizeMove}
+              onPointerUp={onResizeUp}
+              onPointerCancel={onResizeUp}
+            >
+              <span className="tl-resize-grip" />
+            </div>
+            <div className="tl-zoom" role="group" aria-label="Timeline zoom">
+              <button onClick={() => actions.setZoom(state.zoom / 1.5)} disabled={state.zoom <= 1.01} aria-label="Zoom out" title="Zoom out (−)">−</button>
+              <button className="tl-zoom-val" onClick={() => actions.setZoom(1)} title="Reset zoom (0)">{state.zoom.toFixed(1)}×</button>
+              <button onClick={() => actions.setZoom(state.zoom * 1.5)} aria-label="Zoom in" title="Zoom in (+)">+</button>
+            </div>
+            <Timeline />
+          </>
+        )}
       </section>
       <TransportBar />
       {state.listView && <ListView />}
