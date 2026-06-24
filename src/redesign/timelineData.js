@@ -143,11 +143,25 @@ const projectClips = projects.map((p) => {
 });
 
 // --- education era bands (background context on the ruler) ------------------
-export const eras = [
+// Greedy row-packing so overlapping degrees (M.S. + Ph.D. both start 2020)
+// never render their labels on top of each other.
+const eraDefs = [
   { label: "B.S. · Florida Poly", t0: START, t1: 2020.4 },
   { label: "M.S. · UF", t0: 2020.6, t1: 2023.4 },
   { label: "Ph.D. · UF", t0: 2020.6, t1: NOW },
 ];
+const eraRowEnds = [];
+export const eras = eraDefs.map((e) => {
+  let row = eraRowEnds.findIndex((end) => end <= e.t0 + 0.01);
+  if (row === -1) {
+    row = eraRowEnds.length;
+    eraRowEnds.push(e.t1);
+  } else {
+    eraRowEnds[row] = e.t1;
+  }
+  return { ...e, row };
+});
+export const eraRowCount = eraRowEnds.length;
 
 // --- honor markers (gold flags) --------------------------------------------
 export const honorMarks = [
