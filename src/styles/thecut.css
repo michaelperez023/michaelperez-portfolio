@@ -777,6 +777,16 @@ kbd {
 .tl-clip:hover .tl-tip, .tl-clip:focus-visible .tl-tip,
 .tl-dot:hover .tl-tip, .tl-dot:focus-visible .tl-tip,
 .tl-bar:hover .tl-tip, .tl-bar:focus-visible .tl-tip { display: flex; }
+.tl-tip-img {
+  display: block;
+  width: 100%;
+  height: 86px;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 4px;
+  margin-bottom: 0.35rem;
+  background: #0a0d11;
+}
 .tl-tip-title { color: var(--fg); font-size: 0.74rem; font-weight: 600; line-height: 1.25; white-space: normal; }
 .tl-tip-meta { color: var(--dim); font-size: 0.66rem; font-family: var(--mono); line-height: 1.2; white-space: normal; }
 

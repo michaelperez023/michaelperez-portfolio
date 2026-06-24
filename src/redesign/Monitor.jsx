@@ -90,21 +90,13 @@ export default function Monitor() {
   const showingClips = !answering && !isPanel(state.activeId);
   const coincident = useMemo(() => {
     if (!showingClips) return [];
-    const active = clipById[state.activeId];
-    // Anchor on the active clip's own date (or the playhead's point inside a bar),
-    // so "at this moment" means concurrent with what you're actually looking at.
-    const anchor = active
-      ? active.point
-        ? active.t0
-        : Math.min(active.t1, Math.max(active.t0, state.playhead))
-      : state.playhead;
-    const at = clipsAtTime(anchor);
-    if (active && !at.some((c) => c.id === active.id)) at.unshift(active);
-    // Stable order (never reshuffles when you change focus): experience, research, projects, by time.
+    // Filter strictly by the current playhead time (the blue line).
+    const at = clipsAtTime(state.playhead);
+    // Stable order (never reshuffles when focus changes): experience, research, projects, by time.
     const ord = { experience: 0, research: 1, projects: 2 };
     at.sort((a, b) => ord[a.track] - ord[b.track] || a.t0 - b.t0);
     return at;
-  }, [showingClips, state.activeId, state.playhead]);
+  }, [showingClips, state.playhead]);
 
   // Degree(s) in progress at this moment (shown at the bottom of the rail).
   const eduActive = showingClips
