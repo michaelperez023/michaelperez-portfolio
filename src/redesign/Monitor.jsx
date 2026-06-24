@@ -346,7 +346,6 @@ function ClipCard({ clip, dense, primary, rail, onFocus }) {
           <div className="cv-projtext">
             <p className="cv-body">{clip.sub}</p>
             <LinkRow clip={clip} />
-            {clip.approx && <p className="cv-approx">≈ placed by era — exact date adjustable</p>}
           </div>
         </div>
       </article>
