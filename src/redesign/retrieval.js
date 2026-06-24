@@ -184,13 +184,13 @@ const TOPICS = [
   {
     keys: ["hiring", "why hire", "strengths", "good fit", "stand out"],
     answer:
-      "I pair real research with real engineering: first-author at ACM Multimedia 2025 [[r-creleri]], a published CV internship at CoVar [[e-covar]], and systems chops shown by a simulator verified past 2M nodes [[p-gossip]]. I ship end-to-end — research, pipelines, and deployment.",
+      "You'd get someone who moves an idea from research to production without a handoff — I find the white-space problem, prototype the model, and ship the pipeline that runs it. That range is why I have a first-author paper at ACM Multimedia 2025 [[r-creleri]], a CV system shipped during my CoVar internship [[e-covar]], and infrastructure proven past 2,000,000 nodes [[p-gossip]]: research velocity with the engineering discipline to deploy it.",
     attend: ["r-creleri", "e-covar", "p-gossip"],
   },
   {
-    keys: ["availability", "graduate", "when"],
+    keys: ["availability", "graduate", "when", "start", "relocate"],
     answer:
-      "I'm a PhD candidate at UF graduating around August 2026 and open to full-time ML / AI Engineer roles. Reach me via the Contact section — happy to talk timelines.",
+      "I'm a PhD candidate at UF, available to start full-time on August 10, 2026 — open to ML / AI Engineer roles on-site, hybrid, or remote, and happy to relocate. Reach me via the Contact section to talk timelines [[r-creleri]].",
     attend: ["r-creleri"],
   },
 ];

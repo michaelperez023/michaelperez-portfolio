@@ -398,7 +398,7 @@ function ClipStack({ clips, primaryId, edu, onFocus }) {
             <ClipCard key={c.id} clip={c} dense primary={c.id === primaryId} onFocus={onFocus} />
           ))
         ) : (
-          <p className="cv-empty">Nothing published or built at this exact point — scrub or zoom to explore.</p>
+          <p className="cv-empty">Nothing at this exact moment — drag the playhead or click any dot to explore, or ask my work a question above.</p>
         )}
       </div>
       {hasRail && (
@@ -446,7 +446,7 @@ function IntroPanel() {
             </div>
           ))}
         </div>
-        <p className="intro-hint">▸ scrub the timeline below, press <kbd>Space</kbd> to play it, or <kbd>/</kbd> to ask my work a question</p>
+        <p className="intro-hint">▸ scrub the timeline below or click any dot for details · press <kbd>Space</kbd> to play · <kbd>/</kbd> to ask my work a question</p>
       </div>
       <div className="intro-portrait">
         <img src={information.headshot} alt={information.fullName} loading="lazy" />
@@ -513,7 +513,7 @@ function ContactPanel() {
   return (
     <div className="panel">
       <h2 className="panel-h">Let's build something.</h2>
-      <p className="panel-p">Open to full-time ML / AI Engineer roles. The fastest way to reach me:</p>
+      <p className="panel-p">Available August 10, 2026 for full-time ML / AI Engineer roles — on-site, hybrid, or remote, and open to relocating. Fastest way to reach me:</p>
       <div className="contact-row">
         <button className="contact-btn primary" onClick={copy}>
           {copied ? <><FiCheck size={15} /> Copied</> : <><FiCopy size={15} /> {email}</>}

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FiChevronUp } from "react-icons/fi";
 import { useStore } from "./storeCore";
 import Monitor from "./Monitor";
@@ -12,6 +12,23 @@ export default function TheCut() {
   const stateRef = useRef(state);
   stateRef.current = state;
   const timelineWrapRef = useRef(null);
+
+  // first-visit cue: pulse the playhead so the scrub interaction is discoverable
+  // (once per browser session)
+  const [firstVisit] = useState(() => {
+    try {
+      return !sessionStorage.getItem("cut-onboarded");
+    } catch {
+      return false;
+    }
+  });
+  useEffect(() => {
+    try {
+      sessionStorage.setItem("cut-onboarded", "1");
+    } catch {
+      /* sessionStorage unavailable */
+    }
+  }, []);
 
   // resizable timeline height (drag the top handle) — height lives in the store
   const resizing = useRef(null);
@@ -210,7 +227,7 @@ export default function TheCut() {
 
   return (
     <div
-      className="cut-root"
+      className={`cut-root${firstVisit ? " onboarding" : ""}`}
       style={{ gridTemplateRows: `auto minmax(0, 1fr) ${state.tlCollapsed ? 34 : state.tlHeight}px auto` }}
     >
       <header className="cut-topbar">
