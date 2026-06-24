@@ -219,20 +219,6 @@ export default function Timeline() {
             NOW
           </span>
         )}
-        <div className="tl-sections">
-          {sections.filter((s) => inView(s.t)).map((s) => (
-            <button
-              key={s.key}
-              className={`tl-flag${state.activeId === (s.panel || s.clipId) ? " on" : ""}`}
-              style={{ left: `${vpos(s.t) * 100}%` }}
-              onClick={() => actions.gotoSection(s)}
-              title={`${s.num} · ${s.label}`}
-            >
-              <span className="tl-flag-num">{s.num}</span>
-              {s.label}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* scrub surface: era bands + tracks + playhead */}

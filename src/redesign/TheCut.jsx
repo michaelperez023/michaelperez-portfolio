@@ -141,8 +141,24 @@ export default function TheCut() {
       style={{ gridTemplateRows: `auto minmax(0, 1fr) ${state.tlHeight}px auto` }}
     >
       <header className="cut-topbar">
-        <span className="cut-brand">MICHAEL&nbsp;PÉREZ</span>
+        <button className="cut-brand" onClick={() => actions.gotoSection(sections.find((s) => s.key === "intro"))}>
+          MICHAEL&nbsp;PÉREZ
+        </button>
         <span className="cut-brand-sub">video understanding · in real time</span>
+        <nav className="cut-nav">
+          {["about", "skills", "contact"].map((k) => {
+            const s = sections.find((x) => x.key === k);
+            return (
+              <button
+                key={k}
+                className={`cut-nav-link${state.activeId === s.panel ? " on" : ""}`}
+                onClick={() => actions.gotoSection(s)}
+              >
+                {s.label}
+              </button>
+            );
+          })}
+        </nav>
       </header>
       <main className="cut-monitor">
         <Monitor />

@@ -59,8 +59,27 @@ a { color: inherit; }
   font-weight: 800;
   letter-spacing: 0.04em;
   font-size: 0.95rem;
+  background: none;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  padding: 0;
+  cursor: pointer;
 }
+.cut-brand:hover { color: var(--signal); }
 .cut-brand-sub { color: var(--dim); font-size: 0.85rem; }
+.cut-nav { margin-left: auto; display: flex; gap: 0.2rem; }
+.cut-nav-link {
+  background: none;
+  border: none;
+  color: var(--dim);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.3rem 0.65rem;
+  border-radius: 5px;
+}
+.cut-nav-link:hover, .cut-nav-link.on { color: var(--signal); }
 
 /* ---------- monitor ---------- */
 .cut-monitor {
@@ -521,36 +540,6 @@ kbd {
   padding: 0 0.25rem;
   background: rgba(242, 179, 61, 0.08);
 }
-.tl-sections { position: absolute; inset: 0; pointer-events: none; }
-.tl-flag {
-  position: absolute;
-  top: 0;
-  transform: translateX(-50%);
-  pointer-events: auto;
-  background: transparent;
-  border: none;
-  color: var(--faint);
-  font-family: var(--mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.03em;
-  cursor: pointer;
-  display: none;
-}
-/* show section flags only on wider screens (number keys still work) */
-@media (min-width: 900px) {
-  .tl-flag { display: inline-flex; align-items: center; gap: 0.25rem; }
-}
-.tl-flag-num {
-  display: inline-grid;
-  place-items: center;
-  width: 13px; height: 13px;
-  border: 1px solid var(--line2);
-  border-radius: 3px;
-  font-size: 0.56rem;
-}
-.tl-flag:hover, .tl-flag.on { color: var(--signal); }
-.tl-flag.on .tl-flag-num { border-color: var(--signal); color: var(--signal); }
-
 .tl-area { position: relative; flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; }
 .tl-eras { position: relative; flex: 0 0 auto; height: 15px; margin-bottom: 5px; }
 .tl-era {
