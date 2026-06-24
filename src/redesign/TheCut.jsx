@@ -95,7 +95,6 @@ export default function TheCut() {
       <header className="cut-topbar">
         <span className="cut-brand">MICHAEL&nbsp;PÉREZ</span>
         <span className="cut-brand-sub">video understanding · in real time</span>
-        <span className="cut-src">SCRUBHEAD · perez_m.career · 2018–2026</span>
       </header>
       <main className="cut-monitor">
         <Monitor />
