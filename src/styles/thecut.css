@@ -855,6 +855,13 @@ kbd {
 }
 .tl-playhead-handle:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .tl-playhead-handle:active { cursor: grabbing; }
+/* first-visit cue: a few attention pulses so the scrub interaction is found */
+@keyframes ph-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(57, 224, 208, 0.55), 0 0 10px var(--signal); }
+  70% { box-shadow: 0 0 0 15px rgba(57, 224, 208, 0), 0 0 10px var(--signal); }
+  100% { box-shadow: 0 0 0 0 rgba(57, 224, 208, 0), 0 0 10px var(--signal); }
+}
+.cut-root.onboarding .tl-playhead-handle { animation: ph-pulse 1.5s ease-out 4; }
 
 /* ---------- transport ---------- */
 .transport {
@@ -989,5 +996,6 @@ kbd {
 @media (prefers-reduced-motion: reduce) {
   .cv, .intro, .panel { animation: none; }
   .ans-cursor { animation: none; }
+  .cut-root.onboarding .tl-playhead-handle { animation: none; }
   * { scroll-behavior: auto; }
 }

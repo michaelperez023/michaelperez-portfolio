@@ -25,8 +25,9 @@ export const about = {
   ],
   facts: [
     { label: "Focus", value: "Video understanding · Computer vision · Real-time ML" },
-    { label: "PhD expected", value: "August 2026 · University of Florida" },
-    { label: "Open to", value: "Full-time ML / AI Engineer roles" },
+    { label: "Lead pub", value: "CReLeRI · ACM Multimedia 2025 (first author)" },
+    { label: "Available", value: "August 10, 2026" },
+    { label: "Open to", value: "Full-time ML / AI Engineer · remote, on-site, or relocate" },
   ],
 };
 
