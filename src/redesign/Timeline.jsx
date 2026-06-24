@@ -130,28 +130,21 @@ export default function Timeline() {
     return [vpos(c.t0), Math.max(vpos(c.t1), vpos(c.t0) + labelW) + 0.012];
   };
 
-  // Pack the visible clips of a track into sub-rows (greedy, no overlap).
+  // Render the visible clips of a track in their FIXED sub-rows (assigned once
+  // over the full span), so a clip never changes row when you zoom.
   const layoutTrack = (clips) => {
     const visible = clips.filter((c) => {
       const [l, r] = footprint(c);
       return r >= -0.15 && l <= 1.15;
     });
-    const sorted = [...visible].sort((a, b) => a.t0 - b.t0 || a.t1 - b.t1);
-    const rowRight = [];
-    const byRow = [];
-    for (const c of sorted) {
-      const [leftX, rightX] = footprint(c);
-      let row = rowRight.findIndex((end) => end <= leftX - 0.004);
-      if (row === -1) {
-        row = rowRight.length;
-        rowRight.push(rightX);
-        byRow.push([]);
-      } else {
-        rowRight[row] = rightX;
-      }
-      byRow[row].push(c);
-    }
-    return { byRow, rows: Math.max(1, byRow.length) };
+    let maxRow = 0;
+    visible.forEach((c) => {
+      if (c._row > maxRow) maxRow = c._row;
+    });
+    const rows = maxRow + 1;
+    const byRow = Array.from({ length: rows }, () => []);
+    visible.forEach((c) => byRow[c._row].push(c));
+    return { byRow, rows };
   };
 
   const layouts = tracks.map((t) => ({ track: t, ...layoutTrack(t.clips) }));

@@ -114,14 +114,14 @@ const experienceClips = EXP.map(([item, t0, t1, key, extra]) => ({
 const PROJECT_META = {
   1: [2025.3, "creleri-site"], // Video Analysis Website (CReLeRI)
   11: [2022.8, "gossip"], // Gossip & Push-Sum Simulator
-  2: [2021.8, "mario"], // Mario Graphics Game
+  2: [2020.33, "mario", true], // Mario Graphics Game — May 2020
   3: [2021.25, "audio3d", true], // From Here to There: 3D Audio — April 2021
-  4: [2022.3, "twitter"], // Twitter Clone
-  5: [2022.1, "graphics"], // Advanced Graphics Scene
+  4: [2021.92, "twitter", true], // Twitter Clone — Dec 2021
+  5: [2021.83, "graphics", true], // Advanced Graphics Scene — Nov 2021
   6: [2020.25, "hermes", true], // Hermes Tracker — April 2020
-  7: [2021.6, "gamead"], // Game Advertisement Video
+  7: [2019.25, "gamead", true], // Game Advertisement Video — April 2019
   8: [2019.3, "villas"], // DR Villas Booking
-  9: [2021.1, "surgery"], // Surgery Tool Simulator
+  9: [2020.75, "surgery", true], // Surgery Tool Simulator — Oct 2020
   10: [2026.5, "portfolio"], // This Portfolio
 };
 
@@ -173,6 +173,38 @@ export const tracks = [
   { key: "research", label: "RESEARCH", clips: researchClips },
   { key: "projects", label: "PROJECTS", clips: projectClips },
 ];
+
+// Assign each clip a FIXED sub-row, packed once over the full span, so a clip
+// never jumps rows when you zoom (the timeline just renders visible clips in
+// their fixed rows). Point clips use an estimated label footprint; bars use
+// their real time extent.
+const ASSUMED_W = 1312;
+function clipFootprint(c) {
+  if (c.point) {
+    const px = c.label.length * 6.9 + 34;
+    const w = Math.min(0.13, px / ASSUMED_W);
+    const center = pos(c.t0);
+    return [center - w / 2, center + w / 2];
+  }
+  const labelW = Math.min(0.18, (c.label.length * 6.9 + 22) / ASSUMED_W);
+  return [pos(c.t0), Math.max(pos(c.t1), pos(c.t0) + labelW) + 0.012];
+}
+function packTrack(clips) {
+  const sorted = [...clips].sort((a, b) => a.t0 - b.t0 || a.t1 - b.t1);
+  const rowRight = [];
+  for (const c of sorted) {
+    const [leftX, rightX] = clipFootprint(c);
+    let row = rowRight.findIndex((end) => end <= leftX - 0.004);
+    if (row === -1) {
+      row = rowRight.length;
+      rowRight.push(rightX);
+    } else {
+      rowRight[row] = rightX;
+    }
+    c._row = row;
+  }
+}
+tracks.forEach((t) => packTrack(t.clips));
 
 export const allClips = tracks.flatMap((t) => t.clips);
 export const clipById = Object.fromEntries(allClips.map((c) => [c.id, c]));
