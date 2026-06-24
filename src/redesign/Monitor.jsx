@@ -6,6 +6,7 @@ import {
   FiCornerDownLeft,
   FiCheck,
   FiCopy,
+  FiPlay,
 } from "react-icons/fi";
 import { useStore, isPanel } from "./storeCore";
 import { clipById } from "./timelineData";
@@ -156,12 +157,50 @@ function Answer({ tokens, revealed, matched }) {
   );
 }
 
+// Extract an 11-char YouTube id from youtu.be / watch?v= / embed URLs.
+function ytId(url) {
+  if (!url) return null;
+  const m = url.match(/(?:youtu\.be\/|[?&]v=|\/embed\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+// Project preview: poster image; for YouTube projects, click to play inline.
+function ProjectMedia({ clip }) {
+  const [playing, setPlaying] = useState(false);
+  const vid = ytId(clip.url);
+  if (!clip.image && !vid) return null;
+  if (vid && playing) {
+    return (
+      <figure className="cv-figure playing">
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&rel=0&modestbranding=1`}
+          title={clip.title}
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowFullScreen
+        />
+      </figure>
+    );
+  }
+  return (
+    <figure className={`cv-figure${vid ? " has-video" : ""}`}>
+      {clip.image && <img src={clip.image} alt={clip.title} loading="lazy" />}
+      {vid && (
+        <button className="cv-playbtn" onClick={() => setPlaying(true)} aria-label={`Play ${clip.title} video`}>
+          <span className="cv-playcircle"><FiPlay size={22} /></span>
+        </button>
+      )}
+    </figure>
+  );
+}
+
 function LinkRow({ clip }) {
+  const projLabel =
+    clip.track === "projects" ? (ytId(clip.link) ? "Open on YouTube" : "Visit site") : "Read paper";
   return (
     <div className="cv-links">
       {clip.link && (
         <a className="cv-link" href={clip.link} target="_blank" rel="noreferrer">
-          {clip.track === "projects" ? "Watch demo" : "Read paper"} <FiArrowUpRight size={14} />
+          {projLabel} <FiArrowUpRight size={14} />
         </a>
       )}
       {clip.file && (
@@ -203,11 +242,7 @@ function ClipView({ clip }) {
         </div>
         <h2 className="cv-title">{clip.title}</h2>
         <div className="cv-projbody">
-          {clip.image && (
-            <figure className="cv-figure">
-              <img src={clip.image} alt={clip.title} loading="lazy" />
-            </figure>
-          )}
+          <ProjectMedia clip={clip} />
           <div className="cv-projtext">
             <p className="cv-body">{clip.sub}</p>
             <LinkRow clip={clip} />
