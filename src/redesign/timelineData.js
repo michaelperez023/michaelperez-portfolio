@@ -1,0 +1,205 @@
+// Derived timeline model for "THE CUT".
+// Maps every entry in content.js onto a single time axis (2018 -> 2026),
+// so the whole portfolio can be scrubbed like footage.
+//
+// NOTE: papers/jobs carry real years; project dates are best-effort
+// placements inferred from coursework/degree timeline and are easy to
+// adjust (see PROJECT_DATES below).
+
+import {
+  publications,
+  workingPapers,
+  preprints,
+  workingExperience,
+  projects,
+  honors,
+} from "../data/content";
+
+// --- time axis -------------------------------------------------------------
+export const START = 2018.55; // Aug 2018 — B.S. begins
+export const END = 2026.95; // Dec 2026 — includes the Nov HAI conference
+export const NOW = 2026.58; // Aug 2026 — graduation / "now seeking" OUT point
+
+export const pos = (t) => (t - START) / (END - START); // -> 0..1 fraction
+export const clamp = (v, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+// decimal year -> "YYYY · Mon" timecode label
+export function fmtTime(t) {
+  const year = Math.floor(t);
+  let m = Math.round((t - year) * 12);
+  if (m > 11) m = 11;
+  if (m < 0) m = 0;
+  return `${year} · ${MONTHS[m]}`;
+}
+
+const slug = (s) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 28);
+
+// short label for a clip block (keeps the timeline legible)
+const short = (title, n = 22) =>
+  title.length > n ? title.slice(0, n - 1).trimEnd() + "…" : title;
+
+// --- research track (publications + working papers + preprints) ------------
+// [contentItem, decimalYear, key, extra]  — `key` gives a stable clip id
+const RESEARCH = [
+  [publications[0], 2025.79, "creleri", { kind: "pub", lead: true, tag: "ACM MM · first author" }],
+  [publications[3], 2025.42, "muchex", { kind: "pub", tag: "IEEE CG&A" }],
+  [publications[2], 2026.25, "superres", { kind: "pub", tag: "MSS · with CoVar" }],
+  [workingPapers[0], 2026.5, "enkix", { kind: "working", tag: "in prep" }],
+  [workingPapers[1], 2026.33, "temporal", { kind: "working", tag: "in prep" }],
+  [publications[1], 2026.83, "hai", { kind: "pub", upcoming: true, tag: "HAI 2026 · accepted" }],
+  [preprints[0], 2023.06, "animal", { kind: "preprint", tag: "arXiv survey" }],
+  [preprints[1], 2023.5, "urdu", { kind: "preprint", tag: "NLP" }],
+  [preprints[2], 2022.8, "adam", { kind: "preprint", tag: "Adv. ML" }],
+  [preprints[3], 2022.4, "videogan", { kind: "preprint", tag: "ML" }],
+  [preprints[4], 2020.9, "kmeans", { kind: "preprint", tag: "Algorithms" }],
+  [publications[4], 2021.4, "rhino-eval", { kind: "pub", tag: "IJCARS" }],
+  [publications[5], 2021.2, "rhino-anthro", { kind: "pub", tag: "Aesthetic Surgery J." }],
+  [publications[6], 2020.62, "rhino-digit", { kind: "pub", tag: "IJCARS" }],
+];
+
+const researchClips = RESEARCH.map(([item, t, key, extra]) => ({
+  id: `r-${key}`,
+  track: "research",
+  t0: t,
+  t1: t,
+  point: true,
+  label: short(item.title),
+  title: item.title,
+  venue: item.venue || null,
+  authors: item.authors || null,
+  note: item.note || null,
+  year: item.year,
+  link: item.link || null,
+  file: item.file || null,
+  githubLink: item.githubLink || null,
+  ...extra,
+}));
+
+// --- experience track (real date ranges) -----------------------------------
+const EXP = [
+  [workingExperience[0], 2025.33, 2025.62, "covar", { tag: "Internship" }],
+  [workingExperience[1], 2023.0, NOW, "ruiz", { tag: "DARPA · Ruiz HCI Lab", hub: true }],
+  [workingExperience[2], 2020.6, NOW, "ta", { tag: "Teaching" }],
+  [workingExperience[3], 2020.6, 2023.0, "gilm", { tag: "NSF · GILM Lab" }],
+  [workingExperience[4], 2019.0, 2020.5, "rhino-ra", { tag: "Florida Poly" }],
+];
+
+const experienceClips = EXP.map(([item, t0, t1, key, extra]) => ({
+  id: `e-${key}`,
+  track: "experience",
+  t0,
+  t1,
+  point: false,
+  label: item.company.split(",")[0],
+  title: item.position,
+  company: item.company,
+  location: item.location,
+  details: item.details,
+  year: item.year,
+  ...extra,
+}));
+
+// --- projects track (approximate placements — easy to edit) ----------------
+// keyed by project id: [decimalYear, stableKey]
+const PROJECT_META = {
+  1: [2025.3, "creleri-site"], // Video Analysis Website (CReLeRI)
+  11: [2022.8, "gossip"], // Gossip & Push-Sum Simulator
+  2: [2021.8, "mario"], // Mario Graphics Game
+  3: [2021.4, "audio3d"], // 3D Audio Experience
+  4: [2022.3, "twitter"], // Twitter Clone
+  5: [2022.1, "graphics"], // Advanced Graphics Scene
+  6: [2019.8, "hermes"], // Hermes Tracker
+  7: [2021.6, "gamead"], // Game Advertisement Video
+  8: [2019.3, "villas"], // DR Villas Booking
+  9: [2021.1, "surgery"], // Surgery Tool Simulator
+  10: [2026.5, "portfolio"], // This Portfolio
+};
+
+const projectClips = projects.map((p) => {
+  const [t, key] = PROJECT_META[p.id] ?? [2022, slug(p.title)];
+  return {
+    id: `p-${key}`,
+    track: "projects",
+    t0: t,
+    t1: t,
+    point: true,
+    label: short(p.title, 18),
+    title: p.title,
+    sub: p.subtitle,
+    image: p.image,
+    url: p.url || null,
+    link: p.url || null,
+    githubLink: p.githubLink || null,
+    file: p.report || null,
+    tags: p.tags || [],
+    approx: true,
+  };
+});
+
+// --- education era bands (background context on the ruler) ------------------
+export const eras = [
+  { label: "B.S. · Florida Poly", t0: START, t1: 2020.4 },
+  { label: "M.S. · UF", t0: 2020.6, t1: 2023.4 },
+  { label: "Ph.D. · UF", t0: 2020.6, t1: NOW },
+];
+
+// --- honor markers (gold flags) --------------------------------------------
+export const honorMarks = [
+  { ...honors[0], t: 2022.5 }, // L3Harris fellowship
+  { ...honors[1], t: 2020.62 }, // Preeminence award
+  { ...honors[2], t: 2021.5 }, // GenerationNext
+];
+
+// --- assembled tracks ------------------------------------------------------
+export const tracks = [
+  { key: "research", label: "RESEARCH", clips: researchClips },
+  { key: "experience", label: "EXPERIENCE", clips: experienceClips },
+  { key: "projects", label: "PROJECTS", clips: projectClips },
+];
+
+export const allClips = tracks.flatMap((t) => t.clips);
+export const clipById = Object.fromEntries(allClips.map((c) => [c.id, c]));
+
+// center time of a clip (for nearest-clip selection + click-to-seek)
+export const clipCenter = (c) => (c.t0 + c.t1) / 2;
+
+// nearest clip to a given playhead time (spans that contain win ties)
+export function nearestClip(t) {
+  let best = null;
+  let bestD = Infinity;
+  for (const c of allClips) {
+    const contains = !c.point && t >= c.t0 && t <= c.t1;
+    const d = contains ? 0 : Math.abs(clipCenter(c) - t);
+    if (d < bestD) {
+      bestD = d;
+      best = c;
+    }
+  }
+  return best;
+}
+
+// clips ordered along time (for arrow-key stepping)
+export const clipsByTime = [...allClips].sort(
+  (a, b) => clipCenter(a) - clipCenter(b)
+);
+
+// --- section markers on the ruler (also the keyboard chapters 1..7) --------
+export const sections = [
+  { key: "intro", label: "Intro", t: NOW, panel: "intro", num: 1 },
+  { key: "about", label: "About", t: NOW, panel: "about", num: 2 },
+  { key: "research", label: "Research", t: 2025.79, clipId: researchClips[0].id, num: 3 },
+  { key: "experience", label: "Experience", t: 2024.2, clipId: experienceClips[1].id, num: 4 },
+  { key: "projects", label: "Projects", t: 2025.3, clipId: projectClips[0].id, num: 5 },
+  { key: "skills", label: "Skills", t: NOW, panel: "skills", num: 6 },
+  { key: "contact", label: "Contact", t: NOW, panel: "contact", num: 7 },
+];
+
+// year ticks for the ruler
+export const yearTicks = [];
+for (let y = 2019; y <= 2026; y++) yearTicks.push(y);
