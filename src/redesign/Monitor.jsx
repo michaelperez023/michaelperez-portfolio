@@ -16,7 +16,8 @@ import { allClips, clipById, barActiveAt, eras } from "./timelineData";
 import { examples } from "./retrieval";
 import { information, about, skillGroups, honors, education } from "../data/content";
 
-const COINCIDE_W = 0.5; // ~6 months: nearby work (a cluster of papers/projects) shows together
+const COINCIDE_W = 0.25; // ~3 months (a quarter): a tight cluster shows together, but
+// distinct work from another season doesn't bleed in.
 function clipsAtTime(t) {
   return allClips.filter((c) =>
     c.point ? Math.abs(c.t0 - t) <= COINCIDE_W : barActiveAt(c, t)
