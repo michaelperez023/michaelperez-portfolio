@@ -225,7 +225,8 @@ const CORPUS = allClips.map((c) => {
     c.company, c.position, (c.tags || []).join(" "), c.kind, c.track, c.year,
     AUGMENT[c.id] || "",
   ];
-  return { id: c.id, track: c.track, title: (c.title || "").toLowerCase(), blob: parts.filter(Boolean).join(" ").toLowerCase() };
+  const yr = parseInt(String(c.year || "").slice(0, 4), 10) || 0;
+  return { id: c.id, track: c.track, lead: !!c.lead, year: yr, title: (c.title || "").toLowerCase(), blob: parts.filter(Boolean).join(" ").toLowerCase() };
 });
 
 const STOP = new Set(
@@ -258,13 +259,17 @@ function generalSearch(q) {
   const ts = terms(q).map(stem);
   if (!ts.length) return [];
   const jobRelevant = JOB_HINTS.some((h) => q.includes(h));
-  const scored = CORPUS.map(({ id, track, title, blob }) => {
+  const scored = CORPUS.map(({ id, track, lead, year, title, blob }) => {
     let s = 0;
     for (const t of ts) {
       if (title.includes(t)) s += 4;
       else if (blob.includes(t)) s += 1.5;
     }
     if (track === "experience" && !jobRelevant) s *= 0.35; // don't surface jobs for topical queries
+    if (s > 0) {
+      if (lead) s *= 1.5; // surface first-author work
+      if (year >= 2024) s *= 1.25; // and recent work over older papers
+    }
     return { id, s };
   })
     .filter((x) => x.s > 0)

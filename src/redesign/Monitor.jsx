@@ -128,7 +128,7 @@ export default function Monitor() {
       </div>
       <div className="mon-examples">
         {examples.map((ex) => (
-          <button key={ex} className="mon-ex" onClick={() => { actions.setQuery(ex); actions.submitQuery(); }}>
+          <button key={ex} className="mon-ex" aria-label={`Ask my work: ${ex}`} onClick={() => { actions.setQuery(ex); actions.submitQuery(); }}>
             {ex}
           </button>
         ))}
@@ -167,6 +167,16 @@ export default function Monitor() {
 function Answer({ tokens, revealed, matched }) {
   const { actions } = useStore();
   let citeN = 0;
+  const done = revealed >= tokens.length;
+  // unique cited clips, in order of first appearance, for the sources footer
+  const cited = [];
+  const seen = new Set();
+  for (const t of tokens) {
+    if (t.type !== "text" && t.id && clipById[t.id] && !seen.has(t.id)) {
+      seen.add(t.id);
+      cited.push(clipById[t.id]);
+    }
+  }
   return (
     <div className="mon-answer">
       <p className="ans-body">
@@ -181,11 +191,21 @@ function Answer({ tokens, revealed, matched }) {
             </button>
           );
         })}
-        {revealed < tokens.length && <span className="ans-cursor" />}
+        {!done && <span className="ans-cursor" />}
       </p>
-      {revealed >= tokens.length && (
+      {done && cited.length > 0 && (
+        <div className="ans-sources">
+          <span className="ans-sources-label">{cited.length === 1 ? "Source" : "Sources"}</span>
+          {cited.map((clip, i) => (
+            <button key={clip.id} className="ans-source" onClick={() => actions.selectClip(clip.id)} title={clip.title}>
+              <sup>[{i + 1}]</sup> {clip.label}
+            </button>
+          ))}
+        </div>
+      )}
+      {done && (
         <p className="ans-foot">
-          {matched ? "retrieved from indexed work · click a citation to scrub there" : "no exact match — showing an overview"}
+          {matched ? "retrieved from indexed work · click a source to scrub there" : "no exact match — showing an overview"}
         </p>
       )}
     </div>
