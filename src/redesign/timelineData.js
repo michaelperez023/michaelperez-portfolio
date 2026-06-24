@@ -61,8 +61,8 @@ const RESEARCH = [
   [preprints[2], 2022.8, "adam", { kind: "preprint", tag: "Adv. ML", thumb: "/images/papers/adam.jpg" }],
   [preprints[3], 2022.4, "videogan", { kind: "preprint", tag: "ML", thumb: "/images/papers/videogan.jpg" }],
   [preprints[4], 2020.92, "kmeans", { kind: "preprint", tag: "Algorithms", thumb: "/images/papers/kmeans.jpg" }],
-  [publications[4], 2021.4, "rhino-eval", { kind: "pub", tag: "IJCARS" }],
-  [publications[5], 2021.2, "rhino-anthro", { kind: "pub", tag: "Aesthetic Surgery J." }],
+  [publications[4], 2021.42, "rhino-eval", { kind: "pub", tag: "IJCARS" }],
+  [publications[5], 2021.25, "rhino-anthro", { kind: "pub", tag: "Aesthetic Surgery J." }],
   [publications[6], 2020.83, "rhino-digit", { kind: "pub", tag: "IJCARS" }],
 ];
 
