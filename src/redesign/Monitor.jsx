@@ -235,7 +235,7 @@ function ClipView({ clip }) {
   }
   if (clip.track === "projects") {
     return (
-      <article className="cv">
+      <article className="cv cv-proj">
         <div className="cv-meta">
           <span className="cv-kind proj">PROJECT</span>
           {clip.tags?.map((t) => <span key={t} className="cv-tag">{t}</span>)}

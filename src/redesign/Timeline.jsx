@@ -10,12 +10,40 @@ import {
   eraRowCount,
   honorMarks,
   sections,
-  yearTicks,
   fmtTime,
 } from "./timelineData";
 
 const FULL = END - START;
 const ASSUMED_W = 1312; // assumed timeline width (px) for label-width estimates
+const CHROME = 168; // approx non-lane vertical overhead in the timeline panel
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+// Ruler ticks: years when zoomed out, months once the window is short enough.
+function rulerTicks(vs, ve, span) {
+  const ticks = [];
+  if (span > 3.2) {
+    for (let y = Math.ceil(vs - 0.001); y <= Math.floor(ve + 0.001); y++) {
+      ticks.push({ key: `y${y}`, t: y, label: `'${String(y).slice(2)}`, major: true });
+    }
+  } else {
+    const labelEvery = span <= 1.4 ? 1 : 3; // months between labels
+    for (let y = Math.floor(vs); y <= Math.ceil(ve); y++) {
+      for (let m = 0; m < 12; m++) {
+        const t = y + m / 12;
+        if (t < vs - 0.03 || t > ve + 0.03) continue;
+        const major = m === 0;
+        const labeled = major || m % labelEvery === 0;
+        ticks.push({
+          key: `${y}-${m}`,
+          t,
+          major,
+          label: labeled ? (major ? `${MONTHS[0]} '${String(y).slice(2)}` : MONTHS[m]) : "",
+        });
+      }
+    }
+  }
+  return ticks;
+}
 
 export default function Timeline() {
   const { state, actions } = useStore();
@@ -25,6 +53,7 @@ export default function Timeline() {
   // visible time window (zoom + pan)
   const viewSpan = FULL / state.zoom;
   const viewStart = state.viewStart;
+  const viewEnd = viewStart + viewSpan;
   const vpos = (t) => (t - viewStart) / viewSpan; // -> 0..1 across the viewport
 
   const timeFromX = (clientX) => {
@@ -33,9 +62,17 @@ export default function Timeline() {
     return viewStart + f * viewSpan;
   };
 
+  const capture = (e) => {
+    try {
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+    } catch {
+      /* pointer already released */
+    }
+  };
+
   const onPointerDown = (e) => {
     dragging.current = true;
-    e.currentTarget.setPointerCapture?.(e.pointerId);
+    capture(e);
     actions.seek(timeFromX(e.clientX));
   };
   const onPointerMove = (e) => {
@@ -96,11 +133,30 @@ export default function Timeline() {
     return { byRow, rows: Math.max(1, byRow.length) };
   };
 
+  const layouts = tracks.map((t) => ({ track: t, ...layoutTrack(t.clips) }));
+  const sumRows = layouts.reduce((a, l) => a + l.rows, 0);
+  const bandH = (state.tlHeight - CHROME) / sumRows;
+  const compact = bandH < 17; // bands too short for legible labels -> dots
+
   const renderClip = (c) => {
-    const left = vpos(c.t0) * 100;
     const isActive = state.activeId === c.id;
     const isLit = lit.has(c.id);
+    const showLabel = !compact || isActive || isLit;
     if (c.point) {
+      const left = vpos(c.t0) * 100;
+      if (!showLabel) {
+        return (
+          <button
+            key={c.id}
+            className={`tl-dot k-${c.kind || "project"}${isActive ? " active" : ""}${isLit ? " lit" : ""}${c.upcoming ? " upcoming" : ""}`}
+            style={{ left: `${left}%` }}
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={() => actions.selectClip(c.id)}
+            title={c.title}
+            aria-label={c.title}
+          />
+        );
+      }
       const frac = left / 100;
       const anchor = frac > 0.82 ? " edge-r" : frac < 0.06 ? " edge-l" : "";
       return (
@@ -128,7 +184,7 @@ export default function Timeline() {
         onClick={() => actions.selectClip(c.id)}
         title={`${c.title} — ${c.company}`}
       >
-        <span className="tl-bar-label">{c.label}</span>
+        {showLabel && <span className="tl-bar-label">{c.label}</span>}
       </button>
     );
   };
@@ -137,11 +193,15 @@ export default function Timeline() {
 
   return (
     <div className="tl">
-      {/* ruler: years + section flags + honors + NOW */}
+      {/* ruler: year/month ticks + section flags + honors + NOW */}
       <div className="tl-ruler">
-        {yearTicks.filter((y) => inView(y)).map((y) => (
-          <span key={y} className="tl-year" style={{ left: `${vpos(y) * 100}%` }}>
-            {String(y).slice(2)}
+        {rulerTicks(viewStart, viewEnd, viewSpan).map((tk) => (
+          <span
+            key={tk.key}
+            className={`tl-tick${tk.major ? " maj" : ""}${tk.label ? "" : " nolabel"}`}
+            style={{ left: `${vpos(tk.t) * 100}%` }}
+          >
+            {tk.label}
           </span>
         ))}
         {honorMarks.filter((h) => inView(h.t)).map((h) => (
@@ -203,25 +263,22 @@ export default function Timeline() {
             })}
         </div>
 
-        {tracks.map((track) => {
-          const { byRow, rows } = layoutTrack(track.clips);
-          return (
-            <div
-              className={`tl-track tl-track-${track.key}`}
-              key={track.key}
-              style={{ flexGrow: rows }}
-            >
-              <span className="tl-track-label">{track.label}</span>
-              <div className="tl-lane">
-                {byRow.map((clips, ri) => (
-                  <div className="tl-sublane" key={ri}>
-                    {clips.map((c) => renderClip(c))}
-                  </div>
-                ))}
-              </div>
+        {layouts.map(({ track, byRow, rows }) => (
+          <div
+            className={`tl-track tl-track-${track.key}`}
+            key={track.key}
+            style={{ flexGrow: rows }}
+          >
+            <span className="tl-track-label">{track.label}</span>
+            <div className="tl-lane">
+              {byRow.map((clips, ri) => (
+                <div className="tl-sublane" key={ri}>
+                  {clips.map((c) => renderClip(c))}
+                </div>
+              ))}
             </div>
-          );
-        })}
+          </div>
+        ))}
 
         {/* playhead */}
         <div className="tl-playhead" style={{ left: `${phPct}%` }} aria-hidden="true">
@@ -241,7 +298,7 @@ export default function Timeline() {
           onPointerDown={(e) => {
             e.stopPropagation();
             dragging.current = true;
-            e.currentTarget.setPointerCapture?.(e.pointerId);
+            capture(e);
           }}
           onPointerMove={(e) => dragging.current && actions.seek(timeFromX(e.clientX))}
           onPointerUp={endDrag}

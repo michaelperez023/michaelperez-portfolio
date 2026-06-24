@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useStore } from "./storeCore";
 import Monitor from "./Monitor";
 import Timeline from "./Timeline";
@@ -12,19 +12,22 @@ export default function TheCut() {
   stateRef.current = state;
   const timelineWrapRef = useRef(null);
 
-  // resizable timeline height (drag the top handle)
-  const [tlHeight, setTlHeight] = useState(300);
+  // resizable timeline height (drag the top handle) — height lives in the store
   const resizing = useRef(null);
   const onResizeDown = (e) => {
-    resizing.current = { startY: e.clientY, startH: tlHeight };
-    e.currentTarget.setPointerCapture?.(e.pointerId);
+    resizing.current = { startY: e.clientY, startH: stateRef.current.tlHeight };
+    try {
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+    } catch {
+      /* pointer already released */
+    }
   };
   const onResizeMove = (e) => {
     const r = resizing.current;
     if (!r) return;
     const max = Math.round(window.innerHeight * 0.62);
     const next = Math.min(max, Math.max(168, r.startH + (r.startY - e.clientY)));
-    setTlHeight(next);
+    actions.setTlHeight(next);
   };
   const onResizeUp = () => {
     resizing.current = null;
@@ -87,9 +90,18 @@ export default function TheCut() {
     const onWheel = (e) => {
       e.preventDefault();
       if (e.ctrlKey || e.metaKey) {
-        // pinch / ctrl+wheel => temporal zoom
+        // pinch / ctrl+wheel => temporal zoom toward the cursor
         const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
-        actions.setZoom(stateRef.current.zoom * factor);
+        const area = node.querySelector(".tl-area");
+        if (area) {
+          const rect = area.getBoundingClientRect();
+          const frac = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+          const span = (END - START) / stateRef.current.zoom;
+          const focusTime = stateRef.current.viewStart + frac * span;
+          actions.setZoomAt(stateRef.current.zoom * factor, focusTime, frac);
+        } else {
+          actions.setZoom(stateRef.current.zoom * factor);
+        }
         return;
       }
       const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
@@ -126,7 +138,7 @@ export default function TheCut() {
   return (
     <div
       className="cut-root"
-      style={{ gridTemplateRows: `auto minmax(0, 1fr) ${tlHeight}px auto` }}
+      style={{ gridTemplateRows: `auto minmax(0, 1fr) ${state.tlHeight}px auto` }}
     >
       <header className="cut-topbar">
         <span className="cut-brand">MICHAEL&nbsp;PÉREZ</span>
