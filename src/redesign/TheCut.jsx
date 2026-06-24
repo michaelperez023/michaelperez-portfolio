@@ -207,11 +207,12 @@ export default function TheCut() {
     if (!state.playing) return;
     let raf;
     let last = null;
-    const speed = (END - START) / 15000; // full span in ~15s
     const frame = (ts) => {
       if (last == null) last = ts;
       const dt = ts - last;
       last = ts;
+      // 1x ≈ full span in 20s; speed read live so the chip applies mid-play
+      const speed = ((END - START) / 20000) * stateRef.current.playSpeed;
       const next = stateRef.current.playhead + speed * dt;
       if (next >= END) {
         actions.tick(END);

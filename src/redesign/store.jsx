@@ -25,6 +25,7 @@ export function StoreProvider({ children }) {
         dispatch({ type: "SET_ZOOM_AT", zoom, focusTime, focusFrac }),
       setTlHeight: (value) => dispatch({ type: "SET_TL_HEIGHT", value }),
       toggleTlCollapse: () => dispatch({ type: "TOGGLE_TL_COLLAPSE" }),
+      cyclePlaySpeed: () => dispatch({ type: "CYCLE_PLAY_SPEED" }),
     }),
     []
   );

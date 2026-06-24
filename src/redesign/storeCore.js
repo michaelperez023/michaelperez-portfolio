@@ -46,6 +46,7 @@ export const initial = {
   viewStart: START, // left edge of the visible time window
   tlHeight: 300, // timeline panel height (px), user-resizable
   tlCollapsed: false, // hide the timeline for a full-screen content view
+  playSpeed: 1, // playback speed multiplier (1x ≈ full career in ~20s)
   tagFilter: null, // {type,value} — when set, show all clips with this tag (ignores time)
 };
 
@@ -154,6 +155,11 @@ export function reducer(state, action) {
       return { ...state, tlHeight: action.value };
     case "TOGGLE_TL_COLLAPSE":
       return { ...state, tlCollapsed: !state.tlCollapsed };
+    case "CYCLE_PLAY_SPEED": {
+      const SPEEDS = [1, 1.5, 2, 0.5];
+      const i = SPEEDS.indexOf(state.playSpeed);
+      return { ...state, playSpeed: SPEEDS[(i + 1) % SPEEDS.length] };
+    }
     case "FOCUS_CLIP":
       // highlight a clip (timeline + card) without moving the playhead or
       // changing which clips are shown — used by clicking a coincident card.
