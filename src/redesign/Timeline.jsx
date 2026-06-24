@@ -4,6 +4,7 @@ import {
   START,
   END,
   NOW,
+  pos,
   clamp,
   tracks,
   eras,
@@ -186,8 +187,9 @@ export default function Timeline() {
           </button>
         );
       }
-      const frac = left / 100;
-      const anchor = frac > 0.82 ? " edge-r" : frac < 0.06 ? " edge-l" : "";
+      // anchor by the clip's FIXED full-span position so it never flips while panning
+      const fullFrac = pos(c.t0);
+      const anchor = fullFrac > 0.9 ? " edge-r" : fullFrac < 0.035 ? " edge-l" : "";
       return (
         <button
           key={c.id}

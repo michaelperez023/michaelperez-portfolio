@@ -54,12 +54,12 @@ const RESEARCH = [
   [publications[3], 2025.42, "muchex", { kind: "pub", tag: "IEEE CG&A" }],
   [publications[2], 2026.25, "superres", { kind: "pub", tag: "MSS · with CoVar" }],
   [workingPapers[0], 2026.5, "enkix", { kind: "working", tag: "in prep" }],
-  [workingPapers[1], 2026.33, "temporal", { kind: "working", tag: "in prep" }],
+  [workingPapers[1], NOW, "temporal", { kind: "working", tag: "in prep" }],
   [publications[1], 2026.83, "hai", { kind: "pub", upcoming: true, tag: "HAI 2026 · accepted" }],
   [preprints[0], 2023.06, "animal", { kind: "preprint", tag: "arXiv survey", thumb: "/images/papers/animal.jpg", pdf: "/files/Animal_Behavior_Survey.pdf" }],
-  [preprints[1], 2023.5, "urdu", { kind: "preprint", tag: "NLP", thumb: "/images/papers/urdu.jpg" }],
-  [preprints[2], 2022.8, "adam", { kind: "preprint", tag: "Adv. ML", thumb: "/images/papers/adam.jpg" }],
-  [preprints[3], 2022.4, "videogan", { kind: "preprint", tag: "ML", thumb: "/images/papers/videogan.jpg" }],
+  [preprints[1], 2023.25, "urdu", { kind: "preprint", tag: "NLP", thumb: "/images/papers/urdu.jpg" }],
+  [preprints[2], 2022.92, "adam", { kind: "preprint", tag: "Adv. ML", thumb: "/images/papers/adam.jpg" }],
+  [preprints[3], 2022.25, "videogan", { kind: "preprint", tag: "ML", thumb: "/images/papers/videogan.jpg" }],
   [preprints[4], 2020.92, "kmeans", { kind: "preprint", tag: "Algorithms", thumb: "/images/papers/kmeans.jpg" }],
   [publications[4], 2021.42, "rhino-eval", { kind: "pub", tag: "IJCARS" }],
   [publications[5], 2021.25, "rhino-anthro", { kind: "pub", tag: "Aesthetic Surgery J." }],
@@ -113,7 +113,7 @@ const experienceClips = EXP.map(([item, t0, t1, key, extra]) => ({
 // keyed by project id: [decimalYear, stableKey]
 const PROJECT_META = {
   1: [2025.3, "creleri-site"], // Video Analysis Website (CReLeRI)
-  11: [2022.8, "gossip"], // Gossip & Push-Sum Simulator
+  11: [2021.75, "gossip", true], // Gossip & Push-Sum Simulator — Oct 2021
   2: [2020.33, "mario", true], // Mario Graphics Game — May 2020
   3: [2021.25, "audio3d", true], // From Here to There: 3D Audio — April 2021
   4: [2021.92, "twitter", true], // Twitter Clone — Dec 2021
