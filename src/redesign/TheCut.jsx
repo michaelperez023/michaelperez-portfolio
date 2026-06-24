@@ -13,7 +13,7 @@ export default function TheCut() {
   const timelineWrapRef = useRef(null);
 
   // resizable timeline height (drag the top handle)
-  const [tlHeight, setTlHeight] = useState(224);
+  const [tlHeight, setTlHeight] = useState(300);
   const resizing = useRef(null);
   const onResizeDown = (e) => {
     resizing.current = { startY: e.clientY, startH: tlHeight };

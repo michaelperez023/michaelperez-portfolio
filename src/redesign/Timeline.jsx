@@ -51,6 +51,43 @@ export default function Timeline() {
 
   const phPct = pos(state.playhead) * 100;
   const lit = new Set(state.attended);
+  const aboutSection = sections.find((s) => s.panel === "about");
+
+  const renderClip = (c) => {
+    const left = pos(c.t0) * 100;
+    const isActive = state.activeId === c.id;
+    const isLit = lit.has(c.id);
+    if (c.point) {
+      const frac = left / 100;
+      const anchor = frac > 0.82 ? " edge-r" : frac < 0.06 ? " edge-l" : "";
+      return (
+        <button
+          key={c.id}
+          className={`tl-clip${isActive ? " active" : ""}${isLit ? " lit" : ""} k-${c.kind || "project"}${c.upcoming ? " upcoming" : ""}${anchor}`}
+          style={{ left: `${left}%` }}
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={() => actions.selectClip(c.id)}
+          title={c.title}
+        >
+          <span className="tl-clip-dot" />
+          <span className="tl-clip-label">{c.label}</span>
+        </button>
+      );
+    }
+    const width = (pos(c.t1) - pos(c.t0)) * 100;
+    return (
+      <button
+        key={c.id}
+        className={`tl-bar${isActive ? " active" : ""}${isLit ? " lit" : ""}${c.hub ? " hub" : ""}`}
+        style={{ left: `${left}%`, width: `${width}%` }}
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={() => actions.selectClip(c.id)}
+        title={`${c.title} — ${c.company}`}
+      >
+        <span className="tl-bar-label">{c.label}</span>
+      </button>
+    );
+  };
 
   return (
     <div className="tl">
@@ -62,12 +99,13 @@ export default function Timeline() {
           </span>
         ))}
         {honorMarks.map((h) => (
-          <span
+          <button
             key={h.id}
             className="tl-honor"
             style={{ left: `${pos(h.t) * 100}%` }}
-            title={`★ ${h.title}`}
-            aria-hidden="true"
+            title={`★ Honor — ${h.title} (${h.year})`}
+            aria-label={`Honor: ${h.title}`}
+            onClick={() => actions.gotoSection(aboutSection)}
           />
         ))}
         <span className="tl-now-flag" style={{ left: `${pos(NOW) * 100}%` }}>
@@ -116,44 +154,18 @@ export default function Timeline() {
         </div>
 
         {tracks.map((track) => (
-          <div className={`tl-track tl-track-${track.key}`} key={track.key}>
+          <div
+            className={`tl-track tl-track-${track.key}`}
+            key={track.key}
+            style={{ flexGrow: track.rows }}
+          >
             <span className="tl-track-label">{track.label}</span>
             <div className="tl-lane">
-              {track.clips.map((c) => {
-                const left = pos(c.t0) * 100;
-                const isActive = state.activeId === c.id;
-                const isLit = lit.has(c.id);
-                if (c.point) {
-                  const frac = left / 100;
-                  const anchor = frac > 0.82 ? " edge-r" : frac < 0.06 ? " edge-l" : "";
-                  return (
-                    <button
-                      key={c.id}
-                      className={`tl-clip${isActive ? " active" : ""}${isLit ? " lit" : ""} k-${c.kind || "project"}${c.upcoming ? " upcoming" : ""}${anchor}`}
-                      style={{ left: `${left}%` }}
-                      onPointerDown={(e) => e.stopPropagation()}
-                      onClick={() => actions.selectClip(c.id)}
-                      title={c.title}
-                    >
-                      <span className="tl-clip-dot" />
-                      <span className="tl-clip-label">{c.label}</span>
-                    </button>
-                  );
-                }
-                const width = (pos(c.t1) - pos(c.t0)) * 100;
-                return (
-                  <button
-                    key={c.id}
-                    className={`tl-bar${isActive ? " active" : ""}${isLit ? " lit" : ""}${c.hub ? " hub" : ""}`}
-                    style={{ left: `${left}%`, width: `${width}%` }}
-                    onPointerDown={(e) => e.stopPropagation()}
-                    onClick={() => actions.selectClip(c.id)}
-                    title={`${c.title} — ${c.company}`}
-                  >
-                    <span className="tl-bar-label">{c.label}</span>
-                  </button>
-                );
-              })}
+              {Array.from({ length: track.rows }).map((_, ri) => (
+                <div className="tl-sublane" key={ri}>
+                  {track.clips.filter((c) => c._row === ri).map((c) => renderClip(c))}
+                </div>
+              ))}
             </div>
           </div>
         ))}

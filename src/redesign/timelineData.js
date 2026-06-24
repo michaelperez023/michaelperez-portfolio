@@ -177,6 +177,42 @@ export const tracks = [
   { key: "projects", label: "PROJECTS", clips: projectClips },
 ];
 
+// Greedy interval packing: assign each clip a sub-row (_row) so clips that
+// would overlap horizontally stack vertically instead. Point clips use an
+// estimated footprint (label width); bars use their real time extent.
+const ASSUMED_W = 1312; // assumed timeline content width (px) for label-width estimates
+// A clip's horizontal footprint as [leftX, rightX] in pos fractions.
+function clipFootprint(c) {
+  if (c.point) {
+    const px = c.label.length * 6.9 + 34; // text + dot + padding
+    const w = Math.min(0.13, px / ASSUMED_W);
+    const center = pos(c.t0); // point clips render centered on their time
+    return [center - w / 2, center + w / 2];
+  }
+  // bar: real time extent, but at least as wide as its label
+  const labelW = Math.min(0.18, (c.label.length * 6.9 + 22) / ASSUMED_W);
+  return [pos(c.t0), Math.max(pos(c.t1), pos(c.t0) + labelW) + 0.012];
+}
+function packTrack(clips) {
+  const sorted = [...clips].sort((a, b) => a.t0 - b.t0 || a.t1 - b.t1);
+  const rowRight = []; // right edge (pos fraction) currently occupied per row
+  for (const c of sorted) {
+    const [leftX, rightX] = clipFootprint(c);
+    let row = rowRight.findIndex((end) => end <= leftX - 0.004);
+    if (row === -1) {
+      row = rowRight.length;
+      rowRight.push(rightX);
+    } else {
+      rowRight[row] = rightX;
+    }
+    c._row = row;
+  }
+  return Math.max(1, rowRight.length);
+}
+tracks.forEach((t) => {
+  t.rows = packTrack(t.clips);
+});
+
 export const allClips = tracks.flatMap((t) => t.clips);
 export const clipById = Object.fromEntries(allClips.map((c) => [c.id, c]));
 
