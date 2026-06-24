@@ -20,6 +20,15 @@ const clampViewStart = (vs, zoom) => {
   const span = FULL / zoom;
   return Math.min(END - span, Math.max(START, vs));
 };
+// Clamp the view window so the playhead stays inside it (pinned to the edge
+// if a zoom would otherwise push it out of view).
+function keepPlayheadInView(vs, zoom, playhead) {
+  const span = FULL / zoom;
+  if (playhead < vs) vs = playhead;
+  else if (playhead > vs + span) vs = playhead - span;
+  return clampViewStart(vs, zoom);
+}
+
 // Pan the view window just enough to keep the playhead visible (with margin).
 function panToShow(viewStart, zoom, playhead) {
   if (zoom <= 1) return START;
@@ -43,6 +52,7 @@ export const initial = {
   listView: false, // accessible linear fallback
   zoom: 1, // temporal zoom (1 = whole span)
   viewStart: START, // left edge of the visible time window
+  tlHeight: 300, // timeline panel height (px), user-resizable
 };
 
 // Build a state update that sets the playhead and pans the window to it.
@@ -134,6 +144,16 @@ export function reducer(state, action) {
       const vs = clampViewStart(state.playhead - span / 2, zoom);
       return { ...state, zoom, viewStart: zoom === 1 ? START : vs };
     }
+    case "SET_ZOOM_AT": {
+      // zoom toward the cursor, but never push the playhead out of view
+      const zoom = Math.min(MAX_ZOOM, Math.max(1, action.zoom));
+      const span = FULL / zoom;
+      let vs = clampViewStart(action.focusTime - action.focusFrac * span, zoom);
+      vs = keepPlayheadInView(vs, zoom, state.playhead);
+      return { ...state, zoom, viewStart: zoom === 1 ? START : vs };
+    }
+    case "SET_TL_HEIGHT":
+      return { ...state, tlHeight: action.value };
     case "PLAY":
       return { ...state, playing: true, mode: "scrub", answer: null, attended: [] };
     case "PAUSE":

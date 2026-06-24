@@ -20,6 +20,9 @@ export function StoreProvider({ children }) {
       escape: () => dispatch({ type: "ESCAPE" }),
       toggleListView: () => dispatch({ type: "TOGGLE_LISTVIEW" }),
       setZoom: (zoom) => dispatch({ type: "SET_ZOOM", zoom }),
+      setZoomAt: (zoom, focusTime, focusFrac) =>
+        dispatch({ type: "SET_ZOOM_AT", zoom, focusTime, focusFrac }),
+      setTlHeight: (value) => dispatch({ type: "SET_TL_HEIGHT", value }),
     }),
     []
   );
