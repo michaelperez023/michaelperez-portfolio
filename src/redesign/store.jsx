@@ -19,6 +19,7 @@ export function StoreProvider({ children }) {
       attend: (id) => dispatch({ type: "ATTEND", id }),
       escape: () => dispatch({ type: "ESCAPE" }),
       toggleListView: () => dispatch({ type: "TOGGLE_LISTVIEW" }),
+      setZoom: (zoom) => dispatch({ type: "SET_ZOOM", zoom }),
     }),
     []
   );

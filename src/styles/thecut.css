@@ -346,6 +346,7 @@ kbd {
 
 /* ---------- timeline ---------- */
 .cut-timeline {
+  position: relative;
   border-top: 1px solid var(--line);
   background: linear-gradient(180deg, var(--bg2), var(--bg));
   padding: 0 1.4rem 0.7rem;
@@ -355,6 +356,33 @@ kbd {
   display: flex;
   flex-direction: column;
 }
+/* zoom controls (top-right of the timeline) */
+.tl-zoom {
+  position: absolute;
+  top: 3px;
+  right: 1.4rem;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.tl-zoom button {
+  min-width: 24px;
+  height: 22px;
+  padding: 0 0.3rem;
+  display: grid;
+  place-items: center;
+  background: var(--panel2);
+  border: 1px solid var(--line2);
+  color: var(--dim);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: var(--mono);
+}
+.tl-zoom button:hover:not(:disabled) { color: var(--signal); border-color: var(--signal); }
+.tl-zoom button:disabled { opacity: 0.4; cursor: default; }
+.tl-zoom-val { font-size: 0.72rem !important; min-width: 38px !important; color: var(--fg) !important; }
 /* drag handle to resize the timeline taller/shorter */
 .tl-resize {
   flex: 0 0 auto;

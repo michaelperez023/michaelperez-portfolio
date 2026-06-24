@@ -4,7 +4,6 @@ import {
   START,
   END,
   NOW,
-  pos,
   clamp,
   tracks,
   eras,
@@ -15,15 +14,23 @@ import {
   fmtTime,
 } from "./timelineData";
 
+const FULL = END - START;
+const ASSUMED_W = 1312; // assumed timeline width (px) for label-width estimates
+
 export default function Timeline() {
   const { state, actions } = useStore();
   const areaRef = useRef(null);
   const dragging = useRef(false);
 
+  // visible time window (zoom + pan)
+  const viewSpan = FULL / state.zoom;
+  const viewStart = state.viewStart;
+  const vpos = (t) => (t - viewStart) / viewSpan; // -> 0..1 across the viewport
+
   const timeFromX = (clientX) => {
     const rect = areaRef.current.getBoundingClientRect();
     const f = clamp((clientX - rect.left) / rect.width, 0, 1);
-    return START + f * (END - START);
+    return viewStart + f * viewSpan;
   };
 
   const onPointerDown = (e) => {
@@ -39,7 +46,7 @@ export default function Timeline() {
   };
 
   const onHandleKey = (e) => {
-    const STEP = (END - START) / 96;
+    const STEP = viewSpan / 96;
     if (e.key === "ArrowLeft") {
       e.preventDefault();
       actions.seek(state.playhead - STEP);
@@ -49,12 +56,48 @@ export default function Timeline() {
     }
   };
 
-  const phPct = pos(state.playhead) * 100;
+  const phPct = vpos(state.playhead) * 100;
   const lit = new Set(state.attended);
   const aboutSection = sections.find((s) => s.panel === "about");
 
+  // A clip's horizontal footprint [leftX, rightX] in viewport fractions.
+  const footprint = (c) => {
+    if (c.point) {
+      const px = c.label.length * 6.9 + 34;
+      const w = Math.min(0.13, px / ASSUMED_W);
+      const center = vpos(c.t0);
+      return [center - w / 2, center + w / 2];
+    }
+    const labelW = Math.min(0.18, (c.label.length * 6.9 + 22) / ASSUMED_W);
+    return [vpos(c.t0), Math.max(vpos(c.t1), vpos(c.t0) + labelW) + 0.012];
+  };
+
+  // Pack the visible clips of a track into sub-rows (greedy, no overlap).
+  const layoutTrack = (clips) => {
+    const visible = clips.filter((c) => {
+      const [l, r] = footprint(c);
+      return r >= -0.15 && l <= 1.15;
+    });
+    const sorted = [...visible].sort((a, b) => a.t0 - b.t0 || a.t1 - b.t1);
+    const rowRight = [];
+    const byRow = [];
+    for (const c of sorted) {
+      const [leftX, rightX] = footprint(c);
+      let row = rowRight.findIndex((end) => end <= leftX - 0.004);
+      if (row === -1) {
+        row = rowRight.length;
+        rowRight.push(rightX);
+        byRow.push([]);
+      } else {
+        rowRight[row] = rightX;
+      }
+      byRow[row].push(c);
+    }
+    return { byRow, rows: Math.max(1, byRow.length) };
+  };
+
   const renderClip = (c) => {
-    const left = pos(c.t0) * 100;
+    const left = vpos(c.t0) * 100;
     const isActive = state.activeId === c.id;
     const isLit = lit.has(c.id);
     if (c.point) {
@@ -74,12 +117,13 @@ export default function Timeline() {
         </button>
       );
     }
-    const width = (pos(c.t1) - pos(c.t0)) * 100;
+    const leftPct = Math.max(0, vpos(c.t0) * 100);
+    const rightPct = Math.min(100, vpos(c.t1) * 100);
     return (
       <button
         key={c.id}
         className={`tl-bar${isActive ? " active" : ""}${isLit ? " lit" : ""}${c.hub ? " hub" : ""}`}
-        style={{ left: `${left}%`, width: `${width}%` }}
+        style={{ left: `${leftPct}%`, width: `${Math.max(1, rightPct - leftPct)}%` }}
         onPointerDown={(e) => e.stopPropagation()}
         onClick={() => actions.selectClip(c.id)}
         title={`${c.title} — ${c.company}`}
@@ -89,34 +133,38 @@ export default function Timeline() {
     );
   };
 
+  const inView = (t, m = 0.02) => vpos(t) >= -m && vpos(t) <= 1 + m;
+
   return (
     <div className="tl">
       {/* ruler: years + section flags + honors + NOW */}
       <div className="tl-ruler">
-        {yearTicks.map((y) => (
-          <span key={y} className="tl-year" style={{ left: `${pos(y) * 100}%` }}>
+        {yearTicks.filter((y) => inView(y)).map((y) => (
+          <span key={y} className="tl-year" style={{ left: `${vpos(y) * 100}%` }}>
             {String(y).slice(2)}
           </span>
         ))}
-        {honorMarks.map((h) => (
+        {honorMarks.filter((h) => inView(h.t)).map((h) => (
           <button
             key={h.id}
             className="tl-honor"
-            style={{ left: `${pos(h.t) * 100}%` }}
+            style={{ left: `${vpos(h.t) * 100}%` }}
             title={`★ Honor — ${h.title} (${h.year})`}
             aria-label={`Honor: ${h.title}`}
             onClick={() => actions.gotoSection(aboutSection)}
           />
         ))}
-        <span className="tl-now-flag" style={{ left: `${pos(NOW) * 100}%` }}>
-          NOW
-        </span>
+        {inView(NOW) && (
+          <span className="tl-now-flag" style={{ left: `${vpos(NOW) * 100}%` }}>
+            NOW
+          </span>
+        )}
         <div className="tl-sections">
-          {sections.map((s) => (
+          {sections.filter((s) => inView(s.t)).map((s) => (
             <button
               key={s.key}
               className={`tl-flag${state.activeId === (s.panel || s.clipId) ? " on" : ""}`}
-              style={{ left: `${pos(s.t) * 100}%` }}
+              style={{ left: `${vpos(s.t) * 100}%` }}
               onClick={() => actions.gotoSection(s)}
               title={`${s.num} · ${s.label}`}
             >
@@ -138,37 +186,42 @@ export default function Timeline() {
       >
         {/* education era bands (context) */}
         <div className="tl-eras" aria-hidden="true" style={{ height: `${eraRowCount * 16}px` }}>
-          {eras.map((era) => (
-            <span
-              key={era.label}
-              className="tl-era"
-              style={{
-                left: `${pos(era.t0) * 100}%`,
-                width: `${(pos(era.t1) - pos(era.t0)) * 100}%`,
-                top: `${era.row * 16}px`,
-              }}
-            >
-              {era.label}
-            </span>
-          ))}
+          {eras
+            .filter((era) => vpos(era.t1) >= 0 && vpos(era.t0) <= 1)
+            .map((era) => {
+              const l = Math.max(0, vpos(era.t0) * 100);
+              const r = Math.min(100, vpos(era.t1) * 100);
+              return (
+                <span
+                  key={era.label}
+                  className="tl-era"
+                  style={{ left: `${l}%`, width: `${r - l}%`, top: `${era.row * 16}px` }}
+                >
+                  {era.label}
+                </span>
+              );
+            })}
         </div>
 
-        {tracks.map((track) => (
-          <div
-            className={`tl-track tl-track-${track.key}`}
-            key={track.key}
-            style={{ flexGrow: track.rows }}
-          >
-            <span className="tl-track-label">{track.label}</span>
-            <div className="tl-lane">
-              {Array.from({ length: track.rows }).map((_, ri) => (
-                <div className="tl-sublane" key={ri}>
-                  {track.clips.filter((c) => c._row === ri).map((c) => renderClip(c))}
-                </div>
-              ))}
+        {tracks.map((track) => {
+          const { byRow, rows } = layoutTrack(track.clips);
+          return (
+            <div
+              className={`tl-track tl-track-${track.key}`}
+              key={track.key}
+              style={{ flexGrow: rows }}
+            >
+              <span className="tl-track-label">{track.label}</span>
+              <div className="tl-lane">
+                {byRow.map((clips, ri) => (
+                  <div className="tl-sublane" key={ri}>
+                    {clips.map((c) => renderClip(c))}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {/* playhead */}
         <div className="tl-playhead" style={{ left: `${phPct}%` }} aria-hidden="true">
