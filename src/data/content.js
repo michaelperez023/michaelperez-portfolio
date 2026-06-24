@@ -188,10 +188,10 @@ export const workingExperience = [
     id: 2,
     year: "2023 – Present",
     position: "Graduate Research Assistant",
-    company: "Ruiz HCI Lab, CISE Department, University of Florida",
+    company: "Ruiz HCI Lab & Data Science Research Lab, University of Florida",
     location: "Gainesville, FL",
     details:
-      "Develop and evaluate ML models for video understanding, including action recognition, segmentation, and retrieval, and build scalable pipelines for video processing, training, and inference. Across two DARPA-funded programs: CReLeRI, an explainable long-video analysis system (ACM Multimedia 2025), and ENKIx, a real-time AR task-guidance system that reached 34% F1 in a multi-team DARPA evaluation. Designed computer-vision systems for AR, web, and neuroscience applications.",
+      "A single research-assistant role with membership in two labs — the Ruiz HCI Lab and the Data Science Research Lab. Develop and evaluate ML models for video understanding, including action recognition, segmentation, and retrieval, and build scalable pipelines for video processing, training, and inference. Across two DARPA-funded programs: CReLeRI, an explainable long-video analysis system (ACM Multimedia 2025), and ENKIx, a real-time AR task-guidance system that reached 34% F1 in a multi-team DARPA evaluation. Designed computer-vision systems for AR, web, and neuroscience applications.",
   },
   {
     id: 3,

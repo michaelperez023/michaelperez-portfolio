@@ -34,7 +34,8 @@ function panToShow(viewStart, zoom, playhead) {
 
 export const initial = {
   playhead: NOW, // decimal year of the playhead
-  activeId: "intro", // a clip id, or a panel id (intro/about/skills/contact)
+  activeId: "intro", // anchors the coincident set (timeline selection / nearest on scrub)
+  focusId: "intro", // the highlighted clip (timeline + card accent); can differ from activeId
   mode: "scrub", // 'scrub' | 'query'
   playing: false, // auto-scrub running
   query: "",
@@ -53,6 +54,7 @@ function moved(state, playhead, extra) {
     ...state,
     playhead: ph,
     viewStart: panToShow(state.viewStart, state.zoom, ph),
+    focusId: extra.activeId ?? state.focusId, // focus follows selection/scrub
     ...extra,
   };
 }
@@ -148,6 +150,10 @@ export function reducer(state, action) {
     }
     case "SET_TL_HEIGHT":
       return { ...state, tlHeight: action.value };
+    case "FOCUS_CLIP":
+      // highlight a clip (timeline + card) without moving the playhead or
+      // changing which clips are shown — used by clicking a coincident card.
+      return { ...state, focusId: action.id };
     case "PLAY":
       return { ...state, playing: true, mode: "scrub", answer: null, attended: [] };
     case "PAUSE":
