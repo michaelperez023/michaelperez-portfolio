@@ -209,6 +209,29 @@ tracks.forEach((t) => packTrack(t.clips));
 export const allClips = tracks.flatMap((t) => t.clips);
 export const clipById = Object.fromEntries(allClips.map((c) => [c.id, c]));
 
+// Tag/skill chips associated with a clip — powers the click-a-tag-to-filter feature.
+export function clipTags(clip) {
+  const out = new Set();
+  if (clip.track === "research") {
+    out.add(clip.kind === "working" ? "WORKING PAPER" : clip.kind === "preprint" ? "PREPRINT" : "PUBLICATION");
+  } else if (clip.track === "experience") {
+    out.add("EXPERIENCE");
+  } else if (clip.track === "projects") {
+    out.add("PROJECT");
+  }
+  if (clip.lead) out.add("FIRST AUTHOR");
+  if (clip.tag) out.add(clip.tag);
+  (clip.tags || []).forEach((t) => out.add(t));
+  return out;
+}
+
+export function clipsMatchingTag(value) {
+  const v = (value || "").toLowerCase();
+  return allClips
+    .filter((c) => [...clipTags(c)].some((t) => t.toLowerCase() === v))
+    .map((c) => c.id);
+}
+
 // center time of a clip (for nearest-clip selection + click-to-seek)
 export const clipCenter = (c) => (c.t0 + c.t1) / 2;
 

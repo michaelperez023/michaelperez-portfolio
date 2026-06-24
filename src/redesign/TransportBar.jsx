@@ -1,4 +1,5 @@
-import { FiPlay, FiPause, FiSkipBack, FiSkipForward, FiList, FiDownload, FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { useState } from "react";
+import { FiPlay, FiPause, FiSkipBack, FiSkipForward, FiList, FiDownload, FiChevronDown, FiChevronUp, FiLink, FiCheck } from "react-icons/fi";
 import { useStore, isPanel } from "./storeCore";
 import { clipById, fmtTime } from "./timelineData";
 import { information } from "../data/content";
@@ -7,6 +8,16 @@ const PANEL_LABEL = { intro: "Intro", about: "About", skills: "Skills", contact:
 
 export default function TransportBar() {
   const { state, actions } = useStore();
+  const [copied, setCopied] = useState(false);
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      /* clipboard unavailable */
+    }
+  };
   const activeLabel = isPanel(state.activeId)
     ? PANEL_LABEL[state.activeId]
     : clipById[state.activeId]?.title || "—";
@@ -54,6 +65,9 @@ export default function TransportBar() {
         <a className="tp-link" href={information.cvFile} target="_blank" rel="noreferrer">
           <FiDownload size={14} /> CV
         </a>
+        <button className="tp-link" onClick={copyLink} aria-label="Copy a shareable link to this view">
+          {copied ? <><FiCheck size={14} /> Copied</> : <><FiLink size={14} /> Share</>}
+        </button>
       </div>
     </div>
   );

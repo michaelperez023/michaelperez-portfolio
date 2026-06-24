@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useStore } from "./storeCore";
 import {
   START,
@@ -10,6 +10,7 @@ import {
   eras,
   eraRowCount,
   fmtTime,
+  clipsMatchingTag,
 } from "./timelineData";
 
 const FULL = END - START;
@@ -118,6 +119,11 @@ export default function Timeline() {
 
   const phPct = vpos(state.playhead) * 100;
   const lit = new Set(state.attended);
+  // when a tag filter is active, glow every clip that matches it
+  const tagLit = useMemo(
+    () => (state.tagFilter ? new Set(clipsMatchingTag(state.tagFilter.value)) : null),
+    [state.tagFilter]
+  );
 
   // A clip's horizontal footprint [leftX, rightX] in viewport fractions.
   const footprint = (c) => {
@@ -161,7 +167,7 @@ export default function Timeline() {
 
   const renderClip = (c) => {
     const isActive = state.focusId === c.id;
-    const isLit = lit.has(c.id);
+    const isLit = lit.has(c.id) || (tagLit !== null && tagLit.has(c.id));
     // In compact mode keep everything as dots — a selected dot stays a dot with
     // a highlight ring (its name is in the monitor card) so it can't expand into
     // a pill that overlaps neighbouring dots.

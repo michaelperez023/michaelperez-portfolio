@@ -26,6 +26,7 @@ export function StoreProvider({ children }) {
       setTlHeight: (value) => dispatch({ type: "SET_TL_HEIGHT", value }),
       toggleTlCollapse: () => dispatch({ type: "TOGGLE_TL_COLLAPSE" }),
       cyclePlaySpeed: () => dispatch({ type: "CYCLE_PLAY_SPEED" }),
+      setTagFilter: (value) => dispatch({ type: "SET_TAG_FILTER", value }),
     }),
     []
   );

@@ -1,11 +1,36 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FiChevronUp } from "react-icons/fi";
-import { useStore } from "./storeCore";
+import { useStore, isPanel } from "./storeCore";
 import Monitor from "./Monitor";
 import Timeline from "./Timeline";
 import TransportBar from "./TransportBar";
 import ListView from "./ListView";
 import { START, END, sections } from "./timelineData";
+
+const PANEL_KEYS = ["about", "skills", "contact", "intro"];
+
+// Parse the URL hash into a restorable view intent (deep links).
+function readHashIntent() {
+  const h = (window.location.hash || "").replace(/^#/, "");
+  if (!h) return null;
+  const slash = h.indexOf("/");
+  const head = slash === -1 ? h : h.slice(0, slash);
+  const arg = slash === -1 ? "" : decodeURIComponent(h.slice(slash + 1));
+  if (head === "tag" && arg) return { type: "tag", value: arg };
+  if (head === "q" && arg) return { type: "q", value: arg };
+  if (head === "clip" && arg) return { type: "clip", value: arg };
+  if (PANEL_KEYS.includes(head)) return { type: "panel", value: head };
+  return null;
+}
+
+// The shareable hash that represents the current view.
+function hashForState(s) {
+  if (s.tagFilter) return `#tag/${encodeURIComponent(s.tagFilter.value)}`;
+  if (s.mode === "query" && s.answer && s.query) return `#q/${encodeURIComponent(s.query)}`;
+  if (isPanel(s.activeId) && s.activeId !== "intro") return `#${s.activeId}`;
+  if (s.focusId && !isPanel(s.focusId)) return `#clip/${s.focusId}`;
+  return "";
+}
 
 export default function TheCut() {
   const { state, actions } = useStore();
@@ -29,6 +54,40 @@ export default function TheCut() {
       /* sessionStorage unavailable */
     }
   }, []);
+
+  // Deep links: restore the view from the URL hash on load...
+  useEffect(() => {
+    const intent = readHashIntent();
+    if (!intent) return;
+    if (intent.type === "tag") actions.setTagFilter(intent.value);
+    else if (intent.type === "q") {
+      actions.setQuery(intent.value);
+      actions.submitQuery();
+    } else if (intent.type === "clip") actions.selectClip(intent.value);
+    else if (intent.type === "panel") {
+      const s = sections.find((x) => x.key === intent.value);
+      if (s) actions.gotoSection(s);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // ...and keep the hash in sync with the current view (debounced; replaceState
+  // so scrubbing doesn't spam history). The address bar is always shareable.
+  useEffect(() => {
+    const id = setTimeout(() => {
+      const want = hashForState(stateRef.current);
+      const cur = window.location.hash || "";
+      if (want !== cur) {
+        const url = want || window.location.pathname + window.location.search;
+        try {
+          window.history.replaceState(null, "", url);
+        } catch {
+          /* ignore */
+        }
+      }
+    }, 300);
+    return () => clearTimeout(id);
+  }, [state.tagFilter, state.mode, state.answer, state.activeId, state.focusId, state.query]);
 
   // resizable timeline height (drag the top handle) — height lives in the store
   const resizing = useRef(null);
