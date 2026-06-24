@@ -1,10 +1,11 @@
-import { FiGithub, FiLinkedin, FiMail, FiArrowUp } from "react-icons/fi";
+import { FiGithub, FiLinkedin, FiArrowUp } from "react-icons/fi";
 import { SiGooglescholar } from "react-icons/si";
 import { Link } from "react-scroll";
 import { information } from "../data/content";
+import CopyEmail from "../components/CopyEmail";
 
 export default function Footer() {
-  const { social, email } = information;
+  const { social } = information;
   const year = "2026";
 
   return (
@@ -28,11 +29,7 @@ export default function Footer() {
             <a href={social.scholar} target="_blank" rel="noreferrer" aria-label="Google Scholar">
               <SiGooglescholar size={18} />
             </a>
-            {email && (
-              <a href={`mailto:${email}`} aria-label="Email">
-                <FiMail size={19} />
-              </a>
-            )}
+            <CopyEmail variant="icon" />
           </div>
         </div>
 

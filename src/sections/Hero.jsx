@@ -2,6 +2,7 @@ import { FiArrowDown, FiDownload, FiGithub, FiLinkedin } from "react-icons/fi";
 import { SiGooglescholar } from "react-icons/si";
 import { Link } from "react-scroll";
 import { information } from "../data/content";
+import CopyEmail from "../components/CopyEmail";
 
 export default function Hero() {
   return (
@@ -26,6 +27,7 @@ export default function Hero() {
             <a className="btn btn-ghost" href={information.social.linkedin} target="_blank" rel="noreferrer">
               <FiLinkedin size={16} /> LinkedIn
             </a>
+            <CopyEmail variant="button" />
           </div>
         </div>
 
