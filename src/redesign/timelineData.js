@@ -115,7 +115,7 @@ const PROJECT_META = {
   1: [2025.3, "creleri-site"], // Video Analysis Website (CReLeRI)
   11: [2022.8, "gossip"], // Gossip & Push-Sum Simulator
   2: [2021.8, "mario"], // Mario Graphics Game
-  3: [2021.4, "audio3d"], // 3D Audio Experience
+  3: [2021.25, "audio3d", true], // From Here to There: 3D Audio — April 2021
   4: [2022.3, "twitter"], // Twitter Clone
   5: [2022.1, "graphics"], // Advanced Graphics Scene
   6: [2020.25, "hermes", true], // Hermes Tracker — April 2020
