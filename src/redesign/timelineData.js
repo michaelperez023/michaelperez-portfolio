@@ -169,8 +169,8 @@ export const eraRowCount = eraRowEnds.length;
 // --- assembled tracks ------------------------------------------------------
 export const tracks = [
   { key: "experience", label: "EXPERIENCE", clips: experienceClips },
-  { key: "projects", label: "PROJECTS", clips: projectClips },
   { key: "research", label: "RESEARCH", clips: researchClips },
+  { key: "projects", label: "PROJECTS", clips: projectClips },
 ];
 
 export const allClips = tracks.flatMap((t) => t.clips);
