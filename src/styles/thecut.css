@@ -61,13 +61,6 @@ a { color: inherit; }
   font-size: 0.95rem;
 }
 .cut-brand-sub { color: var(--dim); font-size: 0.85rem; }
-.cut-src {
-  margin-left: auto;
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  color: var(--faint);
-  letter-spacing: 0.04em;
-}
 
 /* ---------- monitor ---------- */
 .cut-monitor {
@@ -548,7 +541,7 @@ kbd {
 
 /* ---------- responsive ---------- */
 @media (max-width: 720px) {
-  .cut-brand-sub, .cut-src { display: none; }
+  .cut-brand-sub { display: none; }
   .cut-monitor { padding: 0.9rem 1rem 0.3rem; }
   .ans-body { font-size: 1.08rem; }
   .cv-title { font-size: 1.45rem; }
