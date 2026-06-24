@@ -8,6 +8,7 @@ import {
   clamp,
   tracks,
   eras,
+  eraRowCount,
   honorMarks,
   sections,
   yearTicks,
@@ -98,12 +99,16 @@ export default function Timeline() {
         onPointerCancel={endDrag}
       >
         {/* education era bands (context) */}
-        <div className="tl-eras" aria-hidden="true">
+        <div className="tl-eras" aria-hidden="true" style={{ height: `${eraRowCount * 16}px` }}>
           {eras.map((era) => (
             <span
               key={era.label}
               className="tl-era"
-              style={{ left: `${pos(era.t0) * 100}%`, width: `${(pos(era.t1) - pos(era.t0)) * 100}%` }}
+              style={{
+                left: `${pos(era.t0) * 100}%`,
+                width: `${(pos(era.t1) - pos(era.t0)) * 100}%`,
+                top: `${era.row * 16}px`,
+              }}
             >
               {era.label}
             </span>
