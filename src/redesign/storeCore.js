@@ -12,7 +12,25 @@ import { runQuery, tokenize } from "./retrieval";
 
 const PANELS = new Set(["intro", "about", "skills", "contact"]);
 export const isPanel = (id) => PANELS.has(id);
+
+const FULL = END - START;
+export const MAX_ZOOM = 8;
 const seekClamp = (t) => Math.min(END, Math.max(START, t));
+const clampViewStart = (vs, zoom) => {
+  const span = FULL / zoom;
+  return Math.min(END - span, Math.max(START, vs));
+};
+// Pan the view window just enough to keep the playhead visible (with margin).
+function panToShow(viewStart, zoom, playhead) {
+  if (zoom <= 1) return START;
+  const span = FULL / zoom;
+  const lo = viewStart + 0.12 * span;
+  const hi = viewStart + 0.88 * span;
+  let vs = viewStart;
+  if (playhead < lo) vs = playhead - 0.12 * span;
+  else if (playhead > hi) vs = playhead - 0.88 * span;
+  return clampViewStart(vs, zoom);
+}
 
 export const initial = {
   playhead: NOW, // decimal year of the playhead
@@ -23,53 +41,58 @@ export const initial = {
   answer: null, // { tokens, attend } when a query has run
   attended: [], // clip ids currently lit by the active query
   listView: false, // accessible linear fallback
+  zoom: 1, // temporal zoom (1 = whole span)
+  viewStart: START, // left edge of the visible time window
 };
+
+// Build a state update that sets the playhead and pans the window to it.
+function moved(state, playhead, extra) {
+  const ph = seekClamp(playhead);
+  return {
+    ...state,
+    playhead: ph,
+    viewStart: panToShow(state.viewStart, state.zoom, ph),
+    ...extra,
+  };
+}
 
 export function reducer(state, action) {
   switch (action.type) {
     case "SEEK": {
-      const t = seekClamp(action.t);
-      const near = nearestClip(t);
-      return {
-        ...state,
-        playhead: t,
+      const near = nearestClip(seekClamp(action.t));
+      return moved(state, action.t, {
         activeId: near ? near.id : state.activeId,
         mode: "scrub",
         answer: null,
         attended: [],
-      };
+      });
     }
     case "TICK": {
       // like SEEK but used by the auto-scrub RAF loop (keeps `playing`)
-      const t = seekClamp(action.t);
-      const near = nearestClip(t);
-      return { ...state, playhead: t, activeId: near ? near.id : state.activeId };
+      const near = nearestClip(seekClamp(action.t));
+      return moved(state, action.t, { activeId: near ? near.id : state.activeId });
     }
     case "SELECT_CLIP": {
       const clip = clipById[action.id];
       if (!clip) return state;
-      return {
-        ...state,
+      return moved(state, clipCenter(clip), {
         activeId: clip.id,
-        playhead: clipCenter(clip),
         mode: "scrub",
         playing: false,
         answer: null,
         attended: [],
-      };
+      });
     }
     case "GOTO_SECTION": {
       const s = action.section;
       const playhead = s.clipId ? clipCenter(clipById[s.clipId]) : s.t;
-      return {
-        ...state,
+      return moved(state, playhead, {
         activeId: s.panel || s.clipId,
-        playhead: seekClamp(playhead),
         mode: "scrub",
         playing: false,
         answer: null,
         attended: [],
-      };
+      });
     }
     case "STEP": {
       const order = clipsByTime;
@@ -86,19 +109,30 @@ export function reducer(state, action) {
       }
       const next = Math.min(order.length - 1, Math.max(0, idx + action.dir));
       const clip = order[next];
-      return {
-        ...state,
+      return moved(state, clipCenter(clip), {
         activeId: clip.id,
-        playhead: clipCenter(clip),
         mode: "scrub",
         playing: false,
         answer: null,
         attended: [],
-      };
+      });
     }
     case "EDGE": {
       const clip = action.dir < 0 ? clipsByTime[0] : clipsByTime[clipsByTime.length - 1];
-      return { ...state, activeId: clip.id, playhead: clipCenter(clip), mode: "scrub", playing: false, answer: null, attended: [] };
+      return moved(state, clipCenter(clip), {
+        activeId: clip.id,
+        mode: "scrub",
+        playing: false,
+        answer: null,
+        attended: [],
+      });
+    }
+    case "SET_ZOOM": {
+      const zoom = Math.min(MAX_ZOOM, Math.max(1, action.zoom));
+      const span = FULL / zoom;
+      // keep the playhead centered in the new window
+      const vs = clampViewStart(state.playhead - span / 2, zoom);
+      return { ...state, zoom, viewStart: zoom === 1 ? START : vs };
     }
     case "PLAY":
       return { ...state, playing: true, mode: "scrub", answer: null, attended: [] };

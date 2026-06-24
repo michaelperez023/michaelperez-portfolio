@@ -65,6 +65,15 @@ export default function TheCut() {
       } else if (/^[1-7]$/.test(e.key)) {
         const s = sections[parseInt(e.key, 10) - 1];
         if (s) actions.gotoSection(s);
+      } else if (e.key === "+" || e.key === "=") {
+        e.preventDefault();
+        actions.setZoom(stateRef.current.zoom * 1.5);
+      } else if (e.key === "-" || e.key === "_") {
+        e.preventDefault();
+        actions.setZoom(stateRef.current.zoom / 1.5);
+      } else if (e.key === "0") {
+        e.preventDefault();
+        actions.setZoom(1);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -77,8 +86,14 @@ export default function TheCut() {
     if (!node) return;
     const onWheel = (e) => {
       e.preventDefault();
+      if (e.ctrlKey || e.metaKey) {
+        // pinch / ctrl+wheel => temporal zoom
+        const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+        actions.setZoom(stateRef.current.zoom * factor);
+        return;
+      }
       const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      const step = (END - START) / 1600;
+      const step = (END - START) / stateRef.current.zoom / 1600;
       actions.seek(stateRef.current.playhead + delta * step);
     };
     node.addEventListener("wheel", onWheel, { passive: false });
@@ -133,6 +148,11 @@ export default function TheCut() {
           onPointerCancel={onResizeUp}
         >
           <span className="tl-resize-grip" />
+        </div>
+        <div className="tl-zoom" role="group" aria-label="Timeline zoom">
+          <button onClick={() => actions.setZoom(state.zoom / 1.5)} disabled={state.zoom <= 1.01} aria-label="Zoom out" title="Zoom out (−)">−</button>
+          <button className="tl-zoom-val" onClick={() => actions.setZoom(1)} title="Reset zoom (0)">{state.zoom.toFixed(1)}×</button>
+          <button onClick={() => actions.setZoom(state.zoom * 1.5)} aria-label="Zoom in" title="Zoom in (+)">+</button>
         </div>
         <Timeline />
       </section>
