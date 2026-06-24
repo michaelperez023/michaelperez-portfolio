@@ -256,6 +256,36 @@ a { color: inherit; }
   object-fit: contain;
   background: #0a0d11;
 }
+.cv-figure.has-video { cursor: pointer; }
+.cv-playbtn {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: rgba(0, 0, 0, 0.28);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.cv-playbtn:hover { background: rgba(0, 0, 0, 0.14); }
+.cv-playbtn:focus-visible { outline: 2px solid var(--signal); outline-offset: -2px; }
+.cv-playcircle {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  padding-left: 3px;
+  background: rgba(57, 224, 208, 0.95);
+  color: #04201d;
+  box-shadow: 0 0 0 6px rgba(57, 224, 208, 0.16), 0 6px 20px rgba(0, 0, 0, 0.5);
+  transition: transform 0.15s;
+}
+.cv-playbtn:hover .cv-playcircle { transform: scale(1.08); }
+.cv-figure.playing { flex: 0 0 480px; aspect-ratio: 16 / 9; }
+.cv-figure.playing iframe { display: block; width: 100%; height: 100%; border: 0; }
 .cv-projtext { flex: 1 1 280px; min-width: 0; }
 .cv-projtext .cv-body { margin-top: 0; }
 
