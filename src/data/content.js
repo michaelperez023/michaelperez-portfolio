@@ -432,8 +432,9 @@ export const projects = [
   {
     id: 10,
     title: "This Portfolio",
-    subtitle: "Built with React and Vite.",
-    image: "/images/portfolio-website-square.jpg",
+    subtitle:
+      "This site — an interactive, scrubbable video-editor timeline of my work. Built with React and Vite.",
+    image: "/images/portfolio-thecut.jpg",
     url: null,
     githubLink: "https://github.com/michaelperez023/michaelperez-portfolio",
     tags: ["React", "Vite"],
