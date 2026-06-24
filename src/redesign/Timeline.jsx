@@ -158,13 +158,21 @@ export default function Timeline() {
   const sumRows = layouts.reduce((a, l) => a + l.rows, 0);
   const bandH = (state.tlHeight - CHROME) / sumRows;
   const compact = bandH < 17; // bands too short for legible labels -> dots
+  // The experience track is weighted heavier; show its bar labels only when that
+  // band is tall enough (otherwise clean thin bars + tooltips).
+  const expRows = layouts.find((l) => l.track.key === "experience")?.rows || 1;
+  const totalWeight = layouts.reduce((a, l) => a + (l.track.key === "experience" ? l.rows * 2.2 : l.rows), 0);
+  const expBandH = ((state.tlHeight - CHROME) * (expRows * 2.2)) / totalWeight / expRows;
+  const showBarLabels = expBandH >= 15;
 
   const renderClip = (c) => {
     const isActive = state.focusId === c.id;
     const isLit = lit.has(c.id);
     const showLabel = !compact || isActive || isLit;
+    const tipImg = c.thumb || c.image;
     const tip = (
       <span className="tl-tip" aria-hidden="true">
+        {tipImg && <img className="tl-tip-img" src={tipImg} alt="" loading="lazy" />}
         <span className="tl-tip-title">{c.title}</span>
         {tipMeta(c) && <span className="tl-tip-meta">{tipMeta(c)}</span>}
       </span>
@@ -220,7 +228,7 @@ export default function Timeline() {
           onClick={() => actions.selectClip(c.id)}
           aria-label={`${c.title} — ${c.company}`}
         >
-          {i === widest && <span className="tl-bar-label">{c.label}</span>}
+          {showBarLabels && i === widest && <span className="tl-bar-label">{c.label}</span>}
           {tip}
         </button>
       );
@@ -295,7 +303,7 @@ export default function Timeline() {
           <div
             className={`tl-track tl-track-${track.key}`}
             key={track.key}
-            style={{ flexGrow: rows }}
+            style={{ flexGrow: track.key === "experience" ? rows * 2.2 : rows }}
           >
             <span className="tl-track-label">{track.label}</span>
             <div className="tl-lane">

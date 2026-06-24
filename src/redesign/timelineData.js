@@ -60,10 +60,10 @@ const RESEARCH = [
   [preprints[1], 2023.5, "urdu", { kind: "preprint", tag: "NLP", thumb: "/images/papers/urdu.jpg" }],
   [preprints[2], 2022.8, "adam", { kind: "preprint", tag: "Adv. ML", thumb: "/images/papers/adam.jpg" }],
   [preprints[3], 2022.4, "videogan", { kind: "preprint", tag: "ML", thumb: "/images/papers/videogan.jpg" }],
-  [preprints[4], 2020.9, "kmeans", { kind: "preprint", tag: "Algorithms", thumb: "/images/papers/kmeans.jpg" }],
+  [preprints[4], 2020.92, "kmeans", { kind: "preprint", tag: "Algorithms", thumb: "/images/papers/kmeans.jpg" }],
   [publications[4], 2021.4, "rhino-eval", { kind: "pub", tag: "IJCARS" }],
   [publications[5], 2021.2, "rhino-anthro", { kind: "pub", tag: "Aesthetic Surgery J." }],
-  [publications[6], 2020.62, "rhino-digit", { kind: "pub", tag: "IJCARS" }],
+  [publications[6], 2020.83, "rhino-digit", { kind: "pub", tag: "IJCARS" }],
 ];
 
 const researchClips = RESEARCH.map(([item, t, key, extra]) => ({
@@ -118,7 +118,7 @@ const PROJECT_META = {
   3: [2021.4, "audio3d"], // 3D Audio Experience
   4: [2022.3, "twitter"], // Twitter Clone
   5: [2022.1, "graphics"], // Advanced Graphics Scene
-  6: [2019.8, "hermes"], // Hermes Tracker
+  6: [2020.25, "hermes", true], // Hermes Tracker — April 2020
   7: [2021.6, "gamead"], // Game Advertisement Video
   8: [2019.3, "villas"], // DR Villas Booking
   9: [2021.1, "surgery"], // Surgery Tool Simulator
@@ -126,7 +126,7 @@ const PROJECT_META = {
 };
 
 const projectClips = projects.map((p) => {
-  const [t, key] = PROJECT_META[p.id] ?? [2022, slug(p.title)];
+  const [t, key, exact] = PROJECT_META[p.id] ?? [2022, slug(p.title)];
   return {
     id: `p-${key}`,
     track: "projects",
@@ -142,7 +142,7 @@ const projectClips = projects.map((p) => {
     githubLink: p.githubLink || null,
     file: p.report || null,
     tags: p.tags || [],
-    approx: true,
+    approx: !exact,
   };
 });
 
