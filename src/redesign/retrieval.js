@@ -184,7 +184,7 @@ const TOPICS = [
   {
     keys: ["hiring", "why hire", "strengths", "good fit", "stand out"],
     answer:
-      "You'd get someone who moves an idea from research to production without a handoff — I find the white-space problem, prototype the model, and ship the pipeline that runs it. That range is why I have a first-author paper at ACM Multimedia 2025 [[r-creleri]], a CV system shipped during my CoVar internship [[e-covar]], and infrastructure proven past 2,000,000 nodes [[p-gossip]]: research velocity with the engineering discipline to deploy it.",
+      "You'd get someone who pairs publishable research with the engineering to put it to work — I prototype the model and build the pipeline around it. That range shows up as a first-author paper at ACM Multimedia 2025 [[r-creleri]], published infrared video super-resolution work from my CoVar internship [[e-covar]], and a distributed simulator whose convergence I verified past 2,000,000 nodes [[p-gossip]] — research velocity backed by real engineering discipline.",
     attend: ["r-creleri", "e-covar", "p-gossip"],
   },
   {
