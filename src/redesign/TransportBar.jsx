@@ -1,6 +1,6 @@
 import { FiPlay, FiPause, FiSkipBack, FiSkipForward, FiList, FiDownload } from "react-icons/fi";
 import { useStore, isPanel } from "./storeCore";
-import { clipById, sections, fmtTime } from "./timelineData";
+import { clipById, fmtTime } from "./timelineData";
 import { information } from "../data/content";
 
 const PANEL_LABEL = { intro: "Intro", about: "About", skills: "Skills", contact: "Contact" };
@@ -10,7 +10,6 @@ export default function TransportBar() {
   const activeLabel = isPanel(state.activeId)
     ? PANEL_LABEL[state.activeId]
     : clipById[state.activeId]?.title || "—";
-  const contactSection = sections.find((s) => s.key === "contact");
 
   return (
     <div className="transport">
@@ -36,9 +35,6 @@ export default function TransportBar() {
         <a className="tp-link" href={information.cvFile} target="_blank" rel="noreferrer">
           <FiDownload size={14} /> CV
         </a>
-        <button className="tp-link solid" onClick={() => actions.gotoSection(contactSection)}>
-          Contact
-        </button>
       </div>
     </div>
   );

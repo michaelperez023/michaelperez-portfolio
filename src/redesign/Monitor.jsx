@@ -7,13 +7,16 @@ import {
   FiCheck,
   FiCopy,
   FiPlay,
+  FiDownload,
+  FiLinkedin,
 } from "react-icons/fi";
+import { SiGooglescholar } from "react-icons/si";
 import { useStore, isPanel } from "./storeCore";
 import { allClips, clipById } from "./timelineData";
 import { examples } from "./retrieval";
 import { information, about, skillGroups, honors, education } from "../data/content";
 
-const COINCIDE_W = 0.3; // ~3.5 months: point clips within this of the playhead count as "now"
+const COINCIDE_W = 0.06; // ~3 weeks: only point clips genuinely at the same time
 function clipsAtTime(t) {
   return allClips.filter((c) =>
     c.point ? Math.abs(c.t0 - t) <= COINCIDE_W : t >= c.t0 && t <= c.t1
@@ -87,8 +90,15 @@ export default function Monitor() {
   const showingClips = !answering && !isPanel(state.activeId);
   const coincident = useMemo(() => {
     if (!showingClips) return [];
-    const at = clipsAtTime(state.playhead);
     const active = clipById[state.activeId];
+    // Anchor on the active clip's own date (or the playhead's point inside a bar),
+    // so "at this moment" means concurrent with what you're actually looking at.
+    const anchor = active
+      ? active.point
+        ? active.t0
+        : Math.min(active.t1, Math.max(active.t0, state.playhead))
+      : state.playhead;
+    const at = clipsAtTime(anchor);
     if (active && !at.some((c) => c.id === active.id)) at.unshift(active);
     const ord = { research: 0, experience: 1, projects: 2 };
     at.sort((a, b) => {
@@ -303,9 +313,9 @@ function ResearchCard({ clip }) {
   );
 }
 
-function ClipCard({ clip, dense, primary }) {
+function ClipCard({ clip, dense, primary, rail }) {
   if (!clip) return null;
-  const base = `cv${dense ? " dense" : ""}${primary ? " primary" : ""}`;
+  const base = `cv${dense ? " dense" : ""}${primary ? " primary" : ""}${rail ? " inrail" : ""}`;
   if (clip.track === "experience") {
     return (
       <article className={base}>
@@ -316,7 +326,7 @@ function ClipCard({ clip, dense, primary }) {
         </div>
         <h2 className="cv-title">{clip.title}</h2>
         <p className="cv-sub">{clip.company}{clip.location ? ` · ${clip.location}` : ""}</p>
-        <p className="cv-body">{clip.details}</p>
+        {!rail && <p className="cv-body">{clip.details}</p>}
       </article>
     );
   }
@@ -346,16 +356,32 @@ function ClipCard({ clip, dense, primary }) {
   );
 }
 
-// Show every clip at the current playhead time, primary first.
+// Show every clip at the current playhead time. Papers/projects go in the main
+// area; concurrent experience (roles) sit in a fixed right rail so they don't
+// reshuffle as the playhead moves during playback.
 function ClipStack({ clips, primaryId }) {
   if (!clips || !clips.length) return null;
-  const dense = clips.length > 1;
+  const primaryClip = clips.find((c) => c.id === primaryId);
+  let main = clips.filter((c) => c.track !== "experience");
+  const rail = clips.filter((c) => c.track === "experience" && c.id !== primaryId);
+  if (primaryClip && primaryClip.track === "experience") main = [primaryClip, ...main];
+  const denseMain = main.length > 1;
   return (
-    <div className={`cv-stack${dense ? " multi" : ""}`}>
-      {dense && <p className="cv-stack-head">{clips.length} at this moment</p>}
-      {clips.map((c) => (
-        <ClipCard key={c.id} clip={c} dense={dense} primary={c.id === primaryId} />
-      ))}
+    <div className="cv-zones">
+      <div className={`cv-stack cv-zone-main${denseMain ? " multi" : ""}`}>
+        {denseMain && <p className="cv-stack-head">{main.length} at this moment</p>}
+        {main.map((c) => (
+          <ClipCard key={c.id} clip={c} dense={denseMain} primary={c.id === primaryId} />
+        ))}
+      </div>
+      {rail.length > 0 && (
+        <aside className="cv-rail">
+          <p className="cv-rail-head">Concurrent roles</p>
+          {rail.map((c) => (
+            <ClipCard key={c.id} clip={c} dense rail primary={false} />
+          ))}
+        </aside>
+      )}
     </div>
   );
 }
@@ -371,20 +397,25 @@ function Panel({ id }) {
 function IntroPanel() {
   return (
     <div className="intro">
-      <p className="intro-eyebrow">{information.role.toUpperCase()}</p>
-      <h1 className="intro-name">
-        Michael <span className="acc">Pérez</span>
-      </h1>
-      <p className="intro-tag">{information.tagline}</p>
-      <div className="intro-facts">
-        {about.facts.map((f) => (
-          <div key={f.label} className="intro-fact">
-            <span className="k">{f.label}</span>
-            <span className="v">{f.value}</span>
-          </div>
-        ))}
+      <div className="intro-text">
+        <p className="intro-eyebrow">{information.role.toUpperCase()}</p>
+        <h1 className="intro-name">
+          Michael <span className="acc">Pérez</span>
+        </h1>
+        <p className="intro-tag">{information.tagline}</p>
+        <div className="intro-facts">
+          {about.facts.map((f) => (
+            <div key={f.label} className="intro-fact">
+              <span className="k">{f.label}</span>
+              <span className="v">{f.value}</span>
+            </div>
+          ))}
+        </div>
+        <p className="intro-hint">▸ scrub the timeline below, press <kbd>Space</kbd> to play it, or <kbd>/</kbd> to ask my work a question</p>
       </div>
-      <p className="intro-hint">▸ scrub the timeline below, press <kbd>Space</kbd> to play it, or <kbd>/</kbd> to ask my work a question</p>
+      <div className="intro-portrait">
+        <img src={information.headshot} alt={information.fullName} loading="lazy" />
+      </div>
     </div>
   );
 }
@@ -452,10 +483,10 @@ function ContactPanel() {
         <button className="contact-btn primary" onClick={copy}>
           {copied ? <><FiCheck size={15} /> Copied</> : <><FiCopy size={15} /> {email}</>}
         </button>
-        <a className="contact-btn" href={cvFile} target="_blank" rel="noreferrer">Download CV</a>
-        <a className="contact-btn" href={social.github} target="_blank" rel="noreferrer">GitHub</a>
-        <a className="contact-btn" href={social.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
-        <a className="contact-btn" href={social.scholar} target="_blank" rel="noreferrer">Scholar</a>
+        <a className="contact-btn" href={cvFile} target="_blank" rel="noreferrer"><FiDownload size={15} /> Download CV</a>
+        <a className="contact-btn" href={social.github} target="_blank" rel="noreferrer"><FiGithub size={15} /> GitHub</a>
+        <a className="contact-btn" href={social.linkedin} target="_blank" rel="noreferrer"><FiLinkedin size={15} /> LinkedIn</a>
+        <a className="contact-btn" href={social.scholar} target="_blank" rel="noreferrer"><SiGooglescholar size={15} /> Scholar</a>
       </div>
     </div>
   );

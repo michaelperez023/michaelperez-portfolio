@@ -16,8 +16,12 @@ import {
 
 // --- time axis -------------------------------------------------------------
 export const START = 2018.55; // Aug 2018 — B.S. begins
-export const END = 2026.95; // Dec 2026 — includes the Nov HAI conference
-export const NOW = 2026.58; // Aug 2026 — graduation / "now seeking" OUT point
+// "now" tracks the real current date so the timeline stays live.
+const _today = new Date();
+export const NOW =
+  _today.getFullYear() + (_today.getMonth() + Math.min(0.999, (_today.getDate() - 1) / 31)) / 12;
+// include the Nov 2026 HAI conference, plus headroom so NOW never hits the edge.
+export const END = Math.max(2026.95, NOW + 0.18);
 
 export const pos = (t) => (t - START) / (END - START); // -> 0..1 fraction
 export const clamp = (v, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
@@ -26,7 +30,7 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 // decimal year -> "YYYY · Mon" timecode label
 export function fmtTime(t) {
   const year = Math.floor(t);
-  let m = Math.round((t - year) * 12);
+  let m = Math.floor((t - year) * 12); // the month the time falls within
   if (m > 11) m = 11;
   if (m < 0) m = 0;
   return `${year} · ${MONTHS[m]}`;
@@ -164,9 +168,9 @@ export const eraRowCount = eraRowEnds.length;
 
 // --- assembled tracks ------------------------------------------------------
 export const tracks = [
-  { key: "research", label: "RESEARCH", clips: researchClips },
   { key: "experience", label: "EXPERIENCE", clips: experienceClips },
   { key: "projects", label: "PROJECTS", clips: projectClips },
+  { key: "research", label: "RESEARCH", clips: researchClips },
 ];
 
 export const allClips = tracks.flatMap((t) => t.clips);
