@@ -12,7 +12,6 @@ import {
   preprints,
   workingExperience,
   projects,
-  honors,
 } from "../data/content";
 
 // --- time axis -------------------------------------------------------------
@@ -162,13 +161,6 @@ export const eras = eraDefs.map((e) => {
   return { ...e, row };
 });
 export const eraRowCount = eraRowEnds.length;
-
-// --- honor markers (gold flags) --------------------------------------------
-export const honorMarks = [
-  { ...honors[0], t: 2022.5 }, // L3Harris fellowship
-  { ...honors[1], t: 2020.62 }, // Preeminence award
-  { ...honors[2], t: 2021.5 }, // GenerationNext
-];
 
 // --- assembled tracks ------------------------------------------------------
 export const tracks = [
