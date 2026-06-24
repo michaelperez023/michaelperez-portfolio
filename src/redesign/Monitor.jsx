@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   FiArrowUpRight,
   FiGithub,
@@ -9,9 +9,16 @@ import {
   FiPlay,
 } from "react-icons/fi";
 import { useStore, isPanel } from "./storeCore";
-import { clipById } from "./timelineData";
+import { allClips, clipById } from "./timelineData";
 import { examples } from "./retrieval";
 import { information, about, skillGroups, honors, education } from "../data/content";
+
+const COINCIDE_W = 0.3; // ~3.5 months: point clips within this of the playhead count as "now"
+function clipsAtTime(t) {
+  return allClips.filter((c) =>
+    c.point ? Math.abs(c.t0 - t) <= COINCIDE_W : t >= c.t0 && t <= c.t1
+  );
+}
 
 const ME = "Michael Pérez";
 function withMe(authors) {
@@ -76,6 +83,22 @@ export default function Monitor() {
   const total = answering ? state.answer.tokens.length : 0;
   const confidence = answering ? Math.min(96, Math.round((revealed / Math.max(1, total)) * 100)) : 0;
 
+  // All clips at the current playhead time (so concurrent work shows together).
+  const showingClips = !answering && !isPanel(state.activeId);
+  const coincident = useMemo(() => {
+    if (!showingClips) return [];
+    const at = clipsAtTime(state.playhead);
+    const active = clipById[state.activeId];
+    if (active && !at.some((c) => c.id === active.id)) at.unshift(active);
+    const ord = { research: 0, experience: 1, projects: 2 };
+    at.sort((a, b) => {
+      if (a.id === state.activeId) return -1;
+      if (b.id === state.activeId) return 1;
+      return ord[a.track] - ord[b.track] || a.t0 - b.t0;
+    });
+    return at;
+  }, [showingClips, state.playhead, state.activeId]);
+
   return (
     <div className="mon">
       {/* console */}
@@ -122,7 +145,7 @@ export default function Monitor() {
         ) : isPanel(state.activeId) ? (
           <Panel id={state.activeId} />
         ) : (
-          <ClipView clip={clipById[state.activeId]} />
+          <ClipStack clips={coincident} primaryId={state.activeId} />
         )}
       </div>
     </div>
@@ -217,11 +240,75 @@ function LinkRow({ clip }) {
   );
 }
 
-function ClipView({ clip }) {
+// Paper PDF preview: first-page thumbnail; click to open the PDF inline.
+function PaperPreview({ clip }) {
+  const [open, setOpen] = useState(false);
+  const pdf = clip.pdf || clip.file;
+  if (!clip.thumb) return null;
+  if (open && pdf) {
+    return (
+      <figure className="cv-figure paper playing">
+        <iframe src={`${pdf}#view=FitH`} title={`${clip.title} (PDF)`} />
+      </figure>
+    );
+  }
+  return (
+    <figure className={`cv-figure paper${pdf ? " has-pdf" : ""}`}>
+      <img src={clip.thumb} alt={`First page of ${clip.title}`} loading="lazy" />
+      {pdf && (
+        <button className="cv-pdfbtn" onClick={() => setOpen(true)} aria-label={`Open the PDF of ${clip.title}`}>
+          <span className="cv-pdftag"><FiFileText size={12} /> View PDF</span>
+        </button>
+      )}
+    </figure>
+  );
+}
+
+function ResearchCard({ clip }) {
+  const kindLabel = clip.kind === "working" ? "WORKING PAPER" : clip.kind === "preprint" ? "PREPRINT" : "PUBLICATION";
+  const meta = (
+    <div className="cv-meta">
+      <span className={`cv-kind ${clip.kind}`}>{kindLabel}</span>
+      <span className="cv-year">{clip.year}</span>
+      {clip.lead && <span className="cv-tag lead">FIRST AUTHOR</span>}
+      {clip.upcoming && <span className="cv-tag up">ACCEPTED · TO APPEAR</span>}
+    </div>
+  );
+  const body = (
+    <>
+      {clip.venue && <p className="cv-venue">{clip.venue}</p>}
+      {clip.authors && <p className="cv-authors">{withMe(clip.authors)}</p>}
+      {clip.note && <p className="cv-note">{clip.note}</p>}
+      <LinkRow clip={clip} />
+    </>
+  );
+  if (clip.thumb) {
+    return (
+      <>
+        {meta}
+        <h2 className="cv-title">{clip.title}</h2>
+        <div className="cv-projbody">
+          <PaperPreview clip={clip} />
+          <div className="cv-projtext">{body}</div>
+        </div>
+      </>
+    );
+  }
+  return (
+    <>
+      {meta}
+      <h2 className="cv-title">{clip.title}</h2>
+      {body}
+    </>
+  );
+}
+
+function ClipCard({ clip, dense, primary }) {
   if (!clip) return null;
+  const base = `cv${dense ? " dense" : ""}${primary ? " primary" : ""}`;
   if (clip.track === "experience") {
     return (
-      <article className="cv">
+      <article className={base}>
         <div className="cv-meta">
           <span className="cv-kind exp">EXPERIENCE</span>
           <span className="cv-year">{clip.year}</span>
@@ -235,7 +322,7 @@ function ClipView({ clip }) {
   }
   if (clip.track === "projects") {
     return (
-      <article className="cv cv-proj">
+      <article className={`${base} cv-proj`}>
         <div className="cv-meta">
           <span className="cv-kind proj">PROJECT</span>
           {clip.tags?.map((t) => <span key={t} className="cv-tag">{t}</span>)}
@@ -252,22 +339,24 @@ function ClipView({ clip }) {
       </article>
     );
   }
-  // research
-  const kindLabel = clip.kind === "working" ? "WORKING PAPER" : clip.kind === "preprint" ? "PREPRINT" : "PUBLICATION";
   return (
-    <article className="cv">
-      <div className="cv-meta">
-        <span className={`cv-kind ${clip.kind}`}>{kindLabel}</span>
-        <span className="cv-year">{clip.year}</span>
-        {clip.lead && <span className="cv-tag lead">FIRST AUTHOR</span>}
-        {clip.upcoming && <span className="cv-tag up">ACCEPTED · TO APPEAR</span>}
-      </div>
-      {clip.venue && <p className="cv-venue">{clip.venue}</p>}
-      <h2 className="cv-title">{clip.title}</h2>
-      {clip.authors && <p className="cv-authors">{withMe(clip.authors)}</p>}
-      {clip.note && <p className="cv-note">{clip.note}</p>}
-      <LinkRow clip={clip} />
+    <article className={base}>
+      <ResearchCard clip={clip} />
     </article>
+  );
+}
+
+// Show every clip at the current playhead time, primary first.
+function ClipStack({ clips, primaryId }) {
+  if (!clips || !clips.length) return null;
+  const dense = clips.length > 1;
+  return (
+    <div className={`cv-stack${dense ? " multi" : ""}`}>
+      {dense && <p className="cv-stack-head">{clips.length} at this moment</p>}
+      {clips.map((c) => (
+        <ClipCard key={c.id} clip={c} dense={dense} primary={c.id === primaryId} />
+      ))}
+    </div>
   );
 }
 
