@@ -8,8 +8,6 @@ import {
   tracks,
   eras,
   eraRowCount,
-  honorMarks,
-  sections,
   fmtTime,
 } from "./timelineData";
 
@@ -95,7 +93,6 @@ export default function Timeline() {
 
   const phPct = vpos(state.playhead) * 100;
   const lit = new Set(state.attended);
-  const aboutSection = sections.find((s) => s.panel === "about");
 
   // A clip's horizontal footprint [leftX, rightX] in viewport fractions.
   const footprint = (c) => {
@@ -203,16 +200,6 @@ export default function Timeline() {
           >
             {tk.label}
           </span>
-        ))}
-        {honorMarks.filter((h) => inView(h.t)).map((h) => (
-          <button
-            key={h.id}
-            className="tl-honor"
-            style={{ left: `${vpos(h.t) * 100}%` }}
-            title={`★ Honor — ${h.title} (${h.year})`}
-            aria-label={`Honor: ${h.title}`}
-            onClick={() => actions.gotoSection(aboutSection)}
-          />
         ))}
         {inView(NOW) && (
           <span className="tl-now-flag" style={{ left: `${vpos(NOW) * 100}%` }}>

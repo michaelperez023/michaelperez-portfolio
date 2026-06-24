@@ -513,20 +513,6 @@ kbd {
 .tl-tick.maj { color: var(--dim); }
 .tl-tick.maj::before { top: -11px; height: 9px; }
 .tl-tick.nolabel::before { top: -6px; height: 4px; }
-.tl-honor {
-  position: absolute;
-  top: 1px;
-  width: 9px; height: 9px;
-  transform: translateX(-50%) rotate(45deg);
-  background: var(--amber);
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  box-shadow: 0 0 7px rgba(242, 179, 61, 0.6);
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-.tl-honor:hover { transform: translateX(-50%) rotate(45deg) scale(1.5); box-shadow: 0 0 13px rgba(242, 179, 61, 0.95); }
-.tl-honor:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .tl-now-flag {
   position: absolute;
   top: 0;
