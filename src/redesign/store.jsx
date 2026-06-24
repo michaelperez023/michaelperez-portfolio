@@ -19,6 +19,7 @@ export function StoreProvider({ children }) {
       attend: (id) => dispatch({ type: "ATTEND", id }),
       escape: () => dispatch({ type: "ESCAPE" }),
       toggleListView: () => dispatch({ type: "TOGGLE_LISTVIEW" }),
+      focusClip: (id) => dispatch({ type: "FOCUS_CLIP", id }),
       setZoom: (zoom) => dispatch({ type: "SET_ZOOM", zoom }),
       setZoomAt: (zoom, focusTime, focusFrac) =>
         dispatch({ type: "SET_ZOOM_AT", zoom, focusTime, focusFrac }),

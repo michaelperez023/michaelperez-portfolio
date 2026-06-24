@@ -12,14 +12,14 @@ import {
 } from "react-icons/fi";
 import { SiGooglescholar } from "react-icons/si";
 import { useStore, isPanel } from "./storeCore";
-import { allClips, clipById } from "./timelineData";
+import { allClips, clipById, barActiveAt, eras } from "./timelineData";
 import { examples } from "./retrieval";
 import { information, about, skillGroups, honors, education } from "../data/content";
 
-const COINCIDE_W = 0.06; // ~3 weeks: only point clips genuinely at the same time
+const COINCIDE_W = 0.5; // ~6 months: nearby work (a cluster of papers/projects) shows together
 function clipsAtTime(t) {
   return allClips.filter((c) =>
-    c.point ? Math.abs(c.t0 - t) <= COINCIDE_W : t >= c.t0 && t <= c.t1
+    c.point ? Math.abs(c.t0 - t) <= COINCIDE_W : barActiveAt(c, t)
   );
 }
 
@@ -100,14 +100,16 @@ export default function Monitor() {
       : state.playhead;
     const at = clipsAtTime(anchor);
     if (active && !at.some((c) => c.id === active.id)) at.unshift(active);
-    const ord = { research: 0, experience: 1, projects: 2 };
-    at.sort((a, b) => {
-      if (a.id === state.activeId) return -1;
-      if (b.id === state.activeId) return 1;
-      return ord[a.track] - ord[b.track] || a.t0 - b.t0;
-    });
+    // Stable order (never reshuffles when you change focus): experience, research, projects, by time.
+    const ord = { experience: 0, research: 1, projects: 2 };
+    at.sort((a, b) => ord[a.track] - ord[b.track] || a.t0 - b.t0);
     return at;
-  }, [showingClips, state.playhead, state.activeId]);
+  }, [showingClips, state.activeId, state.playhead]);
+
+  // Degree(s) in progress at this moment (shown at the bottom of the rail).
+  const eduActive = showingClips
+    ? eras.filter((e) => state.playhead >= e.t0 && state.playhead <= e.t1)
+    : [];
 
   return (
     <div className="mon">
@@ -155,7 +157,12 @@ export default function Monitor() {
         ) : isPanel(state.activeId) ? (
           <Panel id={state.activeId} />
         ) : (
-          <ClipStack clips={coincident} primaryId={state.activeId} />
+          <ClipStack
+            clips={coincident}
+            edu={eduActive}
+            primaryId={state.focusId}
+            onFocus={actions.focusClip}
+          />
         )}
       </div>
     </div>
@@ -279,9 +286,9 @@ function ResearchCard({ clip }) {
   const meta = (
     <div className="cv-meta">
       <span className={`cv-kind ${clip.kind}`}>{kindLabel}</span>
-      <span className="cv-year">{clip.year}</span>
       {clip.lead && <span className="cv-tag lead">FIRST AUTHOR</span>}
       {clip.upcoming && <span className="cv-tag up">ACCEPTED · TO APPEAR</span>}
+      <span className="cv-year">{clip.year}</span>
     </div>
   );
   const body = (
@@ -313,16 +320,20 @@ function ResearchCard({ clip }) {
   );
 }
 
-function ClipCard({ clip, dense, primary, rail }) {
+function ClipCard({ clip, dense, primary, rail, onFocus }) {
   if (!clip) return null;
   const base = `cv${dense ? " dense" : ""}${primary ? " primary" : ""}${rail ? " inrail" : ""}`;
+  // Clicking the card body highlights it in the timeline (ignore inner links/buttons).
+  const onCardClick = (e) => {
+    if (onFocus && !e.target.closest("a, button")) onFocus(clip.id);
+  };
   if (clip.track === "experience") {
     return (
-      <article className={base}>
+      <article className={base} onClick={onCardClick}>
         <div className="cv-meta">
           <span className="cv-kind exp">EXPERIENCE</span>
-          <span className="cv-year">{clip.year}</span>
           {clip.tag && <span className="cv-tag">{clip.tag}</span>}
+          <span className="cv-year">{clip.year}</span>
         </div>
         <h2 className="cv-title">{clip.title}</h2>
         <p className="cv-sub">{clip.company}{clip.location ? ` · ${clip.location}` : ""}</p>
@@ -332,7 +343,7 @@ function ClipCard({ clip, dense, primary, rail }) {
   }
   if (clip.track === "projects") {
     return (
-      <article className={`${base} cv-proj`}>
+      <article className={`${base} cv-proj`} onClick={onCardClick}>
         <div className="cv-meta">
           <span className="cv-kind proj">PROJECT</span>
           {clip.tags?.map((t) => <span key={t} className="cv-tag">{t}</span>)}
@@ -350,35 +361,45 @@ function ClipCard({ clip, dense, primary, rail }) {
     );
   }
   return (
-    <article className={base}>
+    <article className={base} onClick={onCardClick}>
       <ResearchCard clip={clip} />
     </article>
   );
 }
 
-// Show every clip at the current playhead time. Papers/projects go in the main
-// area; concurrent experience (roles) sit in a fixed right rail so they don't
-// reshuffle as the playhead moves during playback.
-function ClipStack({ clips, primaryId }) {
+// Papers/projects in the main area; ALL concurrent roles (and the degree in
+// progress) sit in a fixed right rail so they stay put during playback.
+function ClipStack({ clips, primaryId, edu, onFocus }) {
   if (!clips || !clips.length) return null;
-  const primaryClip = clips.find((c) => c.id === primaryId);
-  let main = clips.filter((c) => c.track !== "experience");
-  const rail = clips.filter((c) => c.track === "experience" && c.id !== primaryId);
-  if (primaryClip && primaryClip.track === "experience") main = [primaryClip, ...main];
+  const main = clips.filter((c) => c.track !== "experience");
+  const rail = clips.filter((c) => c.track === "experience");
   const denseMain = main.length > 1;
+  const hasRail = rail.length > 0 || (edu && edu.length > 0);
   return (
     <div className="cv-zones">
       <div className={`cv-stack cv-zone-main${denseMain ? " multi" : ""}`}>
         {denseMain && <p className="cv-stack-head">{main.length} at this moment</p>}
-        {main.map((c) => (
-          <ClipCard key={c.id} clip={c} dense={denseMain} primary={c.id === primaryId} />
-        ))}
+        {main.length ? (
+          main.map((c) => (
+            <ClipCard key={c.id} clip={c} dense={denseMain} primary={c.id === primaryId} onFocus={onFocus} />
+          ))
+        ) : (
+          <p className="cv-empty">Nothing published or built at this exact point — scrub or zoom to explore.</p>
+        )}
       </div>
-      {rail.length > 0 && (
+      {hasRail && (
         <aside className="cv-rail">
-          <p className="cv-rail-head">Concurrent roles</p>
+          {edu && edu.length > 0 && (
+            <div className="cv-edu">
+              <p className="cv-rail-head">Education</p>
+              {edu.map((e) => (
+                <div key={e.label} className="cv-edu-item">{e.label}</div>
+              ))}
+            </div>
+          )}
+          {rail.length > 0 && <p className="cv-rail-head">Roles</p>}
           {rail.map((c) => (
-            <ClipCard key={c.id} clip={c} dense rail primary={false} />
+            <ClipCard key={c.id} clip={c} dense rail primary={c.id === primaryId} onFocus={onFocus} />
           ))}
         </aside>
       )}

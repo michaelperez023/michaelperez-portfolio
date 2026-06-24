@@ -369,26 +369,31 @@ a { color: inherit; }
   margin: 0 0 0.1rem;
 }
 .cv-stack.multi .cv {
-  flex: 1 1 290px;
-  max-width: 460px;
+  flex: 0 1 420px;
   min-width: 0;
+  align-self: flex-start;
   background: var(--panel);
   border: 1px solid var(--line2);
   border-radius: var(--radius);
-  padding: 0.9rem 1.1rem;
+  padding: 0.75rem 0.95rem;
   animation: none;
 }
 .cv-stack.multi .cv.primary { border-color: var(--signal); box-shadow: 0 0 0 1px var(--signal); }
-/* inside a narrow card, stack media above text */
-.cv.dense .cv-projbody { flex-direction: column; gap: 0.7rem; }
-.cv.dense .cv-figure { flex: 0 0 auto; width: 100%; max-width: 100%; }
-.cv.dense .cv-figure.paper { width: 100%; aspect-ratio: 12 / 5; }
-.cv.dense .cv-figure.paper.playing { width: 100%; aspect-ratio: 1 / 1.25; }
-.cv.dense .cv-projtext { width: 100%; }
-.cv.dense .cv-title { font-size: 1.2rem; line-height: 1.2; margin: 0.05rem 0 0.4rem; }
-.cv.dense .cv-body { font-size: 0.9rem; margin-bottom: 0.5rem; }
-.cv.dense .cv-authors { font-size: 0.82rem; margin-bottom: 0.4rem; }
-.cv.dense .cv-venue { font-size: 0.74rem; }
+/* inside a narrow card, stack media above text — sized to content */
+.cv.dense .cv-meta { margin-bottom: 0.45rem; }
+.cv.dense .cv-projbody { flex-direction: column; gap: 0.6rem; }
+/* explicit compact media heights so cards size to content */
+.cv.dense .cv-figure { flex: 0 0 auto; width: 100%; max-width: 100%; height: 150px; aspect-ratio: auto; }
+.cv.dense .cv-figure img { width: 100%; height: 100%; aspect-ratio: auto; }
+.cv.dense .cv-figure.paper { height: 118px; }
+.cv.dense .cv-figure.paper.playing { height: 340px; }
+.cv.dense .cv-figure.playing { height: auto; aspect-ratio: 16 / 9; }
+.cv.dense .cv-projtext { flex: 0 0 auto; width: 100%; }
+.cv.dense .cv-title { font-size: 1.15rem; line-height: 1.2; margin: 0.05rem 0 0.35rem; }
+.cv.dense .cv-body { font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.45rem; }
+.cv.dense .cv-authors { font-size: 0.82rem; margin-bottom: 0.35rem; }
+.cv.dense .cv-venue { font-size: 0.74rem; margin-bottom: 0.2rem; }
+.cv.dense .cv-note { margin-bottom: 0.5rem; }
 
 /* two-zone coincident layout: main area + fixed experience rail */
 .cv-zones { display: flex; gap: 1.2rem; align-items: flex-start; width: 100%; }
@@ -413,6 +418,34 @@ a { color: inherit; }
 }
 .cv.inrail .cv-title { font-size: 1rem; margin: 0.05rem 0 0.3rem; }
 .cv.inrail .cv-sub { font-size: 0.82rem; margin: 0; }
+.cv.inrail .cv-meta { margin-bottom: 0.45rem; }
+.cv.inrail.primary { border-color: var(--signal); border-left-color: var(--signal); box-shadow: 0 0 0 1px var(--signal); }
+
+/* education block in the rail */
+.cv-edu { display: flex; flex-direction: column; gap: 0.35rem; }
+.cv-edu-item {
+  background: var(--panel);
+  border: 1px solid var(--line2);
+  border-left: 2px solid var(--indigo);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.7rem;
+  font-size: 0.85rem;
+  color: var(--fg);
+}
+
+/* empty main-area state */
+.cv-empty {
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  max-width: 40ch;
+  margin-top: 0.5rem;
+}
+
+/* clickable cards (click body to highlight in the timeline) */
+.cv-zones .cv { cursor: pointer; }
+.cv-zones .cv a, .cv-zones .cv button { cursor: pointer; }
+
 @media (max-width: 860px) {
   .cv-zones { flex-direction: column; }
   .cv-rail { flex-basis: auto; width: 100%; }
@@ -637,14 +670,14 @@ kbd {
   color: var(--dim);
   cursor: pointer;
   white-space: nowrap;
-  overflow: hidden;
+  overflow: visible;
   font-size: 0.72rem;
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
 .tl-clip.edge-r { transform: translate(-100%, -50%); }
 .tl-clip.edge-l { transform: translate(0, -50%); }
 .tl-clip-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex: none; }
-.tl-clip-label { overflow: hidden; text-overflow: ellipsis; }
+.tl-clip-label { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .tl-clip.k-pub { color: var(--signal); }
 .tl-clip.k-working, .tl-clip.k-preprint { color: var(--indigo); }
 .tl-clip.upcoming { border-style: dashed; opacity: 0.85; }
@@ -698,7 +731,7 @@ kbd {
   color: var(--dim);
   cursor: pointer;
   white-space: nowrap;
-  overflow: hidden;
+  overflow: visible;
   font-size: 0.72rem;
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
@@ -706,7 +739,42 @@ kbd {
 .tl-bar:hover { color: var(--fg); border-color: var(--amber); }
 .tl-bar.active { color: var(--fg); border-color: var(--amber); box-shadow: 0 0 0 1px var(--amber), 0 0 14px rgba(242, 179, 61, 0.25); z-index: 5; }
 .tl-bar.lit { color: var(--fg); border-color: var(--signal); box-shadow: 0 0 0 1px var(--signal); }
-.tl-bar-label { overflow: hidden; text-overflow: ellipsis; }
+.tl-bar-label { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.tl-bar-pause {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 0;
+  border-top: 1.5px dashed var(--faint);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* hover tooltip on dots / clips / bars */
+.tl-tip {
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  flex-direction: column;
+  gap: 1px;
+  width: max-content;
+  max-width: 250px;
+  padding: 0.3rem 0.5rem;
+  background: var(--panel2);
+  border: 1px solid var(--line2);
+  border-radius: 5px;
+  text-align: left;
+  pointer-events: none;
+  z-index: 30;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+.tl-clip:hover .tl-tip, .tl-clip:focus-visible .tl-tip,
+.tl-dot:hover .tl-tip, .tl-dot:focus-visible .tl-tip,
+.tl-bar:hover .tl-tip, .tl-bar:focus-visible .tl-tip { display: flex; }
+.tl-tip-title { color: var(--fg); font-size: 0.74rem; font-weight: 600; line-height: 1.25; white-space: normal; }
+.tl-tip-meta { color: var(--dim); font-size: 0.66rem; font-family: var(--mono); line-height: 1.2; white-space: normal; }
 
 .tl-playhead { position: absolute; top: -2px; bottom: 0; width: 0; pointer-events: none; z-index: 8; }
 .tl-playhead-line { position: absolute; top: 0; bottom: 0; left: 0; width: 2px; transform: translateX(-50%); background: var(--signal); box-shadow: 0 0 10px var(--signal); }

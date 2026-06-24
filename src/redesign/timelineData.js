@@ -85,10 +85,11 @@ const researchClips = RESEARCH.map(([item, t, key, extra]) => ({
 }));
 
 // --- experience track (real date ranges) -----------------------------------
+const COVAR_RANGE = [2025.33, 2025.62]; // CoVar internship — UF roles paused here
 const EXP = [
-  [workingExperience[0], 2025.33, 2025.62, "covar", { tag: "Internship" }],
-  [workingExperience[1], 2023.0, NOW, "ruiz", { tag: "DARPA · Ruiz HCI Lab", hub: true }],
-  [workingExperience[2], 2020.6, NOW, "ta", { tag: "Teaching" }],
+  [workingExperience[0], COVAR_RANGE[0], COVAR_RANGE[1], "covar", { tag: "Internship" }],
+  [workingExperience[1], 2023.0, NOW, "ruiz", { tag: "DARPA", hub: true, pauses: [COVAR_RANGE] }],
+  [workingExperience[2], 2020.6, NOW, "ta", { tag: "Teaching", pauses: [COVAR_RANGE] }],
   [workingExperience[3], 2020.6, 2023.0, "gilm", { tag: "NSF · GILM Lab" }],
   [workingExperience[4], 2019.0, 2020.5, "rhino-ra", { tag: "Florida Poly" }],
 ];
@@ -99,7 +100,7 @@ const experienceClips = EXP.map(([item, t0, t1, key, extra]) => ({
   t0,
   t1,
   point: false,
-  label: item.company.split(",")[0],
+  label: item.position,
   title: item.position,
   company: item.company,
   location: item.location,
@@ -179,12 +180,20 @@ export const clipById = Object.fromEntries(allClips.map((c) => [c.id, c]));
 // center time of a clip (for nearest-clip selection + click-to-seek)
 export const clipCenter = (c) => (c.t0 + c.t1) / 2;
 
-// nearest clip to a given playhead time (spans that contain win ties)
+// Is a span clip active at time t? (false inside any paused range, e.g. a role
+// paused for a summer internship.)
+export function barActiveAt(c, t) {
+  if (c.point || t < c.t0 || t > c.t1) return false;
+  if (c.pauses) for (const [ps, pe] of c.pauses) if (t >= ps && t <= pe) return false;
+  return true;
+}
+
+// nearest clip to a given playhead time (active spans that contain win ties)
 export function nearestClip(t) {
   let best = null;
   let bestD = Infinity;
   for (const c of allClips) {
-    const contains = !c.point && t >= c.t0 && t <= c.t1;
+    const contains = barActiveAt(c, t);
     const d = contains ? 0 : Math.abs(clipCenter(c) - t);
     if (d < bestD) {
       bestD = d;

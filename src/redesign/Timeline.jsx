@@ -43,6 +43,30 @@ function rulerTicks(vs, ve, span) {
   return ticks;
 }
 
+// Active sub-intervals of a span once paused ranges are removed.
+function activeIntervals(t0, t1, pauses) {
+  if (!pauses || !pauses.length) return [[t0, t1]];
+  const sorted = [...pauses].sort((a, b) => a[0] - b[0]);
+  const out = [];
+  let cur = t0;
+  for (const [ps, pe] of sorted) {
+    const s = Math.max(t0, ps);
+    const e = Math.min(t1, pe);
+    if (e <= cur) continue;
+    if (s > cur) out.push([cur, s]);
+    cur = Math.max(cur, e);
+  }
+  if (cur < t1) out.push([cur, t1]);
+  return out;
+}
+
+// Secondary line shown in a clip's hover tooltip.
+function tipMeta(c) {
+  if (c.track === "research") return [c.year, c.venue].filter(Boolean).join(" · ");
+  if (c.track === "experience") return [c.company, c.year].filter(Boolean).join(" · ");
+  return (c.tags || []).join(" · ");
+}
+
 export default function Timeline() {
   const { state, actions } = useStore();
   const areaRef = useRef(null);
@@ -136,9 +160,15 @@ export default function Timeline() {
   const compact = bandH < 17; // bands too short for legible labels -> dots
 
   const renderClip = (c) => {
-    const isActive = state.activeId === c.id;
+    const isActive = state.focusId === c.id;
     const isLit = lit.has(c.id);
     const showLabel = !compact || isActive || isLit;
+    const tip = (
+      <span className="tl-tip" aria-hidden="true">
+        <span className="tl-tip-title">{c.title}</span>
+        {tipMeta(c) && <span className="tl-tip-meta">{tipMeta(c)}</span>}
+      </span>
+    );
     if (c.point) {
       const left = vpos(c.t0) * 100;
       if (!showLabel) {
@@ -149,9 +179,10 @@ export default function Timeline() {
             style={{ left: `${left}%` }}
             onPointerDown={(e) => e.stopPropagation()}
             onClick={() => actions.selectClip(c.id)}
-            title={c.title}
             aria-label={c.title}
-          />
+          >
+            {tip}
+          </button>
         );
       }
       const frac = left / 100;
@@ -163,27 +194,51 @@ export default function Timeline() {
           style={{ left: `${left}%` }}
           onPointerDown={(e) => e.stopPropagation()}
           onClick={() => actions.selectClip(c.id)}
-          title={c.title}
         >
           <span className="tl-clip-dot" />
           <span className="tl-clip-label">{c.label}</span>
+          {tip}
         </button>
       );
     }
-    const leftPct = Math.max(0, vpos(c.t0) * 100);
-    const rightPct = Math.min(100, vpos(c.t1) * 100);
-    return (
-      <button
-        key={c.id}
-        className={`tl-bar${isActive ? " active" : ""}${isLit ? " lit" : ""}${c.hub ? " hub" : ""}`}
-        style={{ left: `${leftPct}%`, width: `${Math.max(1, rightPct - leftPct)}%` }}
-        onPointerDown={(e) => e.stopPropagation()}
-        onClick={() => actions.selectClip(c.id)}
-        title={`${c.title} — ${c.company}`}
-      >
-        {showLabel && <span className="tl-bar-label">{c.label}</span>}
-      </button>
-    );
+    // bar (experience), split around any paused ranges (e.g. internship)
+    const intervals = activeIntervals(c.t0, c.t1, c.pauses);
+    let widest = 0;
+    intervals.forEach((iv, i) => {
+      if (iv[1] - iv[0] > intervals[widest][1] - intervals[widest][0]) widest = i;
+    });
+    const segs = intervals.map((iv, i) => {
+      const l = Math.max(0, vpos(iv[0]) * 100);
+      const r = Math.min(100, vpos(iv[1]) * 100);
+      if (r <= l) return null;
+      return (
+        <button
+          key={`${c.id}-${i}`}
+          className={`tl-bar${isActive ? " active" : ""}${isLit ? " lit" : ""}${c.hub ? " hub" : ""}`}
+          style={{ left: `${l}%`, width: `${Math.max(1, r - l)}%` }}
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={() => actions.selectClip(c.id)}
+          aria-label={`${c.title} — ${c.company}`}
+        >
+          {i === widest && <span className="tl-bar-label">{c.label}</span>}
+          {tip}
+        </button>
+      );
+    });
+    const gaps = (c.pauses || []).map((p, gi) => {
+      const l = Math.max(0, vpos(Math.max(c.t0, p[0])) * 100);
+      const r = Math.min(100, vpos(Math.min(c.t1, p[1])) * 100);
+      if (r <= l) return null;
+      return (
+        <span
+          key={`${c.id}-gap-${gi}`}
+          className="tl-bar-pause"
+          style={{ left: `${l}%`, width: `${r - l}%` }}
+          aria-hidden="true"
+        />
+      );
+    });
+    return [...segs, ...gaps];
   };
 
   const inView = (t, m = 0.02) => vpos(t) >= -m && vpos(t) <= 1 + m;
