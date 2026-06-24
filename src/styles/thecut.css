@@ -510,7 +510,8 @@ kbd {
 .mixer-items { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .mixer-chip { font-size: 0.82rem; background: var(--panel2); border: 1px solid var(--line2); border-radius: 5px; padding: 0.2rem 0.55rem; color: var(--fg); }
 
-.contact-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1rem; }
+.contact-row { display: flex; flex-direction: column; align-items: flex-start; gap: 0.7rem; margin-top: 1rem; }
+.contact-links { display: flex; flex-wrap: wrap; gap: 0.6rem; }
 .contact-btn {
   display: inline-flex;
   align-items: center;

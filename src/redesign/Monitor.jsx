@@ -498,10 +498,12 @@ function ContactPanel() {
         <button className="contact-btn primary" onClick={copy}>
           {copied ? <><FiCheck size={15} /> Copied</> : <><FiCopy size={15} /> {email}</>}
         </button>
-        <a className="contact-btn" href={cvFile} target="_blank" rel="noreferrer"><FiDownload size={15} /> Download CV</a>
-        <a className="contact-btn" href={social.github} target="_blank" rel="noreferrer"><FiGithub size={15} /> GitHub</a>
-        <a className="contact-btn" href={social.linkedin} target="_blank" rel="noreferrer"><FiLinkedin size={15} /> LinkedIn</a>
-        <a className="contact-btn" href={social.scholar} target="_blank" rel="noreferrer"><SiGooglescholar size={15} /> Scholar</a>
+        <div className="contact-links">
+          <a className="contact-btn" href={cvFile} target="_blank" rel="noreferrer"><FiDownload size={15} /> Download CV</a>
+          <a className="contact-btn" href={social.github} target="_blank" rel="noreferrer"><FiGithub size={15} /> GitHub</a>
+          <a className="contact-btn" href={social.linkedin} target="_blank" rel="noreferrer"><FiLinkedin size={15} /> LinkedIn</a>
+          <a className="contact-btn" href={social.scholar} target="_blank" rel="noreferrer"><SiGooglescholar size={15} /> Scholar</a>
+        </div>
       </div>
     </div>
   );
