@@ -85,7 +85,9 @@ export default function Monitor() {
 
   const answering = state.mode === "query" && state.answer;
   const total = answering ? state.answer.tokens.length : 0;
-  const confidence = answering ? Math.min(96, Math.round((revealed / Math.max(1, total)) * 100)) : 0;
+  const confTarget = answering ? state.answer.confidence ?? 90 : 0;
+  const confidence = answering ? Math.round((revealed / Math.max(1, total)) * confTarget) : 0;
+  const latency = answering ? state.answer.latency ?? 38 : 0;
 
   // All clips at the current playhead time (so concurrent work shows together).
   const showingClips = !answering && !isPanel(state.activeId);
@@ -136,7 +138,7 @@ export default function Monitor() {
       {answering && (
         <div className="mon-hud" aria-hidden="true">
           <span className="dot" /> MPX-1
-          <span className="sep">·</span> latency 38ms
+          <span className="sep">·</span> latency {latency}ms
           <span className="sep">·</span> {revealed >= total ? "done" : "decoding"}
           <span className="sep">·</span> conf <b>{confidence}%</b>
           <span className="mon-hud-bar"><i style={{ width: `${confidence}%` }} /></span>
@@ -383,7 +385,7 @@ function ClipStack({ clips, primaryId, edu, onFocus }) {
         <aside className="cv-rail">
           {edu && edu.length > 0 && (
             <div className="cv-edu">
-              <p className="cv-rail-head">Education</p>
+              <p className="cv-rail-head edu">Education</p>
               {edu.map((e) => (
                 <div key={e.label} className="cv-edu-item">{e.label}</div>
               ))}
