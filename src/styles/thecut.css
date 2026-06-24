@@ -21,6 +21,7 @@
   --amber: #f6bb46;
   --indigo: #8b95ff;
   --violet: #c08bf2;
+  --edu: #5b9bd1;
   --radius: 7px;
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --sans: "Hanken Grotesk", system-ui, -apple-system, Segoe UI, sans-serif;
@@ -428,12 +429,13 @@ a { color: inherit; }
 .cv-edu-item {
   background: var(--panel);
   border: 1px solid var(--line2);
-  border-left: 2px solid var(--indigo);
+  border-left: 2px solid var(--edu);
   border-radius: var(--radius);
   padding: 0.5rem 0.7rem;
   font-size: 0.85rem;
   color: var(--fg);
 }
+.cv-rail-head.edu { color: var(--edu); }
 
 /* empty main-area state */
 .cv-empty {
@@ -884,6 +886,35 @@ kbd {
   .tp-active { display: none; }
   .cut-timeline { padding: 0.5rem 1rem 0.6rem; }
   .tl-clip { max-width: 96px; }
+}
+
+/* cards shrink as the window narrows */
+@media (max-width: 1100px) {
+  .cv-stack.multi .cv { flex-basis: 330px; }
+  .cv-rail { flex: 0 0 220px; }
+}
+@media (max-width: 900px) {
+  .cv .cv-title { font-size: 1.5rem; }
+  .cv.dense .cv-title { font-size: 1.05rem; }
+  .cv-stack.multi .cv { flex-basis: 270px; padding: 0.65rem 0.8rem; }
+}
+@media (max-width: 640px) {
+  .cut-topbar { gap: 0.5rem; padding: 0.55rem 0.9rem; }
+  .cut-nav-link { padding: 0.3rem 0.4rem; font-size: 0.8rem; }
+  .mon-console { padding: 0.45rem 0.5rem 0.45rem 0.7rem; gap: 0.4rem; }
+  .mon-input { font-size: 0.9rem; }
+  .mon-prompt { display: none; }
+  .mon-ex { font-size: 0.72rem; padding: 0.18rem 0.55rem; }
+  .cv-stack.multi { gap: 0.6rem; }
+  .cv-stack.multi .cv { flex-basis: 100%; max-width: 100%; }
+  .cv .cv-title, .cv-title { font-size: 1.3rem; }
+  .cv-authors, .cv-body { font-size: 0.9rem; }
+  .cv.dense .cv-figure { height: 130px; }
+  .contact-btn { padding: 0.5rem 0.7rem; font-size: 0.85rem; }
+  .transport { gap: 0.5rem; padding: 0.5rem 0.6rem; }
+  .tp-btn { width: 27px; height: 27px; }
+  .tp-link { padding: 0.3rem 0.5rem; font-size: 0.74rem; }
+  .intro-portrait img { width: 120px; height: 150px; }
 }
 
 /* ---------- reduced motion ---------- */

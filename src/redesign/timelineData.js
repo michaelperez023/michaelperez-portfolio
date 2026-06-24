@@ -120,7 +120,7 @@ const PROJECT_META = {
   5: [2021.83, "graphics", true], // Advanced Graphics Scene — Nov 2021
   6: [2020.25, "hermes", true], // Hermes Tracker — April 2020
   7: [2019.25, "gamead", true], // Game Advertisement Video — April 2019
-  8: [2019.3, "villas"], // DR Villas Booking
+  8: [2023.5, "villas", true], // DR Villas Booking — Summer 2023
   9: [2020.75, "surgery", true], // Surgery Tool Simulator — Oct 2020
   10: [2026.5, "portfolio"], // This Portfolio
 };
@@ -220,13 +220,14 @@ export function barActiveAt(c, t) {
   return true;
 }
 
-// nearest clip to a given playhead time (active spans that contain win ties)
+// Nearest clip to a playhead time. Point clips (papers/projects) are the salient
+// "events"; a long background role bar only wins if no point clip is reasonably
+// near (containing bars get a distance just above the coincidence window).
 export function nearestClip(t) {
   let best = null;
   let bestD = Infinity;
   for (const c of allClips) {
-    const contains = barActiveAt(c, t);
-    const d = contains ? 0 : Math.abs(clipCenter(c) - t);
+    const d = barActiveAt(c, t) ? 0.26 : Math.abs(clipCenter(c) - t);
     if (d < bestD) {
       bestD = d;
       best = c;

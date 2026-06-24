@@ -45,6 +45,7 @@ export const initial = {
   zoom: 1, // temporal zoom (1 = whole span)
   viewStart: START, // left edge of the visible time window
   tlHeight: 300, // timeline panel height (px), user-resizable
+  tagFilter: null, // {type,value} — when set, show all clips with this tag (ignores time)
 };
 
 // Build a state update that sets the playhead and pans the window to it.
@@ -171,7 +172,13 @@ export function reducer(state, action) {
         ...state,
         mode: "query",
         playing: false,
-        answer: { tokens: tokenize(res.answer), attend: res.attend, matched: res.matched },
+        answer: {
+          tokens: tokenize(res.answer),
+          attend: res.attend,
+          matched: res.matched,
+          latency: res.latency,
+          confidence: res.confidence,
+        },
         attended: [],
       };
     }
