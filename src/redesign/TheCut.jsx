@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useStore } from "./storeCore";
 import Monitor from "./Monitor";
 import Timeline from "./Timeline";
@@ -11,6 +11,24 @@ export default function TheCut() {
   const stateRef = useRef(state);
   stateRef.current = state;
   const timelineWrapRef = useRef(null);
+
+  // resizable timeline height (drag the top handle)
+  const [tlHeight, setTlHeight] = useState(224);
+  const resizing = useRef(null);
+  const onResizeDown = (e) => {
+    resizing.current = { startY: e.clientY, startH: tlHeight };
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+  };
+  const onResizeMove = (e) => {
+    const r = resizing.current;
+    if (!r) return;
+    const max = Math.round(window.innerHeight * 0.62);
+    const next = Math.min(max, Math.max(168, r.startH + (r.startY - e.clientY)));
+    setTlHeight(next);
+  };
+  const onResizeUp = () => {
+    resizing.current = null;
+  };
 
   // global keyboard transport
   useEffect(() => {
@@ -91,7 +109,10 @@ export default function TheCut() {
   }, [state.playing, actions]);
 
   return (
-    <div className="cut-root">
+    <div
+      className="cut-root"
+      style={{ gridTemplateRows: `auto minmax(0, 1fr) ${tlHeight}px auto` }}
+    >
       <header className="cut-topbar">
         <span className="cut-brand">MICHAEL&nbsp;PÉREZ</span>
         <span className="cut-brand-sub">video understanding · in real time</span>
@@ -100,6 +121,19 @@ export default function TheCut() {
         <Monitor />
       </main>
       <section className="cut-timeline" ref={timelineWrapRef} aria-label="Career timeline (scrub to explore)">
+        <div
+          className="tl-resize"
+          role="separator"
+          aria-orientation="horizontal"
+          aria-label="Drag to resize the timeline"
+          title="Drag to resize"
+          onPointerDown={onResizeDown}
+          onPointerMove={onResizeMove}
+          onPointerUp={onResizeUp}
+          onPointerCancel={onResizeUp}
+        >
+          <span className="tl-resize-grip" />
+        </div>
         <Timeline />
       </section>
       <TransportBar />
