@@ -26,6 +26,14 @@ export default function TransportBar() {
         </button>
         <button className="tp-btn" onClick={() => actions.step(1)} aria-label="Next clip">▶</button>
         <button className="tp-btn" onClick={() => actions.edge(1)} aria-label="Last clip"><FiSkipForward size={15} /></button>
+        <button
+          className="tp-btn tp-speed"
+          onClick={() => actions.cyclePlaySpeed()}
+          title="Playback speed"
+          aria-label={`Playback speed ${state.playSpeed}×`}
+        >
+          {state.playSpeed}×
+        </button>
       </div>
 
       <div className="tp-right">
