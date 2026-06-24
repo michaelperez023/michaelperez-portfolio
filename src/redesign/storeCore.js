@@ -20,15 +20,6 @@ const clampViewStart = (vs, zoom) => {
   const span = FULL / zoom;
   return Math.min(END - span, Math.max(START, vs));
 };
-// Clamp the view window so the playhead stays inside it (pinned to the edge
-// if a zoom would otherwise push it out of view).
-function keepPlayheadInView(vs, zoom, playhead) {
-  const span = FULL / zoom;
-  if (playhead < vs) vs = playhead;
-  else if (playhead > vs + span) vs = playhead - span;
-  return clampViewStart(vs, zoom);
-}
-
 // Pan the view window just enough to keep the playhead visible (with margin).
 function panToShow(viewStart, zoom, playhead) {
   if (zoom <= 1) return START;
@@ -145,12 +136,15 @@ export function reducer(state, action) {
       return { ...state, zoom, viewStart: zoom === 1 ? START : vs };
     }
     case "SET_ZOOM_AT": {
-      // zoom toward the cursor, but never push the playhead out of view
+      // zoom toward the cursor (keep the time under the pointer fixed);
+      // pin the playhead to the nearest visible edge if it would leave view.
       const zoom = Math.min(MAX_ZOOM, Math.max(1, action.zoom));
       const span = FULL / zoom;
-      let vs = clampViewStart(action.focusTime - action.focusFrac * span, zoom);
-      vs = keepPlayheadInView(vs, zoom, state.playhead);
-      return { ...state, zoom, viewStart: zoom === 1 ? START : vs };
+      const vs = zoom === 1 ? START : clampViewStart(action.focusTime - action.focusFrac * span, zoom);
+      let playhead = state.playhead;
+      if (playhead < vs) playhead = vs;
+      else if (playhead > vs + span) playhead = vs + span;
+      return { ...state, zoom, viewStart: vs, playhead };
     }
     case "SET_TL_HEIGHT":
       return { ...state, tlHeight: action.value };
