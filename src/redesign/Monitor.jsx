@@ -202,9 +202,18 @@ function ClipView({ clip }) {
           {clip.tags?.map((t) => <span key={t} className="cv-tag">{t}</span>)}
         </div>
         <h2 className="cv-title">{clip.title}</h2>
-        <p className="cv-body">{clip.sub}</p>
-        <LinkRow clip={clip} />
-        {clip.approx && <p className="cv-approx">≈ placed by era — exact date adjustable</p>}
+        <div className="cv-projbody">
+          {clip.image && (
+            <figure className="cv-figure">
+              <img src={clip.image} alt={clip.title} loading="lazy" />
+            </figure>
+          )}
+          <div className="cv-projtext">
+            <p className="cv-body">{clip.sub}</p>
+            <LinkRow clip={clip} />
+            {clip.approx && <p className="cv-approx">≈ placed by era — exact date adjustable</p>}
+          </div>
+        </div>
       </article>
     );
   }

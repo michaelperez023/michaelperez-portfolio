@@ -230,6 +230,35 @@ a { color: inherit; }
 }
 .cv-link:hover { border-color: var(--signal); }
 
+/* project preview ("program monitor" frame) */
+.cv-projbody { display: flex; gap: 1.4rem; align-items: flex-start; flex-wrap: wrap; }
+.cv-figure {
+  margin: 0;
+  flex: 0 0 340px;
+  max-width: 100%;
+  border: 1px solid var(--line2);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #0a0d11;
+  position: relative;
+}
+.cv-figure::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+.cv-figure img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: contain;
+  background: #0a0d11;
+}
+.cv-projtext { flex: 1 1 280px; min-width: 0; }
+.cv-projtext .cv-body { margin-top: 0; }
+
 /* ---------- intro / panels ---------- */
 .intro { max-width: 60ch; animation: rise 0.3s ease; }
 .intro-eyebrow { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.18em; color: var(--signal); margin: 0.4rem 0 0.6rem; }
