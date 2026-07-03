@@ -8,7 +8,7 @@ import {
   clipById,
   clipsByTime,
 } from "./timelineData";
-import { runQuery, tokenize } from "./retrieval";
+import { tokenize } from "./retrieval";
 
 const PANELS = new Set(["intro", "about", "skills", "contact"]);
 export const isPanel = (id) => PANELS.has(id);
@@ -39,6 +39,7 @@ export const initial = {
   mode: "scrub", // 'scrub' | 'query'
   playing: false, // auto-scrub running
   query: "",
+  pending: false, // a query is resolving (e.g. semantic model still warming)
   answer: null, // { tokens, attend } when a query has run
   attended: [], // clip ids currently lit by the active query
   listView: false, // accessible linear fallback
@@ -59,6 +60,7 @@ function moved(state, playhead, extra) {
     viewStart: panToShow(state.viewStart, state.zoom, ph),
     focusId: extra.activeId ?? state.focusId, // focus follows selection/scrub
     tagFilter: null, // any playhead move exits the tag filter
+    pending: false, // and abandons any in-flight query
     ...extra,
   };
 }
@@ -170,30 +172,30 @@ export function reducer(state, action) {
       // changing which clips are shown — used by clicking a coincident card.
       return { ...state, focusId: action.id };
     case "PLAY":
-      return { ...state, playing: true, mode: "scrub", answer: null, attended: [] };
+      return { ...state, playing: true, mode: "scrub", answer: null, attended: [], pending: false };
     case "PAUSE":
       return { ...state, playing: false };
     case "TOGGLE_PLAY":
       return state.playing
         ? { ...state, playing: false }
-        : { ...state, playing: true, mode: "scrub", answer: null, attended: [] };
+        : { ...state, playing: true, mode: "scrub", answer: null, attended: [], pending: false };
     case "SET_QUERY":
       return { ...state, query: action.value };
-    case "SUBMIT_QUERY": {
-      const t0 = performance.now();
-      const res = runQuery(state.query);
-      if (!res) return state;
-      const latency = performance.now() - t0; // real, measured
+    case "QUERY_PENDING":
+      return { ...state, mode: "query", playing: false, pending: true, answer: null, attended: [], tagFilter: null };
+    case "QUERY_RESULT": {
+      if (!state.pending) return state; // user scrubbed away while resolving
+      const res = action.res;
       return {
         ...state,
         mode: "query",
-        playing: false,
+        pending: false,
         answer: {
           tokens: tokenize(res.answer),
           attend: res.attend,
           matched: res.matched,
           tier: res.tier,
-          latency,
+          latency: action.latency, // real, measured (includes any model wait)
         },
         attended: [],
         tagFilter: null,
@@ -204,7 +206,7 @@ export function reducer(state, action) {
         ? state
         : { ...state, attended: [...state.attended, action.id] };
     case "ESCAPE":
-      return { ...state, mode: "scrub", playing: false, answer: null, attended: [], query: "", tagFilter: null };
+      return { ...state, mode: "scrub", playing: false, answer: null, attended: [], query: "", tagFilter: null, pending: false };
     case "TOGGLE_LISTVIEW":
       return { ...state, listView: !state.listView, playing: false };
     default:

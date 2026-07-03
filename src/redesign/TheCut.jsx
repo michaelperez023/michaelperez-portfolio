@@ -62,7 +62,7 @@ export default function TheCut() {
     if (intent.type === "tag") actions.setTagFilter(intent.value);
     else if (intent.type === "q") {
       actions.setQuery(intent.value);
-      actions.submitQuery();
+      actions.submitQuery(intent.value);
     } else if (intent.type === "clip") actions.selectClip(intent.value);
     else if (intent.type === "panel") {
       const s = sections.find((x) => x.key === intent.value);

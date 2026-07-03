@@ -23,7 +23,7 @@ const SYNONYMS = {
   transparent: "explainable", xai: "explainable",
   pipeline: "systems", pipelines: "systems", backend: "systems", infrastructure: "systems",
   fastapi: "systems", docker: "systems", mlops: "systems", engineering: "systems",
-  engineer: "systems", build: "systems",
+  engineer: "systems",
   paper: "publication", papers: "publication", published: "publication",
   publications: "publication", peer: "publication", "first-author": "first author",
   language: "nlp", summarization: "nlp", summarisation: "nlp", text: "nlp",
@@ -293,7 +293,9 @@ function editDistance(a, b, max) {
 function nearest(word, candidates) {
   if (word.length < 4 || /^\d+$/.test(word)) return null;
   let best = null;
-  let bestD = word.length >= 7 ? 2 : 1;
+  // conservative: distance 2 only on long words, or real words get "corrected"
+  // into vocabulary (e.g. weaving -> serving)
+  let bestD = word.length >= 8 ? 2 : 1;
   for (const c of candidates) {
     const d = editDistance(word, c, bestD);
     if (d <= bestD && (d < bestD || best === null)) {
@@ -445,6 +447,24 @@ export function runQuery(raw) {
   // 3) graceful fallback
   return { answer: FALLBACK.answer, attend: FALLBACK.attend, matched: FALLBACK.matched, tier: "overview" };
 }
+
+// --- documents for the optional in-browser semantic layer (semantic.js) ---
+const stripCites = (s) => s.replace(/\[\[[^\]]+\]\]/g, "").replace(/\s+/g, " ").trim();
+export const topicDocs = TOPICS.map((t) => ({
+  answer: t.answer,
+  attend: t.attend,
+  text: `${t.keys.join(", ")}. ${stripCites(t.answer)}`,
+}));
+export const clipDocs = allClips.map((c) => ({
+  id: c.id,
+  text: [
+    c.title, c.venue, c.note, c.sub, c.details, c.company, c.position,
+    (c.tags || []).join(", "), AUGMENT[c.id] || "",
+  ]
+    .filter(Boolean)
+    .join(". "),
+}));
+export { composeGeneral };
 
 // Split an answer into tokens; [[id]] markers become citation tokens.
 export function tokenize(answer) {
