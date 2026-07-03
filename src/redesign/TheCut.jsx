@@ -310,7 +310,7 @@ export default function TheCut() {
             );
           })}
           <button
-            className={`cut-nav-link lv${state.listView ? " on" : ""}`}
+            className={`cut-nav-link nav-lv${state.listView ? " on" : ""}`}
             onClick={() => actions.toggleListView()}
             title="Everything as a plain, scrollable CV"
           >
