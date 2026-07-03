@@ -297,31 +297,11 @@ export const examples = [
   "Why should we hire you?",
 ];
 
-// Deterministic per-query seed (so latency/confidence vary by question but stay
-// stable for a given question, not flickering).
-function seedFrom(s) {
-  let h = 2166136261;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
-}
-
+// tier reports which retrieval path actually answered — shown honestly in the
+// HUD (no simulated metrics): "curated" | "keyword" | "overview".
 export function runQuery(raw) {
   if (!raw || !raw.trim()) return null;
   const q = expand(raw);
-  const seed = seedFrom(raw);
-  const latency = 19 + (seed % 44); // 19–62 ms, varies per question
-  const finish = (res, quality) => ({
-    ...res,
-    latency,
-    // confidence reflects match quality, with slight per-query variation
-    confidence: Math.max(
-      38,
-      Math.round((quality === "curated" ? 95 : quality === "general" ? 82 : 49) - (seed % 6))
-    ),
-  });
 
   // 1) curated topics, synonym-aware
   let best = null;
@@ -334,14 +314,14 @@ export function runQuery(raw) {
       best = topic;
     }
   }
-  if (best) return finish({ answer: best.answer, attend: best.attend, matched: true }, "curated");
+  if (best) return { answer: best.answer, attend: best.attend, matched: true, tier: "curated" };
 
   // 2) weighted keyword search over the whole record
   const ids = generalSearch(q).filter((id) => clipById[id]);
-  if (ids.length) return finish(composeGeneral(raw, ids), "general");
+  if (ids.length) return { ...composeGeneral(raw, ids), tier: "keyword" };
 
   // 3) graceful fallback
-  return finish({ answer: FALLBACK.answer, attend: FALLBACK.attend, matched: FALLBACK.matched }, "none");
+  return { answer: FALLBACK.answer, attend: FALLBACK.attend, matched: FALLBACK.matched, tier: "overview" };
 }
 
 // Split an answer into tokens; [[id]] markers become citation tokens.

@@ -36,6 +36,7 @@ export default function ListView() {
         <header className="lv-head">
           <h1>{information.fullName}</h1>
           <p>{information.role} · {information.location}</p>
+          <p className="lv-avail">{information.availability}</p>
           <p className="lv-links">
             <a href={`mailto:${information.email}`}>{information.email}</a> ·{" "}
             <a href={information.social.github}>GitHub</a> ·{" "}

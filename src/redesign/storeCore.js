@@ -180,8 +180,10 @@ export function reducer(state, action) {
     case "SET_QUERY":
       return { ...state, query: action.value };
     case "SUBMIT_QUERY": {
+      const t0 = performance.now();
       const res = runQuery(state.query);
       if (!res) return state;
+      const latency = performance.now() - t0; // real, measured
       return {
         ...state,
         mode: "query",
@@ -190,8 +192,8 @@ export function reducer(state, action) {
           tokens: tokenize(res.answer),
           attend: res.attend,
           matched: res.matched,
-          latency: res.latency,
-          confidence: res.confidence,
+          tier: res.tier,
+          latency,
         },
         attended: [],
         tagFilter: null,
