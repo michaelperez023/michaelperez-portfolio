@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { FiChevronUp } from "react-icons/fi";
+import { FiChevronUp, FiList } from "react-icons/fi";
 import { useStore, isPanel } from "./storeCore";
 import Monitor from "./Monitor";
 import Timeline from "./Timeline";
@@ -270,8 +270,9 @@ export default function TheCut() {
       if (last == null) last = ts;
       const dt = ts - last;
       last = ts;
-      // 1x ≈ full span in 20s; speed read live so the chip applies mid-play
-      const speed = ((END - START) / 20000) * stateRef.current.playSpeed;
+      // 1x ≈ full span in 30s (slow enough to read cards as they change);
+      // speed read live so the chip applies mid-play
+      const speed = ((END - START) / 30000) * stateRef.current.playSpeed;
       const next = stateRef.current.playhead + speed * dt;
       if (next >= END) {
         actions.tick(END);
@@ -308,6 +309,13 @@ export default function TheCut() {
               </button>
             );
           })}
+          <button
+            className={`cut-nav-link lv${state.listView ? " on" : ""}`}
+            onClick={() => actions.toggleListView()}
+            title="Everything as a plain, scrollable CV"
+          >
+            <FiList size={13} /> List<span className="lv-ext"> view</span>
+          </button>
         </nav>
       </header>
       <main className="cut-monitor">

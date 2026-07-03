@@ -83,6 +83,16 @@ a { color: inherit; }
   border-radius: 5px;
 }
 .cut-nav-link:hover, .cut-nav-link.on { color: var(--signal); }
+/* List view is the "just show me a CV" escape hatch — make it stand out */
+.cut-nav-link.lv {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: 0.4rem;
+  border: 1px solid var(--line2);
+  border-radius: 6px;
+}
+.cut-nav-link.lv:hover, .cut-nav-link.lv.on { border-color: var(--signal); }
 
 /* ---------- monitor ---------- */
 .cut-monitor {
@@ -988,6 +998,7 @@ kbd {
 @media (max-width: 640px) {
   .cut-topbar { gap: 0.5rem; padding: 0.55rem 0.9rem; }
   .cut-nav-link { padding: 0.3rem 0.4rem; font-size: 0.8rem; }
+  .lv-ext { display: none; } /* "List view" -> "List" on small screens */
   .mon-console { padding: 0.45rem 0.5rem 0.45rem 0.7rem; gap: 0.4rem; }
   .mon-input { font-size: 0.9rem; }
   .mon-prompt { display: none; }
