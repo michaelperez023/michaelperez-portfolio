@@ -83,8 +83,9 @@ a { color: inherit; }
   border-radius: 5px;
 }
 .cut-nav-link:hover, .cut-nav-link.on { color: var(--signal); }
-/* List view is the "just show me a CV" escape hatch — make it stand out */
-.cut-nav-link.lv {
+/* List view is the "just show me a CV" escape hatch — make it stand out.
+   (class is nav-lv, NOT lv — .lv is the fullscreen ListView overlay root) */
+.cut-nav-link.nav-lv {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -92,7 +93,7 @@ a { color: inherit; }
   border: 1px solid var(--line2);
   border-radius: 6px;
 }
-.cut-nav-link.lv:hover, .cut-nav-link.lv.on { border-color: var(--signal); }
+.cut-nav-link.nav-lv:hover, .cut-nav-link.nav-lv.on { border-color: var(--signal); }
 
 /* ---------- monitor ---------- */
 .cut-monitor {
