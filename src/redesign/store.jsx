@@ -1,5 +1,7 @@
 import { useMemo, useReducer } from "react";
 import { StoreCtx, reducer, initial } from "./storeCore";
+import { runQuery } from "./retrieval";
+import { semanticQuery } from "./semantic";
 
 export function StoreProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initial);
@@ -15,7 +17,20 @@ export function StoreProvider({ children }) {
       pause: () => dispatch({ type: "PAUSE" }),
       togglePlay: () => dispatch({ type: "TOGGLE_PLAY" }),
       setQuery: (value) => dispatch({ type: "SET_QUERY", value }),
-      submitQuery: () => dispatch({ type: "SUBMIT_QUERY" }),
+      // Resolve a query: curated (sync) wins; otherwise try the in-browser
+      // semantic layer (bounded wait), falling back to BM25 / overview.
+      submitQuery: async (q) => {
+        const query = (q ?? "").trim();
+        if (!query) return;
+        dispatch({ type: "QUERY_PENDING" });
+        const t0 = performance.now();
+        let res = runQuery(query);
+        if (res.tier !== "curated") {
+          const sem = await semanticQuery(query).catch(() => null);
+          if (sem) res = sem;
+        }
+        dispatch({ type: "QUERY_RESULT", res, latency: performance.now() - t0 });
+      },
       attend: (id) => dispatch({ type: "ATTEND", id }),
       escape: () => dispatch({ type: "ESCAPE" }),
       toggleListView: () => dispatch({ type: "TOGGLE_LISTVIEW" }),

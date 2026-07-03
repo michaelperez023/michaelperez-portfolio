@@ -14,6 +14,7 @@ import { SiGooglescholar } from "react-icons/si";
 import { useStore, isPanel } from "./storeCore";
 import { allClips, clipById, barActiveAt, eras, clipsMatchingTag } from "./timelineData";
 import { examples } from "./retrieval";
+import { prewarm } from "./semantic";
 import { information, about, skillGroups, honors, education } from "../data/content";
 
 const COINCIDE_W = 0.25; // ~3 months (a quarter): a tight cluster shows together, but
@@ -79,7 +80,7 @@ export default function Monitor() {
   const onKey = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      actions.submitQuery();
+      actions.submitQuery(state.query);
     }
   };
 
@@ -117,26 +118,32 @@ export default function Monitor() {
           value={state.query}
           onChange={(e) => actions.setQuery(e.target.value)}
           onKeyDown={onKey}
+          onFocus={() => prewarm()}
           placeholder="e.g. can you scale?  ( press /  to focus )"
           aria-label="Query Michael's work"
           data-query-input
         />
-        <button className="mon-run" onClick={() => actions.submitQuery()} aria-label="Run query">
+        <button className="mon-run" onClick={() => actions.submitQuery(state.query)} aria-label="Run query">
           run <FiCornerDownLeft size={13} />
         </button>
       </div>
       <div className="mon-examples">
         {examples.map((ex) => (
-          <button key={ex} className="mon-ex" aria-label={`Ask my work: ${ex}`} onClick={() => { actions.setQuery(ex); actions.submitQuery(); }}>
+          <button key={ex} className="mon-ex" aria-label={`Ask my work: ${ex}`} onClick={() => { actions.setQuery(ex); actions.submitQuery(ex); }}>
             {ex}
           </button>
         ))}
       </div>
 
-      {/* readout HUD (only while answering) — real, measured values only */}
+      {/* readout HUD — real, measured values only */}
+      {state.pending && (
+        <div className="mon-hud" aria-hidden="true">
+          <span className="dot" /> resolving — warming the in-browser model if needed…
+        </div>
+      )}
       {answering && (
         <div className="mon-hud" aria-hidden="true">
-          <span className="dot" /> local retrieval · no LLM
+          <span className="dot" /> {tier === "semantic" ? "in-browser embeddings · local" : "local retrieval · no LLM"}
           <span className="sep">·</span> {latency < 1 ? "<1" : latency.toFixed(1)}ms
           <span className="sep">·</span> match: <b>{tier}</b>
           <span className="sep">·</span> {revealed >= total ? "done" : "rendering"}
@@ -208,9 +215,11 @@ function Answer({ tokens, revealed, matched, tier }) {
       )}
       {done && (
         <p className="ans-foot">
-          {matched
-            ? "deterministic local retrieval over my indexed work — no LLM · click a source to scrub there"
-            : "no exact match — showing an overview · deterministic local retrieval, no LLM"}
+          {tier === "semantic"
+            ? "semantic match — a small embedding model in your browser · your query never left this page"
+            : matched
+              ? "deterministic local retrieval over my indexed work — no LLM · click a source to scrub there"
+              : "no exact match — showing an overview · deterministic local retrieval, no LLM"}
         </p>
       )}
     </div>
