@@ -148,7 +148,7 @@ export default function Monitor() {
         {state.tagFilter ? (
           <TagFiltered />
         ) : answering ? (
-          <Answer tokens={state.answer.tokens} revealed={revealed} matched={state.answer.matched} />
+          <Answer tokens={state.answer.tokens} revealed={revealed} matched={state.answer.matched} tier={tier} />
         ) : isPanel(state.activeId) ? (
           <Panel id={state.activeId} />
         ) : (
@@ -164,10 +164,13 @@ export default function Monitor() {
   );
 }
 
-function Answer({ tokens, revealed, matched }) {
+function Answer({ tokens, revealed, matched, tier }) {
   const { actions } = useStore();
   let citeN = 0;
   const done = revealed >= tokens.length;
+  // keyword-tier answers are themselves a list of cited clips — a Sources
+  // footer would just repeat the same chips
+  const showSources = tier !== "keyword";
   // unique cited clips, in order of first appearance, for the sources footer
   const cited = [];
   const seen = new Set();
@@ -193,7 +196,7 @@ function Answer({ tokens, revealed, matched }) {
         })}
         {!done && <span className="ans-cursor" />}
       </p>
-      {done && cited.length > 0 && (
+      {done && showSources && cited.length > 0 && (
         <div className="ans-sources">
           <span className="ans-sources-label">{cited.length === 1 ? "Source" : "Sources"}</span>
           {cited.map((clip, i) => (
