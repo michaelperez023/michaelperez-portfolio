@@ -1,8 +1,9 @@
 // Local, deterministic "inference" for the query-and-attend feature.
 // No LLM, no network, no API key — so there's zero cost and zero abuse surface.
-// Three tiers: (1) curated topic answers, expanded with synonym-aware matching;
-// (2) a weighted keyword search over the whole record; (3) a smart fallback.
-// Citation markers [[clipId]] point at real timeline clips.
+// Three tiers: (1) curated topic answers, with synonym expansion and typo
+// correction; (2) BM25 over a word-boundary stemmed index of the whole record,
+// composed into a prose answer that adapts to the question's shape; (3) an
+// honest fallback. Citation markers [[clipId]] point at real timeline clips.
 
 import { allClips, clipById } from "./timelineData";
 
@@ -52,6 +53,10 @@ const SYNONYMS = {
   relocate: "availability", "open-to-work": "availability", start: "availability",
   data: "datascience", numpy: "datascience", pandas: "datascience", analysis: "datascience",
   reviewer: "service", review: "service", "peer-review": "service", chair: "service",
+  ai: "machine learning", ml: "machine learning", pytorch: "machine learning",
+  tensorflow: "machine learning", keras: "machine learning", huggingface: "machine learning",
+  neural: "machine learning", cnn: "machine learning", cnns: "machine learning",
+  deep: "machine learning", vision: "machine learning", artificial: "machine learning",
 };
 
 const TOPICS = [
@@ -78,6 +83,12 @@ const TOPICS = [
     answer:
       "Video understanding is my thesis area. CReLeRI is an explainable, concept-centric long-video analysis system I first-authored at ACM Multimedia 2025 [[r-creleri]]. I also study temporal granularity as a design variable for zero-shot video retrieval [[r-temporal]], and built MuCHEx for interactive visual exploration of hierarchical classification [[r-muchex]].",
     attend: ["r-creleri", "r-temporal", "r-muchex"],
+  },
+  {
+    keys: ["machine learning", "computer vision", "deep learning"],
+    answer:
+      "AI is my day job — I'm a computer-vision / ML researcher and engineer. Flagship: CReLeRI, my first-author explainable video-understanding system at ACM Multimedia 2025 [[r-creleri]]. On the applied side, real-time drone detection and infrared super-resolution at CoVar (MSS 2026) [[e-covar]], and daily PyTorch across two DARPA-funded programs [[e-ruiz]].",
+    attend: ["r-creleri", "e-covar", "e-ruiz"],
   },
   {
     keys: ["darpa"],
@@ -219,67 +230,175 @@ const AUGMENT = {
   "r-temporal": "video retrieval zero-shot temporal granularity",
 };
 
-const CORPUS = allClips.map((c) => {
-  const parts = [
-    c.title, c.venue, c.note, c.tag, c.authors, c.sub, c.details,
-    c.company, c.position, (c.tags || []).join(" "), c.kind, c.track, c.year,
-    AUGMENT[c.id] || "",
-  ];
-  const yr = parseInt(String(c.year || "").slice(0, 4), 10) || 0;
-  return { id: c.id, track: c.track, lead: !!c.lead, year: yr, title: (c.title || "").toLowerCase(), blob: parts.filter(Boolean).join(" ").toLowerCase() };
-});
-
 const STOP = new Set(
-  "do you know can are is the a an of what about your you're with and to me my our show tell have has had any in on for im how does did would could should will give get list some good at would your".split(/\s+/)
+  "do you know can are is the a an of what about your you're with and to me my our show tell have has had any in on for im how does did would could should will give get list some good at use used using familiar done worked ever".split(/\s+/)
 );
 const SHORT_OK = new Set(["ml", "ai", "ar", "cv", "ros", "gan", "hpc", "nlp", "3d", "c++", "f#", "c#", "go"]);
 const stem = (w) => w.replace(/(ing|ers|er|ed|s)$/i, "");
 
-function terms(q) {
-  return q
+// Word-boundary tokens (stemmed, stopworded) — never substrings, so a short
+// query like "ai" can't match the inside of "training".
+function toks(s) {
+  return String(s)
     .toLowerCase()
     .split(/[^a-z0-9+#]+/)
     .filter(Boolean)
-    .filter((w) => !STOP.has(w) && (w.length >= 3 || SHORT_OK.has(w)));
+    .filter((w) => !STOP.has(w) && (w.length >= 3 || SHORT_OK.has(w)))
+    .map(stem);
 }
 
-// Expand a query with canonical synonyms so more phrasings hit the right topic.
-function expand(q) {
-  const lo = q.toLowerCase();
-  const extra = [];
-  for (const t of lo.split(/[^a-z0-9+#-]+/)) {
-    if (SYNONYMS[t]) extra.push(SYNONYMS[t]);
+// --- BM25 index over every clip, with field weighting (title > tags > rest) ---
+const DOCS = allClips.map((c) => {
+  const tf = new Map();
+  const add = (text, w) => toks(text).forEach((t) => tf.set(t, (tf.get(t) || 0) + w));
+  add(c.title || "", 3);
+  add([(c.tags || []).join(" "), c.tag, c.kind].filter(Boolean).join(" "), 2);
+  add(
+    [c.venue, c.note, c.authors, c.sub, c.details, c.company, c.position, c.track, c.year, AUGMENT[c.id] || ""]
+      .filter(Boolean)
+      .join(" "),
+    1
+  );
+  let len = 0;
+  tf.forEach((v) => (len += v));
+  const yr = parseInt(String(c.year || "").slice(0, 4), 10) || 0;
+  return { id: c.id, track: c.track, lead: !!c.lead, year: yr, tf, len };
+});
+const AVGLEN = DOCS.reduce((a, d) => a + d.len, 0) / DOCS.length;
+const DF = new Map();
+DOCS.forEach((d) => d.tf.forEach((_, t) => DF.set(t, (DF.get(t) || 0) + 1)));
+const VOCAB = [...DF.keys()];
+const idf = (t) => {
+  const df = DF.get(t) || 0;
+  return df ? Math.log(1 + (DOCS.length - df + 0.5) / (df + 0.5)) : 0;
+};
+
+// --- typo tolerance: nearest known term within a small edit distance ---
+function editDistance(a, b, max) {
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    let rowMin = i;
+    for (let j = 1; j <= b.length; j++) {
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      if (cur[j] < rowMin) rowMin = cur[j];
+    }
+    if (rowMin > max) return max + 1;
+    prev = cur;
   }
-  return extra.length ? `${lo} ${extra.join(" ")}` : lo;
+  return prev[b.length];
+}
+
+function nearest(word, candidates) {
+  if (word.length < 4 || /^\d+$/.test(word)) return null;
+  let best = null;
+  let bestD = word.length >= 7 ? 2 : 1;
+  for (const c of candidates) {
+    const d = editDistance(word, c, bestD);
+    if (d <= bestD && (d < bestD || best === null)) {
+      bestD = d;
+      best = c;
+      if (d === 0) break;
+    }
+  }
+  return best;
+}
+
+// Vocabulary the topic matcher understands (for typo-correcting the query).
+const KEY_VOCAB = [
+  ...new Set([
+    ...Object.keys(SYNONYMS),
+    ...TOPICS.flatMap((t) => t.keys.flatMap((k) => k.split(" "))),
+  ]),
+];
+
+// Expand a query: fix near-miss typos against known vocabulary, then append
+// canonical synonyms so phrasings we don't literally key on still hit topics.
+function expand(q) {
+  const words = q.toLowerCase().split(/[^a-z0-9+#-]+/).filter(Boolean);
+  const extra = [];
+  const fixed = words.map((w) => {
+    let t = w;
+    if (!STOP.has(t) && !SYNONYMS[t] && t.length >= 5 && !DF.has(stem(t))) {
+      t = nearest(t, KEY_VOCAB) || nearest(stem(t), VOCAB) || t;
+    }
+    if (SYNONYMS[t]) extra.push(SYNONYMS[t]);
+    return t;
+  });
+  return `${fixed.join(" ")} ${extra.join(" ")}`.trim();
+}
+
+// Match a topic key at word boundaries ("scale" shouldn't fire inside "scaled-up" text randomly).
+function hasKey(q, k) {
+  const esc = k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(^|[^a-z0-9])${esc}([^a-z0-9]|$)`).test(q);
 }
 
 const JOB_HINTS = ["job", "role", "work", "intern", "experience", "position", "employ", "ta", "assistant", "career"];
 
-function generalSearch(q) {
-  const ts = terms(q).map(stem);
-  if (!ts.length) return [];
-  const jobRelevant = JOB_HINTS.some((h) => q.includes(h));
-  const scored = CORPUS.map(({ id, track, lead, year, title, blob }) => {
+// BM25 over the record. Returns the top ids plus how much of the ORIGINAL
+// query the best document actually covered (drives honest answer phrasing).
+function generalSearch(raw, expanded) {
+  const fix = (t) => (DF.has(t) ? t : nearest(t, VOCAB) || t);
+  const origTs = [...new Set(toks(raw).map(fix))];
+  const ts = [...new Set([...origTs, ...toks(expanded).map(fix)])];
+  if (!ts.length) return null;
+  const jobRelevant = JOB_HINTS.some((h) => raw.toLowerCase().includes(h));
+  const K1 = 1.4;
+  const B = 0.6;
+  const scored = DOCS.map((d) => {
     let s = 0;
+    let origHits = 0;
     for (const t of ts) {
-      if (title.includes(t)) s += 4;
-      else if (blob.includes(t)) s += 1.5;
+      const f = d.tf.get(t) || 0;
+      if (!f) continue;
+      if (origTs.includes(t)) origHits++;
+      s += idf(t) * ((f * (K1 + 1)) / (f + K1 * (1 - B + (B * d.len) / AVGLEN)));
     }
-    if (track === "experience" && !jobRelevant) s *= 0.35; // don't surface jobs for topical queries
+    if (d.track === "experience" && !jobRelevant) s *= 0.35; // don't surface jobs for topical queries
     if (s > 0) {
-      if (lead) s *= 1.5; // surface first-author work
-      if (year >= 2024) s *= 1.25; // and recent work over older papers
+      if (d.lead) s *= 1.5; // surface first-author work
+      if (d.year >= 2024) s *= 1.25; // and recent work over older papers
     }
-    return { id, s };
+    return { id: d.id, s, origHits };
   })
     .filter((x) => x.s > 0)
     .sort((a, b) => b.s - a.s);
-  return scored.slice(0, 3).map((x) => x.id);
+  if (!scored.length) return null;
+  return {
+    ids: scored.slice(0, 3).map((x) => x.id),
+    coverage: origTs.length ? scored[0].origHits / origTs.length : 0,
+  };
 }
 
-function composeGeneral(raw, ids) {
-  const chips = ids.map((id) => `[[${id}]]`).join("  ");
-  return { answer: `Closest matches in my work for “${raw.trim()}”: ${chips}.`, attend: ids, matched: true };
+// One line of grounding context for a cited clip in a composed answer.
+function clipContext(c) {
+  if (c.track === "research") return [c.venue || c.note, c.year].filter(Boolean).join(", ");
+  if (c.track === "experience") return [c.company, c.year].filter(Boolean).join(", ");
+  return [(c.tags || [])[0], c.year].filter(Boolean).join(", ");
+}
+
+// "do you know X / experience with X / what about X" → capture X so the answer
+// can respond to the question instead of echoing it.
+const ASK_RE =
+  /^(?:do (?:you|u) (?:know|have|use)|have you (?:used|worked with|done|tried)|any experience (?:with|in)|experience (?:with|in)|what about|how about|familiar with|worked with|know|used?)\s+(.+?)[?.!]*$/i;
+
+function composeGeneral(raw, ids, coverage) {
+  const frags = ids.map((id) => {
+    const ctx = clipContext(clipById[id]);
+    return `[[${id}]]${ctx ? ` (${ctx})` : ""}`;
+  });
+  const list = frags.length > 1 ? `${frags.slice(0, -1).join("; ")}; and ${frags[frags.length - 1]}` : frags[0];
+  const m = raw.trim().match(ASK_RE);
+  const subject = m ? m[1].trim() : null;
+  const strong = coverage >= 0.99;
+  let opener;
+  if (subject && strong) opener = `Yes — ${subject} shows up directly in my work:`;
+  else if (subject) opener = `${subject} isn't a headline topic of mine, but the closest work I have:`;
+  else if (strong) opener = `Here's where that shows up in my work:`;
+  else opener = `Closest matches in my work for “${raw.trim()}”:`;
+  return { answer: `${opener} ${list}.`, attend: ids, matched: strong };
 }
 
 const FALLBACK = {
@@ -301,14 +420,14 @@ export const examples = [
 // HUD (no simulated metrics): "curated" | "keyword" | "overview".
 export function runQuery(raw) {
   if (!raw || !raw.trim()) return null;
-  const q = expand(raw);
+  const q = expand(raw); // typo-corrected + synonym-expanded
 
-  // 1) curated topics, synonym-aware
+  // 1) curated topics, matched at word boundaries
   let best = null;
   let bestScore = 0;
   for (const topic of TOPICS) {
     let score = 0;
-    for (const k of topic.keys) if (q.includes(k)) score += k.length;
+    for (const k of topic.keys) if (hasKey(q, k)) score += k.length;
     if (score > bestScore) {
       bestScore = score;
       best = topic;
@@ -316,9 +435,12 @@ export function runQuery(raw) {
   }
   if (best) return { answer: best.answer, attend: best.attend, matched: true, tier: "curated" };
 
-  // 2) weighted keyword search over the whole record
-  const ids = generalSearch(q).filter((id) => clipById[id]);
-  if (ids.length) return { ...composeGeneral(raw, ids), tier: "keyword" };
+  // 2) BM25 over the whole record, composed into a question-aware answer
+  const hit = generalSearch(raw, q);
+  if (hit) {
+    const ids = hit.ids.filter((id) => clipById[id]);
+    if (ids.length) return { ...composeGeneral(raw, ids, hit.coverage), tier: "keyword" };
+  }
 
   // 3) graceful fallback
   return { answer: FALLBACK.answer, attend: FALLBACK.attend, matched: FALLBACK.matched, tier: "overview" };
