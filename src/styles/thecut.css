@@ -172,8 +172,6 @@ a { color: inherit; }
 .mon-hud .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 8px var(--signal); }
 .mon-hud .sep { color: var(--faint); }
 .mon-hud b { color: var(--signal); }
-.mon-hud-bar { width: 90px; height: 4px; background: var(--line2); border-radius: 2px; overflow: hidden; }
-.mon-hud-bar i { display: block; height: 100%; background: var(--signal); transition: width 0.12s linear; }
 
 .mon-stage {
   flex: 1;
@@ -964,6 +962,7 @@ kbd {
 .lv-doc { overflow: auto; padding: 2rem 1.4rem 4rem; max-width: 60rem; margin: 0 auto; width: 100%; }
 .lv-head h1 { font-size: 2rem; margin: 0 0 0.3rem; }
 .lv-head p { color: var(--dim); margin: 0.2rem 0; }
+.lv-head .lv-avail { color: var(--signal); font-weight: 600; }
 .lv-links a { color: var(--signal); text-decoration: none; }
 .lv-doc section { margin-top: 2rem; border-top: 1px solid var(--line); padding-top: 1rem; }
 .lv-doc h2 { font-size: 1.3rem; margin: 0 0 0.8rem; }

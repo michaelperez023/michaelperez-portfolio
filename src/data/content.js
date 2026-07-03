@@ -8,6 +8,8 @@ export const information = {
   tagline:
     "PhD candidate at the University of Florida specializing in video understanding, computer vision, and real-time ML systems. I build end-to-end pipelines for video analysis, detection, and retrieval.",
   location: "Gainesville, Florida",
+  availability:
+    "Available August 10, 2026 for full-time ML / AI Engineer roles — on-site, hybrid, or remote, and open to relocating.",
   email: "michaelperez012@ufl.edu",
   headshot: "/images/headshot.jpg",
   cvFile: "/files/CV.pdf",

@@ -85,9 +85,8 @@ export default function Monitor() {
 
   const answering = state.mode === "query" && state.answer;
   const total = answering ? state.answer.tokens.length : 0;
-  const confTarget = answering ? state.answer.confidence ?? 90 : 0;
-  const confidence = answering ? Math.round((revealed / Math.max(1, total)) * confTarget) : 0;
-  const latency = answering ? state.answer.latency ?? 38 : 0;
+  const tier = answering ? state.answer.tier : null;
+  const latency = answering ? state.answer.latency ?? 0 : 0;
 
   // All clips at the current playhead time (so concurrent work shows together).
   const showingClips = !answering && !isPanel(state.activeId);
@@ -134,14 +133,13 @@ export default function Monitor() {
         ))}
       </div>
 
-      {/* readout HUD (only while answering) */}
+      {/* readout HUD (only while answering) — real, measured values only */}
       {answering && (
         <div className="mon-hud" aria-hidden="true">
-          <span className="dot" /> MPX-1
-          <span className="sep">·</span> latency {latency}ms
-          <span className="sep">·</span> {revealed >= total ? "done" : "decoding"}
-          <span className="sep">·</span> conf <b>{confidence}%</b>
-          <span className="mon-hud-bar"><i style={{ width: `${confidence}%` }} /></span>
+          <span className="dot" /> local retrieval · no LLM
+          <span className="sep">·</span> {latency < 1 ? "<1" : latency.toFixed(1)}ms
+          <span className="sep">·</span> match: <b>{tier}</b>
+          <span className="sep">·</span> {revealed >= total ? "done" : "rendering"}
         </div>
       )}
 
@@ -207,7 +205,9 @@ function Answer({ tokens, revealed, matched }) {
       )}
       {done && (
         <p className="ans-foot">
-          {matched ? "retrieved from indexed work · click a source to scrub there" : "no exact match — showing an overview"}
+          {matched
+            ? "deterministic local retrieval over my indexed work — no LLM · click a source to scrub there"
+            : "no exact match — showing an overview · deterministic local retrieval, no LLM"}
         </p>
       )}
     </div>
@@ -565,7 +565,7 @@ function ContactPanel() {
   return (
     <div className="panel">
       <h2 className="panel-h">Let's build something.</h2>
-      <p className="panel-p">Available August 10, 2026 for full-time ML / AI Engineer roles — on-site, hybrid, or remote, and open to relocating. Fastest way to reach me:</p>
+      <p className="panel-p">{information.availability} Fastest way to reach me:</p>
       <div className="contact-row">
         <button className="contact-btn primary" onClick={copy}>
           {copied ? <><FiCheck size={15} /> Copied</> : <><FiCopy size={15} /> {email}</>}
