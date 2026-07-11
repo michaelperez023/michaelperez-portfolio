@@ -341,6 +341,15 @@ export const service = [
 
 export const projects = [
   {
+    id: 12,
+    title: "Brisal Mountain Retreat",
+    subtitle:
+      "Booking site for a luxury villa rental and day-escape retreat in the mountains of Jarabacoa, Dominican Republic — bilingual (EN/ES), built with Astro.",
+    image: "/images/brisal-retreat.jpg",
+    url: "https://www.brisalmountainretreat.com",
+    tags: ["Astro", "Web"],
+  },
+  {
     id: 1,
     title: "Video Analysis Website",
     subtitle:

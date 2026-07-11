@@ -123,6 +123,7 @@ const PROJECT_META = {
   8: [2023.5, "villas", true], // DR Villas Booking — Summer 2023
   9: [2020.75, "surgery", true], // Surgery Tool Simulator — Oct 2020
   10: [2026.5, "portfolio"], // This Portfolio
+  12: [2026.53, "brisal", true], // Brisal Mountain Retreat — July 2026
 };
 
 const projectClips = projects.map((p) => {

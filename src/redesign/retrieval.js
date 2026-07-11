@@ -228,6 +228,7 @@ const AUGMENT = {
   "r-enkix": "augmented reality ar real-time cognitive load guidance hud",
   "p-hermes": "flutter mobile dart app tracking",
   "r-temporal": "video retrieval zero-shot temporal granularity",
+  "p-brisal": "booking website astro villa rental hospitality travel dominican republic jarabacoa bilingual spanish",
 };
 
 const STOP = new Set(
