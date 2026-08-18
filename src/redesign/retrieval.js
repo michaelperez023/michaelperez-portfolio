@@ -230,6 +230,8 @@ const AUGMENT = {
   "r-temporal": "video retrieval zero-shot temporal granularity",
   "p-brisal": "booking website astro villa rental hospitality travel dominican republic jarabacoa bilingual spanish",
   "e-raft": "raft senior engineer tampa florida industry full-time current job",
+  "r-wacv": "efficient video action detection thesis dissertation wacv benchmark map latency throughput memory flops",
+  "r-hai-prep": "human agent interaction companion agents user experience mental workload user study",
 };
 
 const STOP = new Set(
