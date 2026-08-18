@@ -86,12 +86,14 @@ const researchClips = RESEARCH.map(([item, t, key, extra]) => ({
 
 // --- experience track (real date ranges) -----------------------------------
 const COVAR_RANGE = [2025.33, 2025.62]; // CoVar internship — UF roles paused here
+const GRAD = 2026.6; // Ph.D. completed August 7, 2026 — UF roles end here
 const EXP = [
-  [workingExperience[0], COVAR_RANGE[0], COVAR_RANGE[1], "covar", { tag: "Internship" }],
-  [workingExperience[1], 2023.0, NOW, "ruiz", { tag: "DARPA", hub: true, pauses: [COVAR_RANGE] }],
-  [workingExperience[2], 2020.6, NOW, "ta", { tag: "Teaching", pauses: [COVAR_RANGE] }],
-  [workingExperience[3], 2020.6, 2023.0, "gilm", { tag: "NSF · GILM Lab" }],
-  [workingExperience[4], 2019.0, 2020.5, "rhino-ra", { tag: "Florida Poly" }],
+  [workingExperience[0], 2026.61, NOW, "raft", { tag: "Industry" }], // Raft — started Aug 10, 2026
+  [workingExperience[1], COVAR_RANGE[0], COVAR_RANGE[1], "covar", { tag: "Internship" }],
+  [workingExperience[2], 2023.0, GRAD, "ruiz", { tag: "DARPA", hub: true, pauses: [COVAR_RANGE] }],
+  [workingExperience[3], 2020.6, GRAD, "ta", { tag: "Teaching", pauses: [COVAR_RANGE] }],
+  [workingExperience[4], 2020.6, 2023.0, "gilm", { tag: "NSF · GILM Lab" }],
+  [workingExperience[5], 2019.0, 2020.5, "rhino-ra", { tag: "Florida Poly" }],
 ];
 
 const experienceClips = EXP.map(([item, t0, t1, key, extra]) => ({
@@ -153,7 +155,7 @@ const projectClips = projects.map((p) => {
 const eraDefs = [
   { label: "B.S. · Florida Poly", t0: START, t1: 2020.4 },
   { label: "M.S. · UF", t0: 2020.6, t1: 2023.4 },
-  { label: "Ph.D. · UF", t0: 2020.6, t1: NOW },
+  { label: "Ph.D. · UF", t0: 2020.6, t1: 2026.6 }, // completed Aug 2026
 ];
 const eraRowEnds = [];
 export const eras = eraDefs.map((e) => {

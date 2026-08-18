@@ -10,6 +10,7 @@ import {
   education,
   skillGroups,
   honors,
+  service,
   projects,
 } from "../data/content";
 
@@ -101,6 +102,11 @@ export default function ListView() {
         <section>
           <h2>Education</h2>
           <ul>{education.map((e) => <li key={e.id}><span className="lv-y">{e.year}</span> {e.degree} · {e.school}</li>)}</ul>
+        </section>
+
+        <section>
+          <h2>Service</h2>
+          <ul>{service.map((s) => <li key={s.id}><span className="lv-y">{s.year}</span> {s.role} — {s.venue}</li>)}</ul>
         </section>
 
         <section>

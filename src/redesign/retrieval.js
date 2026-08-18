@@ -189,20 +189,20 @@ const TOPICS = [
   {
     keys: ["service", "peer review"],
     answer:
-      "I serve the community as a peer reviewer for ACM Multimedia 2025 and ACM ICMR 2026, co-chaired UF's Human-Centered Data Science Seminar, and reviewed for IEEE VR 2024 [[r-creleri]].",
+      "I serve the community as a peer reviewer for ACM Multimedia 2025, ACM ICMR 2026, and ICXR 2026, co-chaired UF's Human-Centered Data Science Seminar, and reviewed for IEEE VR 2024 [[r-creleri]].",
     attend: ["r-creleri"],
   },
   {
     keys: ["hiring", "why hire", "strengths", "good fit", "stand out"],
     answer:
-      "You'd get someone who pairs publishable research with the engineering to put it to work — I prototype the model and build the pipeline around it. That range shows up as a first-author paper at ACM Multimedia 2025 [[r-creleri]], published infrared video super-resolution work from my CoVar internship [[e-covar]], and a distributed simulator whose convergence I verified past 2,000,000 nodes [[p-gossip]] — research velocity backed by real engineering discipline.",
-    attend: ["r-creleri", "e-covar", "p-gossip"],
+      "Fair warning: I'm off the market — I joined Raft as a Senior Engineer in August 2026 [[e-raft]]. But the case I made still stands: I pair publishable research with the engineering to put it to work. That range shows up as a first-author paper at ACM Multimedia 2025 [[r-creleri]], published infrared video super-resolution work from my CoVar internship [[e-covar]], and a distributed simulator whose convergence I verified past 2,000,000 nodes [[p-gossip]].",
+    attend: ["e-raft", "r-creleri", "e-covar", "p-gossip"],
   },
   {
-    keys: ["availability", "graduate", "when", "start", "relocate"],
+    keys: ["availability", "graduate", "when", "start", "relocate", "raft", "tampa"],
     answer:
-      "I'm a PhD candidate at UF, available to start full-time on August 10, 2026 — open to ML / AI Engineer roles on-site, hybrid, or remote, and happy to relocate. Reach me via the Contact section to talk timelines [[r-creleri]].",
-    attend: ["r-creleri"],
+      "I completed my Ph.D. in Computer Science at UF in August 2026 and joined Raft in Tampa, FL as a Senior Engineer [[e-raft]] — so I'm not looking for new roles right now. Always happy to connect about research or interesting problems, though: see the Contact section.",
+    attend: ["e-raft"],
   },
 ];
 
@@ -229,6 +229,7 @@ const AUGMENT = {
   "p-hermes": "flutter mobile dart app tracking",
   "r-temporal": "video retrieval zero-shot temporal granularity",
   "p-brisal": "booking website astro villa rental hospitality travel dominican republic jarabacoa bilingual spanish",
+  "e-raft": "raft senior engineer tampa florida industry full-time current job",
 };
 
 const STOP = new Set(
