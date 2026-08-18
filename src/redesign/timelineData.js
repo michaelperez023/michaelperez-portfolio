@@ -20,7 +20,7 @@ export const START = 2018.55; // Aug 2018 — B.S. begins
 const _today = new Date();
 export const NOW =
   _today.getFullYear() + (_today.getMonth() + Math.min(0.999, (_today.getDate() - 1) / 31)) / 12;
-// include the Nov 2026 HAI conference, plus headroom so NOW never hits the edge.
+// headroom past NOW so the playhead never sits at the edge.
 export const END = Math.max(2026.95, NOW + 0.18);
 
 export const pos = (t) => (t - START) / (END - START); // -> 0..1 fraction
@@ -51,19 +51,18 @@ const short = (title, n = 22) =>
 // [contentItem, decimalYear, key, extra]  — `key` gives a stable clip id
 const RESEARCH = [
   [publications[0], 2025.79, "creleri", { kind: "pub", lead: true, tag: "ACM MM · first author" }],
-  [publications[3], 2025.42, "muchex", { kind: "pub", tag: "IEEE CG&A" }],
-  [publications[2], 2026.25, "superres", { kind: "pub", tag: "MSS · with CoVar" }],
+  [publications[2], 2025.42, "muchex", { kind: "pub", tag: "IEEE CG&A" }],
+  [publications[1], 2026.25, "superres", { kind: "pub", tag: "MSS · with CoVar" }],
   [workingPapers[0], 2026.5, "enkix", { kind: "working", tag: "in prep" }],
   [workingPapers[1], NOW, "temporal", { kind: "working", tag: "in prep" }],
-  [publications[1], 2026.83, "hai", { kind: "pub", upcoming: true, tag: "HAI 2026 · accepted" }],
   [preprints[0], 2023.06, "animal", { kind: "preprint", tag: "arXiv survey", thumb: "/images/papers/animal.jpg", pdf: "/files/Animal_Behavior_Survey.pdf" }],
   [preprints[1], 2023.25, "urdu", { kind: "preprint", tag: "NLP", thumb: "/images/papers/urdu.jpg" }],
   [preprints[2], 2022.92, "adam", { kind: "preprint", tag: "Adv. ML", thumb: "/images/papers/adam.jpg" }],
   [preprints[3], 2022.25, "videogan", { kind: "preprint", tag: "ML", thumb: "/images/papers/videogan.jpg" }],
   [preprints[4], 2020.92, "kmeans", { kind: "preprint", tag: "Algorithms", thumb: "/images/papers/kmeans.jpg" }],
-  [publications[4], 2021.42, "rhino-eval", { kind: "pub", tag: "IJCARS" }],
-  [publications[5], 2021.25, "rhino-anthro", { kind: "pub", tag: "Aesthetic Surgery J." }],
-  [publications[6], 2020.83, "rhino-digit", { kind: "pub", tag: "IJCARS" }],
+  [publications[3], 2021.42, "rhino-eval", { kind: "pub", tag: "IJCARS" }],
+  [publications[4], 2021.25, "rhino-anthro", { kind: "pub", tag: "Aesthetic Surgery J." }],
+  [publications[5], 2020.83, "rhino-digit", { kind: "pub", tag: "IJCARS" }],
 ];
 
 const researchClips = RESEARCH.map(([item, t, key, extra]) => ({
