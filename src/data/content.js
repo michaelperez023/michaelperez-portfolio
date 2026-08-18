@@ -121,6 +121,21 @@ export const workingPapers = [
     note: "Manuscript in preparation",
     link: null,
   },
+  {
+    id: 3,
+    year: "2026",
+    title: "Efficient Video Action Detection",
+    note: "Ph.D. thesis work — first-author manuscript in preparation for WACV 2027",
+    link: null,
+  },
+  {
+    id: 4,
+    year: "2026",
+    title:
+      "The Effects of Multiple Companion Agents on User Experience and Mental Workload",
+    note: "Manuscript in preparation",
+    link: null,
+  },
 ];
 
 // Preprints and class projects, secondary, with downloadable reports.
@@ -182,7 +197,7 @@ export const workingExperience = [
     company: "CoVar",
     location: "Durham, NC",
     details:
-      "Applied infrared video super-resolution models to improve long-range object classification, published with CoVar collaborators at the Military Sensing Symposium 2026. Trained lightweight RGB object-detection models for real-time drone detection under resource-constrained deployment, and built offline computer-vision evaluation pipelines spanning preprocessing, inference, and metric analysis.",
+      "Applied infrared video super-resolution models to improve long-range object classification, published with CoVar collaborators at the Military Sensing Symposium 2026. Trained lightweight RGB object-detection models for real-time drone detection targeting resource-constrained, on-device use, and built offline computer-vision evaluation pipelines spanning preprocessing, model inference, metric computation, and efficiency analysis.",
   },
   {
     id: 2,
