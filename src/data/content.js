@@ -10,7 +10,7 @@ export const information = {
   location: "Tampa, Florida",
   availability:
     "In August 2026 I completed my Ph.D. and joined Raft in Tampa, FL as a Senior Engineer — I'm not currently looking for new roles, but I'm always happy to connect.",
-  email: "michaelperez012@ufl.edu",
+  email: "michaelperez023@gmail.com",
   headshot: "/images/headshot.jpg",
   cvFile: "/files/CV.pdf",
   social: {
