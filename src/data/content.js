@@ -4,12 +4,12 @@
 export const information = {
   name: "Michael Pérez",
   fullName: "Michael Francis Pérez",
-  role: "ML & Computer Vision Researcher",
+  role: "ML & Computer Vision Engineer",
   tagline:
-    "PhD candidate at the University of Florida specializing in video understanding, computer vision, and real-time ML systems. I build end-to-end pipelines for video analysis, detection, and retrieval.",
-  location: "Gainesville, Florida",
+    "Senior Engineer at Raft in Tampa, with a Ph.D. in Computer Science from the University of Florida specializing in video understanding, computer vision, and real-time ML systems. I build end-to-end pipelines for video analysis, detection, and retrieval.",
+  location: "Tampa, Florida",
   availability:
-    "Available August 10, 2026 for full-time ML / AI Engineer roles — on-site, hybrid, or remote, and open to relocating.",
+    "In August 2026 I completed my Ph.D. and joined Raft in Tampa, FL as a Senior Engineer — I'm not currently looking for new roles, but I'm always happy to connect.",
   email: "michaelperez012@ufl.edu",
   headshot: "/images/headshot.jpg",
   cvFile: "/files/CV.pdf",
@@ -22,14 +22,14 @@ export const information = {
 
 export const about = {
   paragraphs: [
-    "I'm a PhD candidate in Computer Science at the University of Florida specializing in video understanding, computer vision, and real-time ML systems. I design and deploy end-to-end pipelines for video analysis, including detection, segmentation, and retrieval, across both real-time and offline settings.",
-    "My research spans two DARPA-funded programs at the Ruiz HCI Lab: CReLeRI, an explainable long-video analysis system published at ACM Multimedia 2025, and ENKIx, a real-time AR task-guidance system. I also build scalable systems for processing and indexing large-scale video data.",
+    "I hold a Ph.D. in Computer Science from the University of Florida (August 2026), specializing in video understanding, computer vision, and real-time ML systems, and I'm now a Senior Engineer at Raft in Tampa, FL. I design and deploy end-to-end pipelines for video analysis, including detection, segmentation, and retrieval, across both real-time and offline settings.",
+    "My doctoral research spanned two DARPA-funded programs at the Ruiz HCI Lab: CReLeRI, an explainable long-video analysis system published at ACM Multimedia 2025, and ENKIx, a real-time AR task-guidance system. I also built scalable systems for processing and indexing large-scale video data.",
   ],
   facts: [
     { label: "Focus", value: "Video understanding · Computer vision · Real-time ML" },
     { label: "Lead pub", value: "CReLeRI · ACM Multimedia 2025 (first author)" },
-    { label: "Available", value: "August 10, 2026" },
-    { label: "Open to", value: "Full-time ML / AI Engineer · remote, on-site, or relocate" },
+    { label: "Now", value: "Senior Engineer · Raft · Tampa, FL" },
+    { label: "Ph.D.", value: "Computer Science · University of Florida · 2026" },
   ],
 };
 
@@ -179,6 +179,14 @@ export const preprints = [
 
 export const workingExperience = [
   {
+    id: 6,
+    year: "Aug 2026 – Present",
+    position: "Senior Engineer",
+    company: "Raft",
+    location: "Tampa, FL",
+    details: "Joined Raft as a Senior Engineer in August 2026.",
+  },
+  {
     id: 1,
     year: "May – Aug 2025",
     position: "Machine Learning Engineer Intern",
@@ -189,7 +197,7 @@ export const workingExperience = [
   },
   {
     id: 2,
-    year: "2023 – Present",
+    year: "2023 – 2026",
     position: "Graduate Research Assistant",
     company: "Ruiz HCI Lab & Data Science Research Lab, University of Florida",
     location: "Gainesville, FL",
@@ -198,7 +206,7 @@ export const workingExperience = [
   },
   {
     id: 3,
-    year: "2020 – Present",
+    year: "2020 – 2026",
     position: "Graduate Teaching Assistant",
     company: "CISE Department, University of Florida",
     location: "Gainesville, FL",
@@ -228,7 +236,7 @@ export const workingExperience = [
 export const education = [
   {
     id: 1,
-    year: "2020 – 2026 (expected)",
+    year: "2020 – 2026",
     degree: "Ph.D. in Computer Science",
     school: "University of Florida",
   },
@@ -317,6 +325,7 @@ export const honors = [
 ];
 
 export const service = [
+  { id: 6, year: "2026", role: "Peer Reviewer", venue: "ICXR 2026" },
   { id: 1, year: "2026", role: "Peer Reviewer", venue: "ACM ICMR 2026" },
   { id: 2, year: "2025", role: "Peer Reviewer", venue: "ACM Multimedia 2025" },
   {
