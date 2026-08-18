@@ -325,8 +325,8 @@ export const honors = [
 ];
 
 export const service = [
-  { id: 6, year: "2026", role: "Peer Reviewer", venue: "ICXR 2026" },
-  { id: 1, year: "2026", role: "Peer Reviewer", venue: "ACM ICMR 2026" },
+  { id: 6, year: "August 2026", role: "Peer Reviewer", venue: "ICXR 2026" },
+  { id: 1, year: "March 2026", role: "Peer Reviewer", venue: "ACM ICMR 2026" },
   { id: 2, year: "2025", role: "Peer Reviewer", venue: "ACM Multimedia 2025" },
   {
     id: 3,
