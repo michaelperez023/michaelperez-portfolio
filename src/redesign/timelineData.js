@@ -55,7 +55,7 @@ const RESEARCH = [
   [publications[1], 2026.25, "superres", { kind: "pub", tag: "MSS · with CoVar" }],
   [workingPapers[0], 2026.5, "enkix", { kind: "working", tag: "in prep" }],
   [workingPapers[1], NOW, "temporal", { kind: "working", tag: "in prep" }],
-  [workingPapers[2], NOW, "wacv", { kind: "working", tag: "WACV 2027 · thesis" }],
+  [workingPapers[2], NOW, "wacv", { kind: "working", tag: "Thesis · in prep" }], // Keep the existing clip ID for shared links.
   [workingPapers[3], 2026.6, "hai-prep", { kind: "working", tag: "in prep" }],
   [preprints[0], 2023.06, "animal", { kind: "preprint", tag: "arXiv survey", thumb: "/images/papers/animal.jpg", pdf: "/files/Animal_Behavior_Survey.pdf" }],
   [preprints[1], 2023.25, "urdu", { kind: "preprint", tag: "NLP", thumb: "/images/papers/urdu.jpg" }],
@@ -109,6 +109,8 @@ const experienceClips = EXP.map(([item, t0, t1, key, extra]) => ({
   company: item.company,
   location: item.location,
   details: item.details,
+  highlights: item.highlights,
+  tools: item.tools,
   year: item.year,
   ...extra,
 }));

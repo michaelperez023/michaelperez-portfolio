@@ -45,6 +45,7 @@ a { color: inherit; }
   height: 100vh;
   height: 100dvh;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr) auto auto;
   background:
     radial-gradient(140% 105% at 50% -8%, #141b26 0%, var(--bg) 55%),
@@ -451,6 +452,32 @@ a { color: inherit; }
 .cv.dense .cv-authors { font-size: 0.82rem; margin-bottom: 0.35rem; }
 .cv.dense .cv-venue { font-size: 0.74rem; margin-bottom: 0.2rem; }
 .cv.dense .cv-note { margin-bottom: 0.5rem; }
+
+/* Expanded roles need space for readable accomplishments, including at narrow breakpoints. */
+.cv-zone-main.cv-stack.multi > .cv.cv-experience.primary {
+  flex-basis: 100%;
+  max-width: none;
+  padding: 1.1rem 1.25rem;
+}
+.cv-experience:not(.inrail) .cv-meta { gap: 0.55rem 0.7rem; margin-bottom: 0.8rem; }
+.cv-experience:not(.inrail) .cv-year { flex-basis: 100%; color: var(--dim); font-size: 0.85rem; }
+.cv-experience:not(.inrail) .cv-title { font-size: 1.4rem; line-height: 1.3; }
+.cv-experience:not(.inrail) .cv-sub { color: var(--fg); font-size: 1rem; font-weight: 600; margin-bottom: 1rem; }
+.cv-highlights {
+  margin: 0;
+  padding-left: 1.2rem;
+  max-width: 68ch;
+  color: var(--fg);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.cv-highlights li + li { margin-top: 0.8rem; }
+.cv-highlights li::marker { color: var(--signal); }
+.cv-highlights strong { font-weight: 700; }
+.cv-tools { border-top: 1px solid var(--line2); padding-top: 0.9rem; margin-top: 1.1rem; }
+.cv-tools-label { margin: 0 0 0.6rem; color: var(--dim); font-size: 0.8rem; font-weight: 600; }
+.cv-tools-list { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0; padding: 0; list-style: none; }
+.cv-tools-list li { padding: 0.25rem 0.5rem; border: 1px solid var(--line2); border-radius: 4px; background: var(--panel2); color: var(--fg); font-size: 0.85rem; line-height: 1.4; }
 
 /* two-zone coincident layout: main area + fixed experience rail */
 .cv-zones { display: flex; gap: 1.2rem; align-items: flex-start; width: 100%; }
@@ -971,6 +998,9 @@ kbd {
 .lv-doc ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.8rem; }
 .lv-doc li { line-height: 1.5; }
 .lv-doc a { color: var(--signal); }
+.lv-doc .lv-highlights { display: block; list-style: disc; padding-left: 1.2rem; margin: 0.6rem 0; }
+.lv-doc .lv-highlights li + li { margin-top: 0.6rem; }
+.lv-tools { margin: 0.6rem 0 0; }
 .lv-y { font-family: var(--mono); font-size: 0.78rem; color: var(--faint); margin-right: 0.4rem; }
 .lv-auth { color: var(--faint); font-size: 0.85rem; margin-top: 0.2rem; }
 
@@ -982,6 +1012,7 @@ kbd {
   .cv-title { font-size: 1.45rem; }
   .tp-active { display: none; }
   .cut-timeline { padding: 0.5rem 1rem 0.6rem; }
+  .tl-resize { margin-left: -1rem; margin-right: -1rem; }
   .tl-clip { max-width: 96px; }
 }
 
@@ -996,7 +1027,7 @@ kbd {
   .cv-stack.multi .cv { flex-basis: 270px; padding: 0.65rem 0.8rem; }
 }
 @media (max-width: 640px) {
-  .cut-topbar { gap: 0.5rem; padding: 0.55rem 0.9rem; }
+  .cut-topbar { flex-wrap: wrap; gap: 0.5rem; padding: 0.55rem 0.9rem; }
   .cut-nav-link { padding: 0.3rem 0.4rem; font-size: 0.8rem; }
   .lv-ext { display: none; } /* "List view" -> "List" on small screens */
   .mon-console { padding: 0.45rem 0.5rem 0.45rem 0.7rem; gap: 0.4rem; }
