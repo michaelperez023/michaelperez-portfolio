@@ -9,6 +9,7 @@ import { allClips, clipById } from "./timelineData";
 import { information, workingPapers } from "../data/content";
 
 const thesisPaper = workingPapers.find((p) => p.id === 3);
+const enkixPaper = workingPapers.find((p) => p.id === 1);
 
 // Synonym map: a query token on the left counts as the canonical term on the
 // right, so phrasings we don't literally key on still hit the right topic.
@@ -67,7 +68,13 @@ const SYNONYMS = {
 
 const TOPICS = [
   {
-    keys: ["efficient video action detection", "thesis", "dissertation", "wacv"],
+    keys: ["enkix", "intelligent ar task guidance"],
+    specific: true,
+    answer: `${enkixPaper.title}: ${enkixPaper.note} [[r-enkix]]. The system provides real-time AR task guidance with cognitive-load-adaptive behavior and reached 34% F1 in a multi-team DARPA evaluation.`,
+    attend: ["r-enkix"],
+  },
+  {
+    keys: ["efficient video action detection", "wacv"],
     specific: true,
     answer: `${thesisPaper.title}: ${thesisPaper.note} [[r-wacv]].`,
     attend: ["r-wacv"],
@@ -78,6 +85,12 @@ const TOPICS = [
     answer:
       "At Raft, I worked with Kubernetes, Airflow, MLflow, Label Studio, and FiftyOne, alongside MLOps practices. My work included computer vision data exploration and analysis in production software, dataset curation, annotation review, model analysis, evaluation, and debugging [[e-raft]].",
     attend: ["e-raft"],
+  },
+  {
+    keys: ["thesis", "dissertation"],
+    specific: true,
+    answer: `My Ph.D. thesis work includes ${enkixPaper.title} [[r-enkix]] and ${thesisPaper.title} [[r-wacv]]. Both are first-author manuscripts in preparation.`,
+    attend: ["r-enkix", "r-wacv"],
   },
   {
     keys: ["scale"],
@@ -128,7 +141,13 @@ const TOPICS = [
     attend: ["e-raft", "p-creleri-site", "e-covar", "p-gossip"],
   },
   {
-    keys: ["first author", "flagship", "creleri", "best work"],
+    keys: ["first author"],
+    answer:
+      "My published first-author work includes CReLeRI at ACM Multimedia 2025 [[r-creleri]]. ENKIx [[r-enkix]] and Efficient Video Action Detection [[r-wacv]] are also Ph.D. thesis work, with first-author manuscripts in preparation.",
+    attend: ["r-creleri", "r-enkix", "r-wacv"],
+  },
+  {
+    keys: ["flagship", "creleri", "best work"],
     answer:
       "CReLeRI — my first-author paper at ACM Multimedia 2025: an explainable, concept-centric system for representation, learning, reasoning and interaction over long video [[r-creleri]].",
     attend: ["r-creleri"],
@@ -190,7 +209,7 @@ const TOPICS = [
   {
     keys: ["augmented reality"],
     answer:
-      "ENKIx is my AR work — an intelligent AR task-guidance system with cognitive-load-adaptive HUD behavior, running in real time; it reached 34% F1 in a multi-team DARPA evaluation [[r-enkix]].",
+      "ENKIx is Ph.D. thesis work and a first-author manuscript in preparation. It is an intelligent AR task-guidance system with cognitive-load-adaptive HUD behavior, running in real time; it reached 34% F1 in a multi-team DARPA evaluation [[r-enkix]].",
     attend: ["r-enkix"],
   },
   {
@@ -256,7 +275,7 @@ const AUGMENT = {
   "e-covar": "internship industry detection real-time super resolution infrared evaluation deploy",
   "r-creleri": "video understanding explainable multimodal transformer language reasoning",
   "r-superres": "super resolution infrared detection classification standoff",
-  "r-enkix": "augmented reality ar real-time cognitive load guidance hud",
+  "r-enkix": "augmented reality ar real-time cognitive load guidance hud phd thesis dissertation first author manuscript in preparation",
   "p-hermes": "flutter mobile dart app tracking",
   "r-temporal": "video retrieval zero-shot temporal granularity",
   "p-brisal": "booking website astro villa rental hospitality travel dominican republic jarabacoa bilingual spanish",
@@ -465,7 +484,7 @@ export function runQuery(raw) {
   for (const topic of TOPICS) {
     let score = 0;
     for (const k of topic.keys) if (hasKey(q, k)) score += k.length;
-    // Named tools take precedence over broad ML/system terms in the same query.
+    // Specific research/tooling questions take precedence over broad ML/system terms.
     if (score > 0 && topic.specific) {
       return { answer: topic.answer, attend: topic.attend, matched: true, tier: "curated" };
     }

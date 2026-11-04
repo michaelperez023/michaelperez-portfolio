@@ -112,7 +112,7 @@ export const workingPapers = [
     year: "2026",
     title:
       "ENKIx: An Intelligent AR Task Guidance System with Cognitive Load-Adaptive Capabilities",
-    note: "Manuscript in preparation",
+    note: "Ph.D. thesis work — first-author manuscript in preparation",
     link: null,
   },
   {
