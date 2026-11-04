@@ -377,7 +377,7 @@ function ClipCard({ clip, dense, primary, rail, onFocus }) {
   };
   if (clip.track === "experience") {
     return (
-      <article className={base} onClick={onCardClick}>
+      <article className={`${base} cv-experience`} onClick={onCardClick}>
         <div className="cv-meta">
           <TagChip className="cv-kind exp" label="EXPERIENCE" />
           {clip.tag && <TagChip className="cv-tag" label={clip.tag} />}
@@ -385,7 +385,27 @@ function ClipCard({ clip, dense, primary, rail, onFocus }) {
         </div>
         <h2 className="cv-title">{clip.title}</h2>
         <p className="cv-sub">{clip.company}{clip.location ? ` · ${clip.location}` : ""}</p>
-        {!rail && <p className="cv-body">{clip.details}</p>}
+        {!rail && (
+          <>
+            {clip.highlights ? (
+              <ul className="cv-highlights">
+                {clip.highlights.map((h) => (
+                  <li key={h.label}><strong>{h.label}.</strong> {h.text}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="cv-body">{clip.details}</p>
+            )}
+            {clip.tools?.length > 0 && (
+              <div className="cv-tools">
+                <p className="cv-tools-label">Tools &amp; practices</p>
+                <ul className="cv-tools-list" aria-label="Tools and practices used at this role">
+                  {clip.tools.map((tool) => <li key={tool}>{tool}</li>)}
+                </ul>
+              </div>
+            )}
+          </>
+        )}
       </article>
     );
   }

@@ -6,7 +6,9 @@
 // honest fallback. Citation markers [[clipId]] point at real timeline clips.
 
 import { allClips, clipById } from "./timelineData";
-import { information } from "../data/content";
+import { information, workingPapers } from "../data/content";
+
+const thesisPaper = workingPapers.find((p) => p.id === 3);
 
 // Synonym map: a query token on the left counts as the canonical term on the
 // right, so phrasings we don't literally key on still hit the right topic.
@@ -64,6 +66,12 @@ const SYNONYMS = {
 };
 
 const TOPICS = [
+  {
+    keys: ["efficient video action detection", "thesis", "dissertation", "wacv"],
+    specific: true,
+    answer: `${thesisPaper.title}: ${thesisPaper.note} [[r-wacv]].`,
+    attend: ["r-wacv"],
+  },
   {
     keys: ["raft tooling", "kubernetes", "k8s", "mlops", "airflow", "mlflow", "label studio", "labelstudio", "fiftyone", "fifty one"],
     specific: true,
@@ -253,7 +261,7 @@ const AUGMENT = {
   "r-temporal": "video retrieval zero-shot temporal granularity",
   "p-brisal": "booking website astro villa rental hospitality travel dominican republic jarabacoa bilingual spanish",
   "e-raft": "raft senior engineer tampa florida industry production computer vision dataset visualization exploration analysis clustering filtering natural language querying geospatial analytics data management curation annotation review model evaluation debugging object detection experimentation testing integration kubernetes k8s mlops airflow mlflow label studio labelstudio fiftyone fifty one",
-  "r-wacv": "efficient video action detection thesis dissertation wacv benchmark map latency throughput memory flops",
+  "r-wacv": "efficient video action detection thesis dissertation first author manuscript in preparation benchmark map latency throughput memory flops",
   "r-hai-prep": "human agent interaction companion agents user experience mental workload user study",
 };
 

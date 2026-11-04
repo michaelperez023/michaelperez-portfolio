@@ -127,7 +127,7 @@ export const workingPapers = [
     id: 3,
     year: "2026",
     title: "Efficient Video Action Detection",
-    note: "Ph.D. thesis work — first-author manuscript in preparation for WACV 2027",
+    note: "Ph.D. thesis work — first-author manuscript in preparation",
     link: null,
   },
   {
@@ -183,6 +183,22 @@ export const preprints = [
   },
 ];
 
+const raftHighlights = [
+  {
+    label: "Data exploration",
+    text: "Developed and integrated dataset visualization, clustering, filtering, natural-language querying, and geospatial analytics into production computer vision software.",
+  },
+  {
+    label: "ML workflows",
+    text: "Built data management and evaluation workflows for dataset curation, annotation review, model analysis, and debugging.",
+  },
+  {
+    label: "AI/ML integration",
+    text: "Contributed to development, testing, and integration, including object-detection experiments and improvements to existing software systems.",
+  },
+];
+const raftTools = ["Kubernetes", "MLOps", "Airflow", "MLflow", "Label Studio", "FiftyOne"];
+
 export const workingExperience = [
   {
     id: 6,
@@ -190,8 +206,9 @@ export const workingExperience = [
     position: "Senior Engineer",
     company: "Raft",
     location: "Tampa, FL",
-    details:
-      "Developed and integrated computer vision data exploration and analysis capabilities into a larger production software system, including dataset visualization, clustering, filtering, natural-language querying, and geospatial analytics. Built ML data management and evaluation workflows to support dataset curation, annotation review, model analysis, and debugging. Contributed to the development, testing, and integration of AI/ML capabilities, including object-detection experimentation and improvements to existing software systems. Worked with Kubernetes, Airflow, MLflow, Label Studio, and FiftyOne, alongside MLOps practices.",
+    highlights: raftHighlights,
+    tools: raftTools,
+    details: `${raftHighlights.map((h) => h.text).join(" ")} Tools and practices: ${raftTools.join(", ")}.`,
   },
   {
     id: 1,

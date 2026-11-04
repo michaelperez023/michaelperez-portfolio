@@ -76,7 +76,18 @@ export default function ListView() {
             {workingExperience.map((e) => (
               <li key={e.id}>
                 <span className="lv-y">{e.year}</span> <strong>{e.position}</strong>, {e.company}
-                <div>{e.details}</div>
+                {e.highlights ? (
+                  <>
+                    <ul className="lv-highlights">
+                      {e.highlights.map((h) => (
+                        <li key={h.label}><strong>{h.label}.</strong> {h.text}</li>
+                      ))}
+                    </ul>
+                    <p className="lv-tools"><strong>Tools &amp; practices:</strong> {e.tools.join(", ")}</p>
+                  </>
+                ) : (
+                  <div>{e.details}</div>
+                )}
               </li>
             ))}
           </ul>
