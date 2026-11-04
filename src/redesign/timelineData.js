@@ -53,10 +53,11 @@ const RESEARCH = [
   [publications[0], 2025.79, "creleri", { kind: "pub", lead: true, tag: "ACM MM · first author" }],
   [publications[2], 2025.42, "muchex", { kind: "pub", tag: "IEEE CG&A" }],
   [publications[1], 2026.25, "superres", { kind: "pub", tag: "MSS · with CoVar" }],
-  [workingPapers[0], 2026.5, "enkix", { kind: "working", tag: "in prep" }],
+  // Active manuscripts follow the present so they do not age out of the monitor's time window.
+  [workingPapers[0], NOW, "enkix", { kind: "working", tag: "in prep" }],
   [workingPapers[1], NOW, "temporal", { kind: "working", tag: "in prep" }],
   [workingPapers[2], NOW, "wacv", { kind: "working", tag: "Thesis · in prep" }], // Keep the existing clip ID for shared links.
-  [workingPapers[3], 2026.6, "hai-prep", { kind: "working", tag: "in prep" }],
+  [workingPapers[3], NOW, "hai-prep", { kind: "working", tag: "in prep" }],
   [preprints[0], 2023.06, "animal", { kind: "preprint", tag: "arXiv survey", thumb: "/images/papers/animal.jpg", pdf: "/files/Animal_Behavior_Survey.pdf" }],
   [preprints[1], 2023.25, "urdu", { kind: "preprint", tag: "NLP", thumb: "/images/papers/urdu.jpg" }],
   [preprints[2], 2022.92, "adam", { kind: "preprint", tag: "Adv. ML", thumb: "/images/papers/adam.jpg" }],
