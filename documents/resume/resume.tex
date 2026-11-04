@@ -1,0 +1,67 @@
+% General ML / computer vision resume, based on the current portfolio CV.
+% Facts are drawn from documents/cv/cv.tex, src/data/content.js, and the owner's
+% November 2026 Raft accomplishments and technology list. No proficiency inferred.
+\documentclass[10pt,letterpaper]{article}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage[left=0.65in,right=0.65in,top=0.48in,bottom=0.48in]{geometry}
+\usepackage{enumitem}
+\usepackage{needspace}
+\usepackage[hidelinks,unicode]{hyperref}
+\hypersetup{pdftitle={Michael F. Pérez — ML and Computer Vision Engineer},pdfauthor={Michael F. Pérez}}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{2em}
+\raggedright
+\setlist[itemize]{leftmargin=0.16in,labelsep=0.07in,itemsep=1pt,parsep=0pt,topsep=2pt,partopsep=0pt}
+\newcommand{\ressection}[1]{\par\addvspace{7pt}\needspace{3\baselineskip}\textbf{\MakeUppercase{#1}}\par\nobreak\vspace{1pt}\hrule height 0.5pt\vspace{3pt}}
+\newcommand{\resrow}[2]{\noindent #1\hfill\mbox{#2}\par}
+\newcommand{\resrole}[3]{\par\addvspace{3pt}\needspace{4\baselineskip}\resrow{\textbf{#1}}{#2}#3\par}
+\begin{document}
+\fontsize{10.5}{12}\selectfont
+\begin{center}
+{\fontsize{18}{20}\selectfont\textbf{MICHAEL F. PÉREZ}}\\[2pt]
+\textbf{ML \& Computer Vision Engineer} \quad Tampa, FL · Open to relocation\\[2pt]
+\href{mailto:michaelperez023@gmail.com}{michaelperez023@gmail.com} | (954) 882-5069 | \href{https://www.michaelfperez.com}{michaelfperez.com} | \href{https://github.com/michaelperez023}{GitHub} | \href{https://scholar.google.com/citations?user=fCzyXhUAAAAJ\&hl=en}{Google Scholar}
+\end{center}
+\vspace{-5pt}
+Ph.D. in Computer Science with experience integrating computer vision into production software, building ML data and evaluation workflows, and researching video understanding and real-time ML systems.
+
+\ressection{Technical Skills}
+\textbf{ML \& computer vision:} PyTorch, TensorFlow, OpenCV, scikit-learn, Hugging Face, FiftyOne, Label Studio\par
+\textbf{MLOps \& systems:} Kubernetes, MLOps, Airflow, MLflow, Docker, FastAPI, Flask, Linux, SLURM\par
+\textbf{Languages \& data:} Python, C++, SQL, JavaScript, NumPy, pandas, SciPy, Git
+
+\ressection{Experience}
+\resrole{Senior Engineer · Raft}{Aug 2026 – Nov 2026}{Tampa, FL}
+\begin{itemize}
+\item Developed and integrated computer vision data exploration into production software, including dataset visualization, clustering, filtering, natural-language querying, and geospatial analytics.
+\item Built ML data management and evaluation workflows for dataset curation, annotation review, model analysis, and debugging.
+\item Contributed to AI/ML development, testing, and integration, including object-detection experimentation and improvements to existing software systems.
+\end{itemize}
+\textit{Technologies used:} Kubernetes, MLOps, Airflow, MLflow, Label Studio, FiftyOne.
+
+\resrole{Machine Learning Engineer Intern · CoVar}{May 2025 – Aug 2025}{Durham, NC}
+\begin{itemize}
+\item Applied infrared video super-resolution to long-range object classification; published with CoVar collaborators at the Military Sensing Symposium 2026.
+\item Trained lightweight RGB object-detection models for real-time drone detection targeting resource-constrained, on-device use.
+\item Built offline computer vision evaluation pipelines spanning preprocessing, inference, metrics, and efficiency analysis.
+\end{itemize}
+
+\resrole{Graduate Research Assistant · University of Florida}{Aug 2020 – Aug 2026}{Gainesville, FL}
+\begin{itemize}
+\item Developed and evaluated video understanding models and scalable processing pipelines across the Ruiz HCI Lab, Data Science Research Lab, and Graphics, Imaging \& Light Measurement Lab.
+\item Contributed to DARPA-funded CReLeRI and ENKIx systems, including UI and image/video analysis APIs, action segmentation, and real-time AR task guidance. Trained and tested ENKIx action-recognition models; the system reached 34\% F1 in a multi-team evaluation.
+\item Built a video action-detection benchmark covering mAP, latency, throughput, memory, and FLOPs; preparing a first-author WACV 2027 manuscript.
+\end{itemize}
+
+\ressection{Education}
+\resrow{\textbf{Ph.D. in Computer Science} · University of Florida}{Aug 2026}
+\resrow{\textbf{M.S. in Computer Science} · University of Florida}{May 2023}
+\resrow{\textbf{B.S. in Computer Science} · Florida Polytechnic University}{May 2020}
+
+\ressection{Selected Publications}
+\textbf{CReLeRI: Explainable, Concept-centric Representation, Learning, Reasoning, and Interaction Video Analysis System.} First author · ACM Multimedia, 2025. \href{https://doi.org/10.1145/3746027.3754479}{doi:10.1145/3746027.3754479}\par\vspace{2pt}
+\textbf{Super-Resolution for Improving Vehicle Recognition at Large Stand-offs.} With CoVar · Military Sensing Symposium, 2026.
+\end{document}

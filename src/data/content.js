@@ -6,12 +6,13 @@ export const information = {
   fullName: "Michael Francis Pérez",
   role: "ML & Computer Vision Engineer",
   tagline:
-    "Senior Engineer at Raft in Tampa, with a Ph.D. in Computer Science from the University of Florida specializing in video understanding, computer vision, and real-time ML systems. I build end-to-end pipelines for video analysis, detection, and retrieval.",
+    "ML and computer vision engineer with a Ph.D. in Computer Science from the University of Florida, specializing in video understanding and real-time ML systems. I build production software for data exploration, model evaluation, and video analysis.",
   location: "Tampa, Florida",
   availability:
-    "In August 2026 I completed my Ph.D. and joined Raft in Tampa, FL as a Senior Engineer — I'm not currently looking for new roles, but I'm always happy to connect.",
+    "I'm open to new roles in machine learning and computer vision, and I'm open to relocation.",
   email: "michaelperez023@gmail.com",
   headshot: "/images/headshot.jpg",
+  resumeFile: "/files/Resume.pdf",
   cvFile: "/files/CV.pdf",
   social: {
     github: "https://github.com/michaelperez023",
@@ -22,13 +23,14 @@ export const information = {
 
 export const about = {
   paragraphs: [
-    "I hold a Ph.D. in Computer Science from the University of Florida (August 2026), specializing in video understanding, computer vision, and real-time ML systems, and I'm now a Senior Engineer at Raft in Tampa, FL. I design and deploy end-to-end pipelines for video analysis, including detection, segmentation, and retrieval, across both real-time and offline settings.",
+    "I hold a Ph.D. in Computer Science from the University of Florida (August 2026), specializing in video understanding, computer vision, and real-time ML systems. I design and deploy end-to-end pipelines for video analysis, including detection, segmentation, and retrieval, across both real-time and offline settings.",
+    "As a Senior Engineer at Raft from August to November 2026, I developed and integrated computer vision data exploration and analysis capabilities into production software. I also built ML data management and evaluation workflows for dataset curation, annotation review, model analysis, and debugging, and contributed to AI/ML development, testing, and integration.",
     "My doctoral research spanned two DARPA-funded programs at the Ruiz HCI Lab: CReLeRI, an explainable long-video analysis system published at ACM Multimedia 2025, and ENKIx, a real-time AR task-guidance system. I also built scalable systems for processing and indexing large-scale video data.",
   ],
   facts: [
     { label: "Focus", value: "Video understanding · Computer vision · Real-time ML" },
     { label: "Lead pub", value: "CReLeRI · ACM Multimedia 2025 (first author)" },
-    { label: "Now", value: "Senior Engineer · Raft · Tampa, FL" },
+    { label: "Now", value: "Open to ML & CV roles · Open to relocation" },
     { label: "Ph.D.", value: "Computer Science · University of Florida · 2026" },
   ],
 };
@@ -184,11 +186,12 @@ export const preprints = [
 export const workingExperience = [
   {
     id: 6,
-    year: "Aug 2026 – Present",
+    year: "Aug 2026 – Nov 2026",
     position: "Senior Engineer",
     company: "Raft",
     location: "Tampa, FL",
-    details: "Joined Raft as a Senior Engineer in August 2026.",
+    details:
+      "Developed and integrated computer vision data exploration and analysis capabilities into a larger production software system, including dataset visualization, clustering, filtering, natural-language querying, and geospatial analytics. Built ML data management and evaluation workflows to support dataset curation, annotation review, model analysis, and debugging. Contributed to the development, testing, and integration of AI/ML capabilities, including object-detection experimentation and improvements to existing software systems. Worked with Kubernetes, Airflow, MLflow, Label Studio, and FiftyOne, alongside MLOps practices.",
   },
   {
     id: 1,
@@ -284,6 +287,14 @@ export const skillGroups = [
   {
     title: "Systems & Deployment",
     items: ["Docker", "FastAPI", "Flask", "Pydantic", "Linux", "Bash", "ROS", "SLURM", "HPC", "Git"],
+  },
+  {
+    title: "MLOps & Workflows",
+    items: ["MLOps", "Kubernetes", "Airflow", "MLflow"],
+  },
+  {
+    title: "CV Data Tools",
+    items: ["Label Studio", "FiftyOne"],
   },
   {
     title: "Data Science",

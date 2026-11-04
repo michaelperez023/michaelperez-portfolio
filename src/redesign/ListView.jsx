@@ -43,6 +43,7 @@ export default function ListView() {
             <a href={information.social.github}>GitHub</a> ·{" "}
             <a href={information.social.linkedin}>LinkedIn</a> ·{" "}
             <a href={information.social.scholar}>Scholar</a> ·{" "}
+            <a href={information.resumeFile}>Résumé</a> ·{" "}
             <a href={information.cvFile}>CV</a>
           </p>
         </header>

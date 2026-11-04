@@ -414,11 +414,11 @@ function ClipCard({ clip, dense, primary, rail, onFocus }) {
   );
 }
 
-// Papers/projects in the main area; ALL concurrent roles (and the degree in
-// progress) sit in a fixed right rail so they stay put during playback.
+// Papers/projects and the selected role's details appear in the main area.
+// Concurrent roles and degrees stay in the compact right rail during playback.
 function ClipStack({ clips, primaryId, edu, onFocus }) {
   if (!clips || !clips.length) return null;
-  const main = clips.filter((c) => c.track !== "experience");
+  const main = clips.filter((c) => c.track !== "experience" || c.id === primaryId);
   const rail = clips.filter((c) => c.track === "experience");
   const hasMain = main.length > 0;
   const hasRail = rail.length > 0 || (edu && edu.length > 0);
@@ -564,7 +564,7 @@ function SkillsPanel() {
 
 function ContactPanel() {
   const [copied, setCopied] = useState(false);
-  const { social, email, cvFile } = information;
+  const { social, email, resumeFile, cvFile } = information;
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(email);
@@ -583,6 +583,7 @@ function ContactPanel() {
           {copied ? <><FiCheck size={15} /> Copied</> : <><FiCopy size={15} /> {email}</>}
         </button>
         <div className="contact-links">
+          <a className="contact-btn" href={resumeFile} target="_blank" rel="noreferrer"><FiDownload size={15} /> Download résumé</a>
           <a className="contact-btn" href={cvFile} target="_blank" rel="noreferrer"><FiDownload size={15} /> Download CV</a>
           <a className="contact-btn" href={social.github} target="_blank" rel="noreferrer"><FiGithub size={15} /> GitHub</a>
           <a className="contact-btn" href={social.linkedin} target="_blank" rel="noreferrer"><FiLinkedin size={15} /> LinkedIn</a>
