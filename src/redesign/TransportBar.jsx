@@ -60,8 +60,11 @@ export default function TransportBar() {
           )}
         </button>
         <button className="tp-link" onClick={() => actions.toggleListView()}>
-          <FiList size={14} /> List view
+          <FiList size={14} /> List<span className="lv-ext"> view</span>
         </button>
+        <a className="tp-link" href={information.resumeFile} target="_blank" rel="noreferrer" aria-label="Download résumé (PDF)">
+          <FiDownload size={14} /> Résumé
+        </a>
         <a className="tp-link" href={information.cvFile} target="_blank" rel="noreferrer">
           <FiDownload size={14} /> CV
         </a>

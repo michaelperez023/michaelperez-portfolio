@@ -6,6 +6,7 @@
 // honest fallback. Citation markers [[clipId]] point at real timeline clips.
 
 import { allClips, clipById } from "./timelineData";
+import { information } from "../data/content";
 
 // Synonym map: a query token on the left counts as the canonical term on the
 // right, so phrasings we don't literally key on still hit the right topic.
@@ -22,8 +23,11 @@ const SYNONYMS = {
   explainability: "explainable", interpretable: "explainable", interpretability: "explainable",
   transparent: "explainable", xai: "explainable",
   pipeline: "systems", pipelines: "systems", backend: "systems", infrastructure: "systems",
-  fastapi: "systems", docker: "systems", mlops: "systems", engineering: "systems",
+  fastapi: "systems", docker: "systems", engineering: "systems",
   engineer: "systems",
+  mlops: "raft tooling", kubernetes: "raft tooling", k8s: "kubernetes raft tooling",
+  airflow: "raft tooling", mlflow: "raft tooling", fiftyone: "raft tooling",
+  labelstudio: "raft tooling", "label-studio": "raft tooling", "fifty-one": "raft tooling",
   paper: "publication", papers: "publication", published: "publication",
   publications: "publication", peer: "publication", "first-author": "first author",
   language: "nlp", summarization: "nlp", summarisation: "nlp", text: "nlp",
@@ -46,7 +50,7 @@ const SYNONYMS = {
   ar: "augmented reality", augmented: "augmented reality", hud: "augmented reality",
   drone: "detection", detection: "detection", "super-resolution": "super-resolution",
   superresolution: "super-resolution", infrared: "super-resolution", covar: "internship",
-  internship: "internship", intern: "internship", industry: "internship",
+  internship: "internship", intern: "internship",
   hire: "hiring", hiring: "hiring", "hire-readiness": "hiring", candidate: "hiring",
   strengths: "hiring", "why-you": "hiring",
   available: "availability", availability: "availability", remote: "availability",
@@ -60,6 +64,13 @@ const SYNONYMS = {
 };
 
 const TOPICS = [
+  {
+    keys: ["raft tooling", "kubernetes", "k8s", "mlops", "airflow", "mlflow", "label studio", "labelstudio", "fiftyone", "fifty one"],
+    specific: true,
+    answer:
+      "At Raft, I worked with Kubernetes, Airflow, MLflow, Label Studio, and FiftyOne, alongside MLOps practices. My work included computer vision data exploration and analysis in production software, dataset curation, annotation review, model analysis, evaluation, and debugging [[e-raft]].",
+    attend: ["e-raft"],
+  },
   {
     keys: ["scale"],
     answer:
@@ -75,8 +86,8 @@ const TOPICS = [
   {
     keys: ["deploy"],
     answer:
-      "I ship models, not just notebooks. At CoVar I trained lightweight RGB detectors for real-time drone detection under resource-constrained deployment, and built offline CV evaluation pipelines end to end [[e-covar]]. ENKIx runs live on AR hardware [[r-enkix]], and the CReLeRI tool is served from a FastAPI backend [[p-creleri-site]]. I work daily in Docker, FastAPI, Linux and HPC/SLURM.",
-    attend: ["e-covar", "r-enkix", "p-creleri-site"],
+      "My work spans production ML software and model evaluation. At Raft I integrated computer vision data exploration and analysis into production software, and worked with Kubernetes, Airflow, MLflow, Label Studio, and FiftyOne alongside MLOps practices [[e-raft]]. At CoVar I trained lightweight RGB detectors for real-time drone detection under resource-constrained deployment and built offline CV evaluation pipelines [[e-covar]]. ENKIx runs live on AR hardware [[r-enkix]], and the CReLeRI tool uses a FastAPI backend [[p-creleri-site]].",
+    attend: ["e-raft", "e-covar", "r-enkix", "p-creleri-site"],
   },
   {
     keys: ["video"],
@@ -87,8 +98,8 @@ const TOPICS = [
   {
     keys: ["machine learning", "computer vision", "deep learning"],
     answer:
-      "AI is my day job — I'm a computer-vision / ML researcher and engineer. Flagship: CReLeRI, my first-author explainable video-understanding system at ACM Multimedia 2025 [[r-creleri]]. On the applied side, real-time drone detection and infrared super-resolution at CoVar (MSS 2026) [[e-covar]], and daily PyTorch across two DARPA-funded programs [[e-ruiz]].",
-    attend: ["r-creleri", "e-covar", "e-ruiz"],
+      "I'm a machine learning and computer vision engineer with a Ph.D. in Computer Science. My work includes computer vision data exploration and evaluation workflows in production software at Raft [[e-raft]], CReLeRI, my first-author explainable video-understanding system at ACM Multimedia 2025 [[r-creleri]], and real-time drone detection and infrared super-resolution at CoVar (MSS 2026) [[e-covar]]. My doctoral research used PyTorch across two DARPA-funded programs [[e-ruiz]].",
+    attend: ["e-raft", "r-creleri", "e-covar", "e-ruiz"],
   },
   {
     keys: ["darpa"],
@@ -105,8 +116,8 @@ const TOPICS = [
   {
     keys: ["systems"],
     answer:
-      "I'm a systems-minded ML engineer. The CReLeRI analysis tool has a FastAPI backend serving a long-video front end [[p-creleri-site]], I built offline CV evaluation pipelines at CoVar [[e-covar]], and a distributed simulator scaling past 2M nodes [[p-gossip]] — Docker, FastAPI, Linux, HPC/SLURM day to day.",
-    attend: ["p-creleri-site", "e-covar", "p-gossip"],
+      "I'm a systems-minded ML engineer. At Raft I integrated computer vision data exploration into production software and built ML data management and evaluation workflows. My stack there included Kubernetes, Airflow, MLflow, Label Studio, and FiftyOne, alongside MLOps practices [[e-raft]]. Other systems work includes the CReLeRI analysis tool's FastAPI backend [[p-creleri-site]], offline CV evaluation pipelines at CoVar [[e-covar]], and a distributed simulator scaling past 2M nodes [[p-gossip]].",
+    attend: ["e-raft", "p-creleri-site", "e-covar", "p-gossip"],
   },
   {
     keys: ["first author", "flagship", "creleri", "best work"],
@@ -175,6 +186,18 @@ const TOPICS = [
     attend: ["r-enkix"],
   },
   {
+    keys: ["raft", "at raft", "dataset exploration", "data exploration", "dataset curation", "annotation review", "geospatial", "natural-language querying", "natural language querying"],
+    answer:
+      "I worked as a Senior Engineer at Raft from August to November 2026. I developed and integrated computer vision data exploration and analysis into production software, including dataset visualization, clustering, filtering, natural-language querying, and geospatial analytics. I built ML data management and evaluation workflows for dataset curation, annotation review, model analysis, and debugging, and contributed to AI/ML development, testing, and integration, including object-detection experimentation and software improvements. I worked with Kubernetes, Airflow, MLflow, Label Studio, and FiftyOne, alongside MLOps practices [[e-raft]].",
+    attend: ["e-raft"],
+  },
+  {
+    keys: ["industry"],
+    answer:
+      "My industry experience includes a Senior Engineer role at Raft (August–November 2026), where I integrated computer vision data exploration into production software and built ML data management and evaluation workflows [[e-raft]], and an ML engineering internship at CoVar (May–August 2025), focused on infrared video super-resolution, real-time drone detection, and offline computer vision evaluation pipelines [[e-covar]].",
+    attend: ["e-raft", "e-covar"],
+  },
+  {
     keys: ["internship"],
     answer:
       "I interned at CoVar (summer 2025) as an ML Engineer: infrared video super-resolution for long-range classification (MSS 2026) [[r-superres]], real-time drone detection under deployment constraints, and offline CV evaluation pipelines [[e-covar]].",
@@ -195,13 +218,13 @@ const TOPICS = [
   {
     keys: ["hiring", "why hire", "strengths", "good fit", "stand out"],
     answer:
-      "Fair warning: I'm off the market — I joined Raft as a Senior Engineer in August 2026 [[e-raft]]. But the case I made still stands: I pair publishable research with the engineering to put it to work. That range shows up as a first-author paper at ACM Multimedia 2025 [[r-creleri]], published infrared video super-resolution work from my CoVar internship [[e-covar]], and a distributed simulator whose convergence I verified past 2,000,000 nodes [[p-gossip]].",
+      `${information.availability} I combine ML research with production engineering: at Raft, I integrated computer vision data exploration into production software and built dataset curation and evaluation workflows [[e-raft]]. My work also includes a first-author paper at ACM Multimedia 2025 [[r-creleri]], published infrared video super-resolution research from my CoVar internship [[e-covar]], and a distributed simulator whose convergence I verified past 2,000,000 nodes [[p-gossip]].`,
     attend: ["e-raft", "r-creleri", "e-covar", "p-gossip"],
   },
   {
-    keys: ["availability", "graduate", "when", "start", "relocate", "raft", "tampa"],
+    keys: ["availability", "graduate", "when", "start", "relocate", "relocation", "tampa"],
     answer:
-      "I completed my Ph.D. in Computer Science at UF in August 2026 and joined Raft in Tampa, FL as a Senior Engineer [[e-raft]] — so I'm not looking for new roles right now. Always happy to connect about research or interesting problems, though: see the Contact section.",
+      `${information.availability} I'm based in ${information.location} and completed my Ph.D. in Computer Science at UF in August 2026. My most recent industry role was Senior Engineer at Raft, from August to November 2026 [[e-raft]]. See the Contact section to connect.`,
     attend: ["e-raft"],
   },
 ];
@@ -229,7 +252,7 @@ const AUGMENT = {
   "p-hermes": "flutter mobile dart app tracking",
   "r-temporal": "video retrieval zero-shot temporal granularity",
   "p-brisal": "booking website astro villa rental hospitality travel dominican republic jarabacoa bilingual spanish",
-  "e-raft": "raft senior engineer tampa florida industry full-time current job",
+  "e-raft": "raft senior engineer tampa florida industry production computer vision dataset visualization exploration analysis clustering filtering natural language querying geospatial analytics data management curation annotation review model evaluation debugging object detection experimentation testing integration kubernetes k8s mlops airflow mlflow label studio labelstudio fiftyone fifty one",
   "r-wacv": "efficient video action detection thesis dissertation wacv benchmark map latency throughput memory flops",
   "r-hai-prep": "human agent interaction companion agents user experience mental workload user study",
 };
@@ -434,6 +457,10 @@ export function runQuery(raw) {
   for (const topic of TOPICS) {
     let score = 0;
     for (const k of topic.keys) if (hasKey(q, k)) score += k.length;
+    // Named tools take precedence over broad ML/system terms in the same query.
+    if (score > 0 && topic.specific) {
+      return { answer: topic.answer, attend: topic.attend, matched: true, tier: "curated" };
+    }
     if (score > bestScore) {
       bestScore = score;
       best = topic;

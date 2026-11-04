@@ -88,8 +88,9 @@ const researchClips = RESEARCH.map(([item, t, key, extra]) => ({
 // --- experience track (real date ranges) -----------------------------------
 const COVAR_RANGE = [2025.33, 2025.62]; // CoVar internship — UF roles paused here
 const GRAD = 2026.6; // Ph.D. completed August 7, 2026 — UF roles end here
+const RAFT_END = 2026 + (10 + 1 / 31) / 12; // November 2, 2026; same decimal-year convention as NOW
 const EXP = [
-  [workingExperience[0], 2026.61, NOW, "raft", { tag: "Industry" }], // Raft — started Aug 10, 2026
+  [workingExperience[0], 2026.61, RAFT_END, "raft", { tag: "Industry" }], // Raft — Aug 10 to Nov 2, 2026
   [workingExperience[1], COVAR_RANGE[0], COVAR_RANGE[1], "covar", { tag: "Internship" }],
   [workingExperience[2], 2023.0, GRAD, "ruiz", { tag: "DARPA", hub: true, pauses: [COVAR_RANGE] }],
   [workingExperience[3], 2020.6, GRAD, "ta", { tag: "Teaching", pauses: [COVAR_RANGE] }],
