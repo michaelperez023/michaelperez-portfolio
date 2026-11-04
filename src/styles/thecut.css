@@ -453,10 +453,10 @@ a { color: inherit; }
 .cv.dense .cv-venue { font-size: 0.74rem; margin-bottom: 0.2rem; }
 .cv.dense .cv-note { margin-bottom: 0.5rem; }
 
-/* Expanded roles need space for readable accomplishments, including at narrow breakpoints. */
+/* Keep expanded roles close to the text width while allowing them to shrink on small screens. */
 .cv-zone-main.cv-stack.multi > .cv.cv-experience.primary {
-  flex-basis: 100%;
-  max-width: none;
+  flex: 0 1 76ch;
+  max-width: 100%;
   padding: 1.1rem 1.25rem;
 }
 .cv-experience:not(.inrail) .cv-meta { gap: 0.55rem 0.7rem; margin-bottom: 0.8rem; }
