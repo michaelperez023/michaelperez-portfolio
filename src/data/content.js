@@ -10,10 +10,14 @@ export const information = {
   location: "Tampa, Florida",
   availability:
     "I'm open to new roles in machine learning and computer vision, and I'm open to relocation.",
+  // short form of `availability`, shown as the status line on the intro
+  status: "Open to ML & CV roles · Open to relocation",
   email: "michaelperez023@gmail.com",
-  headshot: "/images/headshot.jpg",
-  resumeFile: "/files/Resume.pdf",
-  cvFile: "/files/CV.pdf",
+  headshot: "/images/headshot-web.jpg", // 500px wide; the 3.7 MB original is /images/headshot.jpg
+  // Named files so a saved copy is identifiable; /files/Resume.pdf and /files/CV.pdf
+  // are kept as identical copies so older links keep working.
+  resumeFile: "/files/Michael_Perez_Resume.pdf",
+  cvFile: "/files/Michael_Perez_CV.pdf",
   social: {
     github: "https://github.com/michaelperez023",
     linkedin: "https://www.linkedin.com/in/michaelperez023/",
@@ -30,7 +34,6 @@ export const about = {
   facts: [
     { label: "Focus", value: "Video understanding · Computer vision · Real-time ML" },
     { label: "Lead pub", value: "CReLeRI · ACM Multimedia 2025 (first author)" },
-    { label: "Now", value: "Open to ML & CV roles · Open to relocation" },
     { label: "Ph.D.", value: "Computer Science · University of Florida · 2026" },
   ],
 };
@@ -42,7 +45,7 @@ export const publications = [
     year: "2025",
     venue: "ACM Multimedia",
     title:
-      "CReLeRI: Explainable, Concept-centric Representation, Learning, Reasoning, and Interaction Video Analysis System",
+      "CReLeRI: Explainable, Concept-centric, Representation, Learning, Reasoning, and Interaction Video Analysis System",
     authors:
       "Michael Pérez, Yichi Yang, Yuheng Zha, Enze Ma, Danish Tamboli, Haodi Ma, Reza Shahriari, Vyom Pathak, Dzmitry Kasinets, Rohith Venkatakrishnan, Daisy (Zhe) Wang, Jaime Ruiz, Eric D. Ragan, Zhiting Hu, Eric Xing, Jun-Yan Zhu",
     note: "Proceedings of the 33rd ACM International Conference on Multimedia",
@@ -54,7 +57,7 @@ export const publications = [
     year: "2026",
     venue: "Military Sensing Symposium",
     title:
-      "Super-Resolution for Improving Vehicle Recognition at Large Standoffs",
+      "Super-Resolution for Improving Vehicle Recognition at Large Stand-offs",
     authors: "Michael Pérez et al. (with CoVar)",
     note: "MSS (BSD, Materials & Detectors, and Passive Sensors) Conference",
     link: null,
@@ -67,7 +70,7 @@ export const publications = [
       "MuCHEx: A Multimodal Conversational Debugging Tool for Interactive Visual Exploration of Hierarchical Object Classification",
     authors:
       "Reza Shahriari, Yichi Yang, Danish Nisar Ahmed Tamboli, Michael Pérez, Yuheng Zha, Jinyu Hou, Mingkai Deng, Eric D. Ragan, Jaime Ruiz, Daisy Zhe Wang, Zhiting Hu, Eric Xing",
-    note: "IEEE Computer Graphics and Applications, 1–13",
+    note: "IEEE Computer Graphics and Applications 45(6), 76–88",
     link: "https://doi.org/10.1109/MCG.2025.3598204",
   },
   {
@@ -135,7 +138,7 @@ export const workingPapers = [
     year: "2026",
     title:
       "The Effects of Multiple Companion Agents on User Experience and Mental Workload",
-    note: "Under review at ACM CHI",
+    note: "Under review at ACM CHI 2027",
     link: null,
   },
 ];
@@ -183,8 +186,8 @@ export const preprints = [
   },
 ];
 
-// Every role uses the same shape: `highlights` (labeled bullets) plus optional
-// `tools`. The Raft bullets track the wording in documents/cv/cv.tex.
+// Every role uses the same shape: `highlights` (labeled bullets). Tools are listed
+// under skillGroups, not per role. The Raft bullets track documents/cv/cv.tex.
 export const workingExperience = [
   {
     id: 6,
@@ -206,7 +209,6 @@ export const workingExperience = [
         text: "Contributed to development, testing, and integration, including object-detection experimentation and improvements to existing software systems.",
       },
     ],
-    tools: ["Kubernetes", "MLOps", "Airflow", "MLflow", "Label Studio", "FiftyOne"],
   },
   {
     id: 1,
@@ -304,7 +306,7 @@ export const workingExperience = [
 ].map((experience) => ({
   ...experience,
   // flat text for the search index
-  details: `${experience.highlights.map((h) => `${h.label}: ${h.text}`).join(" ")}${experience.tools?.length ? ` Tools and practices: ${experience.tools.join(", ")}.` : ""}`,
+  details: experience.highlights.map((h) => `${h.label}: ${h.text}`).join(" "),
 }));
 
 export const education = [
@@ -348,12 +350,12 @@ export const skillGroups = [
     items: ["PyTorch", "TensorFlow", "OpenCV", "scikit-learn"],
   },
   {
-    title: "LLMs & Agents",
-    items: ["LangChain", "Hugging Face", "Transformers"],
+    title: "Languages",
+    items: ["Python", "C++", "SQL", "JavaScript", "C", "C#", "Java", "F#", "Julia"],
   },
   {
-    title: "Systems & Deployment",
-    items: ["Docker", "FastAPI", "Flask", "Pydantic", "Linux", "Bash", "ROS", "SLURM", "HPC", "Git"],
+    title: "LLMs & Vision-Language Models",
+    items: ["Hugging Face", "Transformers", "LangChain", "LaViLa", "LLaVA", "Qwen"],
   },
   {
     title: "MLOps & Workflows",
@@ -362,6 +364,10 @@ export const skillGroups = [
   {
     title: "CV Data Tools",
     items: ["Label Studio", "FiftyOne"],
+  },
+  {
+    title: "Systems & Deployment",
+    items: ["Docker", "FastAPI", "Flask", "Celery", "Redis", "Pydantic", "Linux", "Bash", "SLURM", "HPC", "ROS", "Akka.NET", "Git", "CMake"],
   },
   {
     title: "Data Science",
@@ -373,15 +379,11 @@ export const skillGroups = [
   },
   {
     title: "Web & Mobile",
-    items: ["React", "JavaScript", "HTML", "CSS", "Flutter", "Dart", "WordPress"],
+    items: ["React", "HTML", "CSS", "Flutter", "Dart", "WordPress"],
   },
   {
     title: "Scientific Writing",
     items: ["LaTeX", "Illustrator", "Photoshop", "Premiere", "SigmaPlot"],
-  },
-  {
-    title: "Languages & Tooling",
-    items: ["Python", "C++", "SQL", "C", "C#", "Java", "F#", "Julia", "Akka.NET", "CMake"],
   },
 ];
 
@@ -444,8 +446,8 @@ export const projects = [
     id: 1,
     title: "Video Analysis Website",
     subtitle:
-      "Long-video analysis tool with an HTML/JS/CSS front end and FastAPI backend.",
-    image: "/images/creleri_screenshot.png",
+      "Long-video analysis tool for CReLeRI: HTML/JS/CSS front end and a FastAPI backend with Celery and Redis background tasks, containerized with Docker.",
+    image: "/images/creleri-screenshot.jpg",
     url: "https://youtu.be/XDCue9EYNTU",
     githubLink: "https://github.com/michaelperez023/creleri-video",
     tags: ["FastAPI", "Web", "Video"],

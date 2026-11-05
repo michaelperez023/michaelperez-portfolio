@@ -81,9 +81,6 @@ export default function ListView() {
                     <li key={h.label}><strong>{h.label}.</strong> {h.text}</li>
                   ))}
                 </ul>
-                {e.tools?.length > 0 && (
-                  <p className="lv-tools"><strong>Tools &amp; practices:</strong> {e.tools.join(", ")}</p>
-                )}
               </li>
             ))}
           </ul>

@@ -27,8 +27,8 @@ Plain React 18 + Vite. No state, routing, or styling libraries — one reducer, 
 | [`src/redesign/retrieval.js`](src/redesign/retrieval.js) | The local query engine: curated answers, synonym expansion, weighted search, citation tokenizer |
 | [`src/redesign/Timeline.jsx`](src/redesign/Timeline.jsx) | The timeline surface: ruler, tracks, playhead, tooltips |
 | [`src/redesign/Monitor.jsx`](src/redesign/Monitor.jsx) | The monitor: query console, answer rendering, cards, rails, panels |
-| [`documents/cv/`](documents/cv/README.md) | Editable source and build instructions for the full downloadable CV |
-| [`documents/resume/`](documents/resume/README.md) | Editable source and build instructions for the one-page résumé |
+| [`documents/cv/`](documents/cv/README.md) | Master source for the CV; one build produces the website PDF and a matching Word file |
+| [`documents/resume/`](documents/resume/README.md) | Source for the one-page résumé (the build fails if it is not exactly one page) |
 
 ## Run it
 
@@ -39,4 +39,4 @@ npm run build    # production build to dist/
 npm run deploy   # build + publish to GitHub Pages
 ```
 
-The downloadable documents live in `public/files/CV.pdf` and `public/files/Resume.pdf`. Rebuild a document from its editable source before running the website build; Vite copies the PDFs into `dist/files/` for publication.
+The downloadable documents are `public/files/Michael_Perez_CV.pdf` and `public/files/Michael_Perez_Resume.pdf` (also kept as `CV.pdf` and `Resume.pdf` so older links keep working). Rebuild a document from its source with `sh documents/cv/build.sh` or `sh documents/resume/build.sh` before running the website build; Vite copies the PDFs into `dist/files/` for publication.

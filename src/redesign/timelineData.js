@@ -111,7 +111,6 @@ const experienceClips = EXP.map(([item, t0, t1, key, extra]) => ({
   location: item.location,
   details: item.details,
   highlights: item.highlights,
-  tools: item.tools,
   year: item.year,
   ...extra,
 }));

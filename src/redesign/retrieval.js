@@ -36,7 +36,7 @@ const SYNONYMS = {
   paper: "publication", papers: "publication", published: "publication",
   publications: "publication", peer: "publication", "first-author": "first author",
   language: "nlp", summarization: "nlp", summarisation: "nlp", text: "nlp",
-  transformer: "nlp", transformers: "nlp", llm: "nlp",
+  transformer: "nlp", transformers: "nlp",
   algorithm: "algorithms", "data-structures": "algorithms", complexity: "algorithms",
   sorting: "algorithms", clustering: "algorithms",
   teach: "teaching", mentor: "teaching", mentoring: "teaching", students: "teaching",
@@ -95,6 +95,13 @@ const TOPICS = [
     attend: ["r-hai-prep", "r-enkix", "r-temporal", "r-wacv"],
   },
   {
+    keys: ["llm", "llms", "vlm", "vlms", "vision-language", "vision language", "multimodal", "generative ai", "genai", "langchain", "llava", "qwen", "llama", "lavila", "large language model", "large language models", "foundation model", "foundation models"],
+    specific: true,
+    answer:
+      "I've applied vision-language and LLM-based models in my DARPA video work. In CReLeRI I used LLaMA to parse Qwen-generated captions [[r-creleri]], and for ENKIx I fine-tuned the video-language model LaViLa for action recognition [[r-enkix]]. I've also used LangChain with Pydantic to structure LLM outputs. These were existing pretrained models that I applied and fine-tuned, not models I trained from scratch.",
+    attend: ["r-creleri", "r-enkix"],
+  },
+  {
     keys: ["thesis", "dissertation"],
     specific: true,
     answer: `My Ph.D. thesis work includes ${enkixPaper.title} [[r-enkix]] and ${thesisPaper.title} [[r-wacv]]. Both are first-author manuscripts in preparation.`,
@@ -109,13 +116,13 @@ const TOPICS = [
   {
     keys: ["real-time"],
     answer:
-      "Real-time is the core of my work. ENKIx is a cognitive-load-adaptive AR task-guidance system that runs live and reached 34% F1 in a multi-team DARPA evaluation [[r-enkix]]. At CoVar I trained lightweight RGB detectors for real-time drone detection under resource-constrained deployment [[e-covar]].",
+      "Real-time is the core of my work. ENKIx is a cognitive-load-adaptive AR task-guidance system that runs live and reached 34% F1 in a multi-team DARPA evaluation [[r-enkix]]. At CoVar I trained lightweight RGB detectors targeting real-time, on-device drone detection [[e-covar]].",
     attend: ["r-enkix", "e-covar"],
   },
   {
     keys: ["deploy"],
     answer:
-      "My work spans production ML software and model evaluation. At Raft I integrated computer vision data exploration and analysis into production software, and worked with Kubernetes, Airflow, MLflow, Label Studio, and FiftyOne alongside MLOps practices [[e-raft]]. At CoVar I trained lightweight RGB detectors for real-time drone detection under resource-constrained deployment and built offline CV evaluation pipelines [[e-covar]]. ENKIx runs live on AR hardware [[r-enkix]], and the CReLeRI tool uses a FastAPI backend [[p-creleri-site]].",
+      "My work spans production ML software and model evaluation. At Raft I integrated computer vision data exploration and analysis into production software, and worked with Kubernetes, Airflow, MLflow, Label Studio, and FiftyOne alongside MLOps practices [[e-raft]]. At CoVar I trained lightweight RGB detectors targeting real-time, on-device use and built offline CV evaluation pipelines [[e-covar]]. ENKIx runs live on AR hardware [[r-enkix]], and the CReLeRI tool uses a FastAPI backend [[p-creleri-site]].",
     attend: ["e-raft", "e-covar", "r-enkix", "p-creleri-site"],
   },
   {
@@ -163,7 +170,7 @@ const TOPICS = [
   {
     keys: ["super-resolution", "detection"],
     answer:
-      "At CoVar I applied infrared video super-resolution to improve long-range object classification (published at MSS 2026) [[r-superres]] and trained lightweight real-time drone detectors for constrained deployment [[e-covar]].",
+      "At CoVar I applied infrared video super-resolution to improve long-range object classification (published at MSS 2026) [[r-superres]] and trained lightweight drone detectors targeting real-time, on-device use [[e-covar]].",
     attend: ["r-superres", "e-covar"],
   },
   {
@@ -235,7 +242,7 @@ const TOPICS = [
   {
     keys: ["internship"],
     answer:
-      "I interned at CoVar (summer 2025) as an ML Engineer: infrared video super-resolution for long-range classification (MSS 2026) [[r-superres]], real-time drone detection under deployment constraints, and offline CV evaluation pipelines [[e-covar]].",
+      "I interned at CoVar (summer 2025) as an ML Engineer: infrared video super-resolution for long-range classification (MSS 2026) [[r-superres]], lightweight drone detectors targeting real-time, on-device use, and offline CV evaluation pipelines [[e-covar]].",
     attend: ["e-covar", "r-superres"],
   },
   {
@@ -281,7 +288,7 @@ const AUGMENT = {
   "r-rhino-anthro": "medical imaging surgery facial rhinoplasty anthropometric",
   "r-rhino-digit": "medical imaging surgery facial rhinoplasty 3d web",
   "e-covar": "internship industry detection real-time super resolution infrared evaluation deploy",
-  "r-creleri": "video understanding explainable multimodal transformer language reasoning",
+  "r-creleri": "video understanding explainable multimodal transformer language reasoning llm vlm llama qwen captions fastapi celery redis docker",
   "r-superres": "super resolution infrared detection classification standoff",
   "r-enkix": "augmented reality ar real-time cognitive load guidance hud phd thesis dissertation first author manuscript in preparation",
   "p-hermes": "flutter mobile dart app tracking",
@@ -467,8 +474,8 @@ function composeGeneral(raw, ids, coverage) {
 
 const FALLBACK = {
   answer:
-    "I don't have that exact topic indexed — but here's the shape of my work: video understanding and real-time ML, flagship CReLeRI at ACM Multimedia 2025 [[r-creleri]], CV systems at CoVar [[e-covar]], and a distributed simulator past 2M nodes [[p-gossip]]. Try real-time, deployment, scale, video, algorithms, or DARPA.",
-  attend: ["r-creleri", "e-covar", "p-gossip"],
+    "I don't have that exact topic indexed — but here's the shape of my work: video understanding and real-time ML, flagship CReLeRI at ACM Multimedia 2025 [[r-creleri]], computer vision data tooling in production software at Raft [[e-raft]], CV research at CoVar [[e-covar]], and a distributed simulator past 2M nodes [[p-gossip]]. Try real-time, deployment, scale, video, algorithms, or DARPA.",
+  attend: ["r-creleri", "e-raft", "e-covar", "p-gossip"],
   matched: false,
 };
 
