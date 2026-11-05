@@ -80,6 +80,7 @@ Keep the type size at 10.4pt or larger.
 - Facts come from the CV sections here, `src/data/content.js`, or the job-agent experience bank (`~/Desktop/job-agent/bank`). No proficiency is inferred.
 - Publication details (authors, order, volume, pages) follow the publisher's record for the DOI.
 - A manuscript is listed as under review only while it is under review; manuscripts in preparation do not name a target venue.
+- The CReLeRI publication (ACM Multimedia 2025) is a demo. Call it a demo, never a paper.
 - Ph.D. thesis results are described without the model's name or the manuscript's title while the paper is unpublished.
 - Contact links are written out and words are never hyphenated across lines, so the text survives plain-text extraction by applicant-tracking systems.
 - No reason for leaving a job appears in any document.

@@ -60,7 +60,7 @@ export default function ListView() {
             {publications.map((p) => (
               <li key={p.id}>
                 <span className="lv-y">{p.year}</span>{" "}
-                {p.link ? <a href={p.link}>{p.title}</a> : p.title} — <em>{p.venue}</em>
+                {p.link ? <a href={p.link}>{p.title}</a> : p.title} — <em>{p.venue}</em>{p.demo && " (demo)"}
                 <div className="lv-auth">{withMe(p.authors)}</div>
               </li>
             ))}

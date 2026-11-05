@@ -29,11 +29,11 @@ export const about = {
   paragraphs: [
     "I hold a Ph.D. in Computer Science from the University of Florida (August 2026), specializing in video understanding, computer vision, and real-time ML systems. I design and deploy end-to-end pipelines for video analysis, including detection, segmentation, and retrieval, across both real-time and offline settings.",
     "As a Senior Engineer at Raft from August to November 2026, I developed and integrated computer vision data exploration and analysis capabilities into production software. I also built ML data management and evaluation workflows for dataset curation, annotation review, model analysis, and debugging, and contributed to AI/ML development, testing, and integration.",
-    "My doctoral research spanned two DARPA-funded programs at the Ruiz HCI Lab: CReLeRI, an explainable long-video analysis system published at ACM Multimedia 2025, and ENKIx, a real-time AR task-guidance system. My thesis presents an online action-detection model that matches the strongest verified strictly-causal detector on THUMOS at roughly 60% of its parameters and 2.5–2.9× its throughput, in real time.",
+    "My doctoral research spanned two DARPA-funded programs at the Ruiz HCI Lab: CReLeRI, an explainable long-video analysis system (first-author demo, ACM Multimedia 2025), and ENKIx, a real-time AR task-guidance system. My thesis presents an online action-detection model that matches the strongest verified strictly-causal detector on THUMOS at roughly 60% of its parameters and 2.5–2.9× its throughput, in real time.",
   ],
   facts: [
     { label: "Focus", value: "Video understanding · Computer vision · Real-time ML" },
-    { label: "Lead pub", value: "CReLeRI · ACM Multimedia 2025 (first author)" },
+    { label: "Lead pub", value: "CReLeRI · ACM Multimedia 2025 demo (first author)" },
     { label: "Ph.D.", value: "Computer Science · University of Florida · 2026" },
   ],
 };
@@ -48,9 +48,10 @@ export const publications = [
       "CReLeRI: Explainable, Concept-centric, Representation, Learning, Reasoning, and Interaction Video Analysis System",
     authors:
       "Michael Pérez, Yichi Yang, Yuheng Zha, Enze Ma, Danish Tamboli, Haodi Ma, Reza Shahriari, Vyom Pathak, Dzmitry Kasinets, Rohith Venkatakrishnan, Daisy (Zhe) Wang, Jaime Ruiz, Eric D. Ragan, Zhiting Hu, Eric Xing, Jun-Yan Zhu",
-    note: "Proceedings of the 33rd ACM International Conference on Multimedia",
+    note: "Demo · Proceedings of the 33rd ACM International Conference on Multimedia",
     link: "https://dl.acm.org/doi/10.1145/3746027.3754479",
     lead: true,
+    demo: true, // a demo, not a full paper: say "demo" wherever it is described
   },
   {
     id: 8,
@@ -250,7 +251,7 @@ export const workingExperience = [
       },
       {
         label: "DARPA programs",
-        text: "Worked across two DARPA-funded programs: CReLeRI, an explainable long-video analysis system (ACM Multimedia 2025), and ENKIx, a real-time AR task-guidance system tested in a multi-team DARPA evaluation.",
+        text: "Worked across two DARPA-funded programs: CReLeRI, an explainable long-video analysis system (ACM Multimedia 2025 demo), and ENKIx, a real-time AR task-guidance system tested in a multi-team DARPA evaluation.",
       },
       {
         label: "Cross-lab research",
@@ -415,7 +416,7 @@ export const honors = [
 ];
 
 export const certifications = [
-  { id: 1, year: "2026", title: "CompTIA Security+", note: "Earned October 2026 · valid through October 2029" },
+  { id: 1, year: "2026", title: "CompTIA Security+", note: "Earned October 2026" },
 ];
 
 export const service = [
