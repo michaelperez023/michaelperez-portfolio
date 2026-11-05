@@ -12,6 +12,7 @@
   --panel2: #18202b;
   --fg: #eceff4;
   --dim: #949eb1;
+  --copy: #c3cad7;
   --faint: #8b94a8;
   --line: #1c2330;
   --line2: #2c3643;
@@ -408,17 +409,22 @@ a { color: inherit; }
 .cv-figure.paper.playing { flex: 0 0 440px; aspect-ratio: 1 / 1.3; }
 .cv-figure.paper.playing iframe { display: block; width: 100%; height: 100%; border: 0; background: #fff; }
 
-/* coincident clip cards — laid out horizontally when several coincide */
+/* ---------- card grid ----------
+   Every card in the monitor sits on one grid: equal-width columns, and cards
+   that share a row share a height. What a card holds differs (media, a PDF
+   preview, bullets, links) but the frame, spacing and type scale do not. */
 .cv-stack { width: 100%; }
+.cv-zone-main { container: zone / inline-size; }
 .cv-stack.multi {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 0.9rem;
+  --card-min: 300px;
+  --card-gap: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--card-min)), 1fr));
+  gap: var(--card-gap);
+  align-items: stretch;
 }
 .cv-stack-head {
-  flex-basis: 100%;
+  grid-column: 1 / -1;
   font-family: var(--mono);
   font-size: 0.66rem;
   letter-spacing: 0.12em;
@@ -427,57 +433,114 @@ a { color: inherit; }
   margin: 0 0 0.1rem;
 }
 .cv-stack.multi .cv {
-  flex: 0 1 420px;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
-  align-self: flex-start;
+  max-width: none;
   background: var(--panel);
   border: 1px solid var(--line2);
   border-radius: var(--radius);
-  padding: 0.75rem 0.95rem;
+  padding: 0.8rem 0.95rem 0.9rem;
   animation: none;
 }
 .cv-stack.multi .cv.primary { border-color: var(--signal); box-shadow: 0 0 0 1px var(--signal); }
-/* inside a narrow card, stack media above text — sized to content */
+
+/* shared card anatomy: chips -> title -> [media] -> text -> links (pinned to the bottom) */
 .cv.dense .cv-meta { margin-bottom: 0.45rem; }
-.cv.dense .cv-projbody { flex-direction: column; gap: 0.6rem; }
-/* explicit compact media heights so cards size to content */
-.cv.dense .cv-figure { flex: 0 0 auto; width: 100%; max-width: 100%; height: 150px; aspect-ratio: auto; }
-.cv.dense .cv-figure img { width: 100%; height: 100%; aspect-ratio: auto; }
-.cv.dense .cv-figure.paper { height: 118px; }
-.cv.dense .cv-figure.paper.playing { height: 340px; }
-.cv.dense .cv-figure.playing { height: auto; aspect-ratio: 16 / 9; }
-.cv.dense .cv-projtext { flex: 0 0 auto; width: 100%; }
-.cv.dense .cv-title { font-size: 1.15rem; line-height: 1.2; margin: 0.05rem 0 0.35rem; }
-.cv.dense .cv-body { font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.45rem; }
+.cv.dense .cv-title { font-size: 1.15rem; line-height: 1.22; margin: 0.05rem 0 0.45rem; }
+.cv.dense .cv-sub { font-size: 0.9rem; line-height: 1.4; margin: 0 0 0.65rem; }
+.cv.dense .cv-body { color: var(--copy); font-size: 0.9rem; line-height: 1.5; margin: 0 0 0.55rem; }
 .cv.dense .cv-authors { font-size: 0.82rem; margin-bottom: 0.35rem; }
 .cv.dense .cv-venue { font-size: 0.74rem; margin-bottom: 0.2rem; }
-.cv.dense .cv-note { margin-bottom: 0.5rem; }
+.cv.dense .cv-note { font-size: 0.8rem; line-height: 1.45; margin-bottom: 0.55rem; }
+.cv.dense .cv-projbody { flex: 1 1 auto; flex-direction: column; flex-wrap: nowrap; gap: 0.65rem; }
+.cv.dense .cv-projtext { flex: 1 1 auto; width: 100%; display: flex; flex-direction: column; }
+.cv.dense .cv-links { margin-top: auto; padding-top: 0.1rem; }
+.cv.dense > :last-child,
+.cv.dense .cv-projtext > :last-child { margin-bottom: 0; }
 
-/* Keep expanded roles close to the text width while allowing them to shrink on small screens. */
-.cv-zone-main.cv-stack.multi > .cv.cv-experience.primary {
-  flex: 0 1 76ch;
+/* one media frame for everything — project images, video posters, PDF first
+   pages. Images are never cropped; a blurred copy fills what they don't cover. */
+.cv.dense .cv-figure {
+  flex: 0 0 auto;
+  width: 100%;
   max-width: 100%;
-  padding: 1.1rem 1.25rem;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  max-height: 250px;
 }
-.cv-experience:not(.inrail) .cv-meta { gap: 0.55rem 0.7rem; margin-bottom: 0.8rem; }
-.cv-experience:not(.inrail) .cv-year { flex-basis: 100%; color: var(--dim); font-size: 0.85rem; }
-.cv-experience:not(.inrail) .cv-title { font-size: 1.4rem; line-height: 1.3; }
-.cv-experience:not(.inrail) .cv-sub { color: var(--fg); font-size: 1rem; font-weight: 600; margin-bottom: 1rem; }
+.cv-figure::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  background: var(--fig-bg, none) center / cover no-repeat;
+  filter: blur(18px) brightness(0.5) saturate(1.15);
+  pointer-events: none;
+}
+.cv-figure.playing::before { display: none; }
+.cv-figure img, .cv-figure iframe { position: relative; z-index: 1; }
+.cv-playbtn, .cv-pdfbtn { z-index: 2; }
+.cv-figure::after { z-index: 3; }
+.cv.dense .cv-figure img { width: 100%; height: 100%; aspect-ratio: auto; background: transparent; }
+.cv.dense .cv-figure.paper img { background: #0a0d11; }
+.cv.dense .cv-figure.playing { max-height: none; }
+.cv.dense .cv-figure.paper.playing { aspect-ratio: auto; height: 340px; }
+
+/* role cards: the same anatomy as any other card. The selected role takes a
+   full row and, when it is wide enough, sets its header beside its bullets. */
+.cv-stack.multi > .cv-experience.primary { grid-column: 1 / -1; }
+.cv-stack.multi > .cv-experience.primary + .cv { grid-column-start: 1; }
+@container zone (min-width: 1242px) {
+  /* four or more columns: span three (still on the grid) rather than stretch edge to edge */
+  .cv-stack.multi > .cv-experience.primary { grid-column: span 3; }
+}
+.cv-experience:not(.inrail) { container: role / inline-size; }
+.cv-exp { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; }
 .cv-highlights {
   margin: 0;
-  padding-left: 1.2rem;
-  max-width: 68ch;
-  color: var(--fg);
-  font-size: 1rem;
-  line-height: 1.65;
+  padding-left: 1.15rem;
+  color: var(--copy);
+  font-size: 0.9rem;
+  line-height: 1.55;
 }
-.cv-highlights li + li { margin-top: 0.8rem; }
+.cv-highlights li + li { margin-top: 0.5rem; }
 .cv-highlights li::marker { color: var(--signal); }
-.cv-highlights strong { font-weight: 700; }
-.cv-tools { border-top: 1px solid var(--line2); padding-top: 0.9rem; margin-top: 1.1rem; }
-.cv-tools-label { margin: 0 0 0.6rem; color: var(--dim); font-size: 0.8rem; font-weight: 600; }
-.cv-tools-list { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0; padding: 0; list-style: none; }
-.cv-tools-list li { padding: 0.25rem 0.5rem; border: 1px solid var(--line2); border-radius: 4px; background: var(--panel2); color: var(--fg); font-size: 0.85rem; line-height: 1.4; }
+.cv-highlights strong { color: var(--fg); font-weight: 700; }
+.cv-tools { margin-top: auto; padding-top: 0.9rem; }
+.cv-tools-label {
+  margin: 0 0 0.45rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.cv-tools-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+.cv-tools-list li {
+  padding: 0.16rem 0.5rem;
+  border: 1px solid var(--line2);
+  border-radius: 5px;
+  background: var(--panel2);
+  color: var(--fg);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+@container role (min-width: 660px) {
+  .cv-exp {
+    display: grid;
+    grid-template-columns: minmax(210px, 19rem) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "head body" "tools body";
+    column-gap: 1.8rem;
+    padding: 0.2rem 0.25rem;
+  }
+  .cv-exp-head { grid-area: head; }
+  .cv.dense .cv-exp-head .cv-title { font-size: 1.3rem; }
+  .cv.dense .cv-exp-head .cv-sub { margin-bottom: 0; }
+  .cv-highlights { grid-area: body; align-self: start; max-width: 80ch; font-size: 0.97rem; line-height: 1.6; }
+  .cv-highlights li + li { margin-top: 0.55rem; }
+  .cv-tools { grid-area: tools; align-self: start; margin-top: 0; }
+}
 
 /* two-zone coincident layout: main area + fixed experience rail */
 .cv-zones { display: flex; gap: 1.2rem; align-items: flex-start; width: 100%; }
@@ -1016,15 +1079,20 @@ kbd {
   .tl-clip { max-width: 96px; }
 }
 
-/* cards shrink as the window narrows */
+/* card columns: roomier on large displays, tighter as the window narrows */
+@media (min-width: 1600px) {
+  .cv-stack.multi { --card-min: 340px; }
+}
 @media (max-width: 1100px) {
-  .cv-stack.multi .cv { flex-basis: 330px; }
   .cv-rail { flex: 0 0 220px; }
+}
+@media (max-width: 960px) {
+  .cv-stack.multi { --card-min: 270px; }
 }
 @media (max-width: 900px) {
   .cv .cv-title { font-size: 1.5rem; }
   .cv.dense .cv-title { font-size: 1.05rem; }
-  .cv-stack.multi .cv { flex-basis: 270px; padding: 0.65rem 0.8rem; }
+  .cv-stack.multi .cv { padding: 0.7rem 0.8rem 0.8rem; }
 }
 @media (max-width: 640px) {
   .cut-topbar { flex-wrap: wrap; gap: 0.5rem; padding: 0.55rem 0.9rem; }
@@ -1034,11 +1102,9 @@ kbd {
   .mon-input { font-size: 0.9rem; }
   .mon-prompt { display: none; }
   .mon-ex { font-size: 0.72rem; padding: 0.18rem 0.55rem; }
-  .cv-stack.multi { gap: 0.6rem; }
-  .cv-stack.multi .cv { flex-basis: 100%; max-width: 100%; }
+  .cv-stack.multi { --card-gap: 10px; }
   .cv .cv-title, .cv-title { font-size: 1.3rem; }
   .cv-authors, .cv-body { font-size: 0.9rem; }
-  .cv.dense .cv-figure { height: 130px; }
   .contact-btn { padding: 0.5rem 0.7rem; font-size: 0.85rem; }
   /* reflow the transport: timecode + controls on row 1, links centered on row 2 */
   .transport {

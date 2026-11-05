@@ -12,7 +12,7 @@ for pass in 1 2; do
   }
 done
 
-if rg -n 'Overfull|Missing character|LaTeX Warning' "$cv_build_dir/cv.log"; then
+if grep -nE 'Overfull|Missing character|LaTeX Warning' "$cv_build_dir/cv.log"; then
   printf '\nReview the CV build warnings above.\n' >&2
 fi
 

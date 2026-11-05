@@ -57,7 +57,7 @@ const RESEARCH = [
   [workingPapers[0], NOW, "enkix", { kind: "working", tag: "in prep" }],
   [workingPapers[1], NOW, "temporal", { kind: "working", tag: "in prep" }],
   [workingPapers[2], NOW, "wacv", { kind: "working", tag: "Thesis · in prep" }], // Keep the existing clip ID for shared links.
-  [workingPapers[3], NOW, "hai-prep", { kind: "working", tag: "in prep" }],
+  [workingPapers[3], NOW, "hai-prep", { kind: "working", tag: "under review", review: true }], // Keep the existing clip ID for shared links.
   [preprints[0], 2023.06, "animal", { kind: "preprint", tag: "arXiv survey", thumb: "/images/papers/animal.jpg", pdf: "/files/Animal_Behavior_Survey.pdf" }],
   [preprints[1], 2023.25, "urdu", { kind: "preprint", tag: "NLP", thumb: "/images/papers/urdu.jpg" }],
   [preprints[2], 2022.92, "adam", { kind: "preprint", tag: "Adv. ML", thumb: "/images/papers/adam.jpg" }],
@@ -228,6 +228,7 @@ export function clipTags(clip) {
     out.add("PROJECT");
   }
   if (clip.lead) out.add("FIRST AUTHOR");
+  if (clip.review) out.add("UNDER REVIEW");
   if (clip.tag) out.add(clip.tag);
   (clip.tags || []).forEach((t) => out.add(t));
   return out;
