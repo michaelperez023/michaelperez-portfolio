@@ -93,7 +93,8 @@ export const publications = [
       "Facial Surface Anthropometric Features and Measurements With an Emphasis on Rhinoplasty",
     authors:
       "Mazhar Celikoyar, Michael Pérez, Mustafa Ilhan Akbaş, Oguzhan Topsakal",
-    note: "Aesthetic Surgery Journal",
+    // On the timeline at April 2021, when it was published online; the citation year is the print issue's (2022).
+    note: "Aesthetic Surgery Journal 42(2), 133–148 (2022) · published online April 2021",
     link: "https://doi.org/10.1093/asj/sjab190",
   },
   {
