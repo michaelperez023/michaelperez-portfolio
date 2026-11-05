@@ -394,13 +394,13 @@ export const honors = [
   },
   {
     id: 2,
-    year: "2020 – Present",
+    year: "2020 – 2026",
     title: "Graduate School Preeminence Award",
     note: "Competitive research-assistantship stipend offered to UF CISE's strongest PhD applicants.",
   },
   {
     id: 3,
-    year: "2021 – Present",
+    year: "2021 – 2026",
     title: "GenerationNext Grant",
     note: "Cohort-based support program for PhD students in the UF CISE department.",
   },
