@@ -97,7 +97,7 @@ const TOPICS = [
   {
     keys: ["certification", "certifications", "certified", "certificate", "security+", "comptia", "security plus"],
     specific: true,
-    answer: "I hold the CompTIA Security+ certification, earned in October 2026 and valid through October 2029. It is listed with my education and honors in the About section.",
+    answer: "I hold the CompTIA Security+ certification, earned in October 2026. It is listed with my education and honors in the About section.",
     attend: [],
   },
   {
@@ -134,19 +134,19 @@ const TOPICS = [
   {
     keys: ["video"],
     answer:
-      "Video understanding was the focus of my Ph.D. CReLeRI is an explainable, concept-centric long-video analysis system I first-authored at ACM Multimedia 2025 [[r-creleri]]. I also study temporal granularity as a design variable for zero-shot video retrieval [[r-temporal]], and built MuCHEx for interactive visual exploration of hierarchical classification [[r-muchex]].",
+      "Video understanding was the focus of my Ph.D. CReLeRI is an explainable, concept-centric long-video analysis system, and I am first author of its ACM Multimedia 2025 demo [[r-creleri]]. I also study temporal granularity as a design variable for zero-shot video retrieval [[r-temporal]], and built MuCHEx for interactive visual exploration of hierarchical classification [[r-muchex]].",
     attend: ["r-creleri", "r-temporal", "r-muchex"],
   },
   {
     keys: ["machine learning", "computer vision", "deep learning"],
     answer:
-      "I'm a machine learning and computer vision engineer with a Ph.D. in Computer Science. My work includes computer vision data exploration and evaluation workflows in production software at Raft [[e-raft]], CReLeRI, my first-author explainable video-understanding system at ACM Multimedia 2025 [[r-creleri]], and real-time drone detection and infrared super-resolution at CoVar (MSS 2026) [[e-covar]]. My doctoral research used PyTorch across two DARPA-funded programs [[e-ruiz]].",
+      "I'm a machine learning and computer vision engineer with a Ph.D. in Computer Science. My work includes computer vision data exploration and evaluation workflows in production software at Raft [[e-raft]], CReLeRI, an explainable video-understanding system (first-author demo, ACM Multimedia 2025) [[r-creleri]], and real-time drone detection and infrared super-resolution at CoVar (MSS 2026) [[e-covar]]. My doctoral research used PyTorch across two DARPA-funded programs [[e-ruiz]].",
     attend: ["e-raft", "r-creleri", "e-covar", "e-ruiz"],
   },
   {
     keys: ["darpa"],
     answer:
-      "Two DARPA-funded programs at the Ruiz HCI Lab [[e-ruiz]]: CReLeRI, an explainable long-video analysis system published at ACM Multimedia 2025 [[r-creleri]], and ENKIx, a real-time AR task-guidance system [[r-enkix]].",
+      "Two DARPA-funded programs at the Ruiz HCI Lab [[e-ruiz]]: CReLeRI, an explainable long-video analysis system presented as a demo at ACM Multimedia 2025 [[r-creleri]], and ENKIx, a real-time AR task-guidance system [[r-enkix]].",
     attend: ["e-ruiz", "r-creleri", "r-enkix"],
   },
   {
@@ -164,13 +164,13 @@ const TOPICS = [
   {
     keys: ["first author"],
     answer:
-      "My published first-author work includes CReLeRI at ACM Multimedia 2025 [[r-creleri]]. ENKIx [[r-enkix]] and Efficient Video Action Detection [[r-wacv]] are also Ph.D. thesis work, with first-author manuscripts in preparation.",
-    attend: ["r-creleri", "r-enkix", "r-wacv"],
+      "My published first-author work includes the CReLeRI demo at ACM Multimedia 2025 [[r-creleri]] and a Military Sensing Symposium 2026 paper on infrared super-resolution [[r-superres]]. ENKIx [[r-enkix]] and Efficient Video Action Detection [[r-wacv]] are also Ph.D. thesis work, with first-author manuscripts in preparation.",
+    attend: ["r-creleri", "r-superres", "r-enkix", "r-wacv"],
   },
   {
     keys: ["flagship", "creleri", "best work"],
     answer:
-      "CReLeRI — my first-author paper at ACM Multimedia 2025: an explainable, concept-centric system for representation, learning, reasoning and interaction over long video [[r-creleri]].",
+      "CReLeRI — my first-author demo at ACM Multimedia 2025: an explainable, concept-centric system for representation, learning, reasoning and interaction over long video [[r-creleri]].",
     attend: ["r-creleri"],
   },
   {
@@ -266,7 +266,7 @@ const TOPICS = [
   {
     keys: ["hiring", "why hire", "strengths", "good fit", "stand out"],
     answer:
-      `${information.availability} I combine ML research with production engineering: at Raft, I integrated computer vision data exploration into production software and built dataset curation and evaluation workflows [[e-raft]]. My work also includes a first-author paper at ACM Multimedia 2025 [[r-creleri]], published infrared video super-resolution research from my CoVar internship [[e-covar]], and a distributed simulator whose convergence I verified past 2,000,000 nodes [[p-gossip]].`,
+      `${information.availability} I combine ML research with production engineering: at Raft, I integrated computer vision data exploration into production software and built dataset curation and evaluation workflows [[e-raft]]. My work also includes a first-author demo at ACM Multimedia 2025 [[r-creleri]], published infrared video super-resolution research from my CoVar internship [[e-covar]], and a distributed simulator whose convergence I verified past 2,000,000 nodes [[p-gossip]].`,
     attend: ["e-raft", "r-creleri", "e-covar", "p-gossip"],
   },
   {
@@ -480,7 +480,7 @@ function composeGeneral(raw, ids, coverage) {
 
 const FALLBACK = {
   answer:
-    "I don't have that exact topic indexed — but here's the shape of my work: video understanding and real-time ML, flagship CReLeRI at ACM Multimedia 2025 [[r-creleri]], computer vision data tooling in production software at Raft [[e-raft]], CV research at CoVar [[e-covar]], and a distributed simulator past 2M nodes [[p-gossip]]. Try real-time, deployment, scale, video, algorithms, or DARPA.",
+    "I don't have that exact topic indexed — but here's the shape of my work: video understanding and real-time ML, the CReLeRI demo at ACM Multimedia 2025 [[r-creleri]], computer vision data tooling in production software at Raft [[e-raft]], CV research at CoVar [[e-covar]], and a distributed simulator past 2M nodes [[p-gossip]]. Try real-time, deployment, scale, video, algorithms, or DARPA.",
   attend: ["r-creleri", "e-raft", "e-covar", "p-gossip"],
   matched: false,
 };

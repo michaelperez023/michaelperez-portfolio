@@ -269,7 +269,7 @@ function ProjectMedia({ clip }) {
 function LinkRow({ clip }) {
   if (!clip.link && !clip.file && !clip.githubLink) return null;
   const projLabel =
-    clip.track === "projects" ? (ytId(clip.link) ? "Open on YouTube" : "Visit site") : "Read paper";
+    clip.track === "projects" ? (ytId(clip.link) ? "Open on YouTube" : "Visit site") : clip.demo ? "Read demo" : "Read paper";
   return (
     <div className="cv-links">
       {clip.link && (
@@ -340,6 +340,7 @@ function ResearchCard({ clip }) {
     <div className="cv-meta">
       <TagChip className={`cv-kind ${clip.kind}`} label={kindLabel} />
       {clip.lead && <TagChip className="cv-tag lead" label="FIRST AUTHOR" />}
+      {clip.demo && <TagChip className="cv-tag" label="DEMO" />}
       {clip.upcoming && <span className="cv-tag up">ACCEPTED · TO APPEAR</span>}
       {clip.review && <TagChip className="cv-tag up" label="UNDER REVIEW" />}
       <span className="cv-year">{clip.year}</span>

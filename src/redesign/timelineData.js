@@ -80,6 +80,7 @@ const researchClips = RESEARCH.map(([item, t, key, extra]) => ({
   authors: item.authors || null,
   note: item.note || null,
   summary: item.summary || null,
+  demo: item.demo || false,
   year: item.year,
   link: item.link || null,
   file: item.file || null,
@@ -229,6 +230,7 @@ export function clipTags(clip) {
   }
   if (clip.lead) out.add("FIRST AUTHOR");
   if (clip.review) out.add("UNDER REVIEW");
+  if (clip.demo) out.add("DEMO");
   if (clip.tag) out.add(clip.tag);
   (clip.tags || []).forEach((t) => out.add(t));
   return out;
