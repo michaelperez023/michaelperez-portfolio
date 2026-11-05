@@ -1,0 +1,74 @@
+% Every reusable line of the résumés, defined once. A résumé picks the lines it needs
+% (\item \RaftExplore, \PubCreleri, ...), so the wording cannot drift between variants.
+% Sources: the CV (shared/cv-*.tex), src/data/content.js, and the owner's job-agent
+% experience bank (~/Desktop/job-agent/bank). No proficiency is inferred.
+% Conventions: tools go in a skills line, never under a job; links are written out so they
+% survive plain-text extraction by applicant-tracking systems.
+
+% ---- contact ---------------------------------------------------------------------------
+\newcommand{\ResContactA}{\href{mailto:michaelperez023@gmail.com}{michaelperez023@gmail.com} | (954) 882-5069 | \href{https://www.michaelfperez.com}{michaelfperez.com}}
+\newcommand{\ResContactB}{\href{https://www.linkedin.com/in/michaelperez023/}{linkedin.com/in/michaelperez023} | \href{https://github.com/michaelperez023}{github.com/michaelperez023} | \href{https://scholar.google.com/citations?user=fCzyXhUAAAAJ\&hl=en}{Google Scholar}}
+\newcommand{\ResWhere}{Tampa, FL (open to relocation)}
+
+% ---- role headings ---------------------------------------------------------------------
+\newcommand{\RoleRaft}{\resrole{Senior Engineer}{Raft · Tampa, FL}{Aug 2026 – Nov 2026}}
+\newcommand{\RoleCovar}{\resrole{Machine Learning Engineer Intern}{CoVar · Durham, NC}{May 2025 – Aug 2025}}
+\newcommand{\RoleUfRa}{\resrole{Graduate Research Assistant}{University of Florida · Gainesville, FL}{Aug 2020 – Aug 2026}}
+\newcommand{\RoleUfTa}{\resrole{Graduate Teaching Assistant}{University of Florida · Gainesville, FL}{Aug 2020 – Aug 2026}}
+
+% ---- Raft (the owner's wording) --------------------------------------------------------
+\newcommand{\RaftExplore}{Developed and integrated computer vision data exploration and analysis capabilities into a larger production software system, including dataset visualization, clustering, filtering, natural-language querying, and geospatial analytics.}
+\newcommand{\RaftWorkflows}{Built ML data management and evaluation workflows for dataset curation, annotation review, model analysis, and debugging.}
+\newcommand{\RaftIntegration}{Contributed to the development, testing, and integration of AI/ML capabilities, including object-detection experimentation and improvements to existing software systems.}
+
+% ---- CoVar -----------------------------------------------------------------------------
+\newcommand{\CovarSuperRes}{Applied infrared video super-resolution to long-range object classification; first-author paper at the 2026 Military Sensing Symposium (MSS).}
+\newcommand{\CovarDetect}{Trained lightweight RGB object-detection models targeting real-time, on-device drone detection.}
+\newcommand{\CovarDetectMeasured}{Trained lightweight RGB object-detection models targeting real-time, on-device drone detection, and measured their accuracy and computational cost (FLOPs) offline.}
+\newcommand{\CovarEval}{Built offline computer vision evaluation pipelines spanning preprocessing, inference, metrics, and efficiency analysis.}
+
+% ---- University of Florida: research ---------------------------------------------------
+\newcommand{\UfThesis}{Ph.D. thesis: designed a causal, online temporal action-detection model on state-space (Mamba) backbones that matches the strongest verified strictly-causal detector on THUMOS at roughly 60\% of its parameters and 2.5–2.9× its throughput, running in real time at 37.7 FPS.}
+\newcommand{\UfThesisScores}{Designed a causal, online (streaming) temporal action-detection model on state-space (Mamba) backbones. On THUMOS it reaches 73.3 streaming mAP with ResNet-50 and 76.2 with DINOv2, matching the strongest verified strictly-causal detector at roughly 60\% of its parameters and 2.5–2.9× its throughput, in real time (37.7 FPS).}
+\newcommand{\UfThesisEfficiency}{Ph.D. thesis: designed an online action-detection model that runs in real time (37.7 FPS) and matches the strongest verified strictly-causal detector on THUMOS at roughly 60\% of its parameters and 2.5–2.9× its throughput.}
+\newcommand{\UfBenchmark}{Built a unified framework benchmarking online, sliding-window, and multimodal video models on THUMOS and ActivityNet across mAP, latency, throughput, memory, and FLOPs; first-author manuscript in preparation.}
+\newcommand{\UfBenchmarkInfra}{Built a unified benchmarking framework for video models covering mAP, latency, throughput, memory, and FLOPs, and ran distributed multi-GPU training on a SLURM-managed HPC cluster.}
+\newcommand{\UfCreleri}{Built UI and image/video analysis APIs and trained action-segmentation models for CReLeRI, a DARPA-funded explainable long-video analysis system; first author of its ACM Multimedia 2025 demo paper.}
+\newcommand{\UfCreleriTool}{Built CReLeRI's long-video analysis web tool: FastAPI backend with Celery and Redis background tasks, containerized with Docker, with GPU compute offloaded to UF's HiPerGator cluster.}
+\newcommand{\UfCreleriVlm}{Applied vision-language and LLM-based models in CReLeRI, using LLaMA to parse Qwen-generated captions.}
+\newcommand{\UfEnkix}{Trained and tested action-recognition models, including fine-tuning the video-language model LaViLa, for ENKIx, a DARPA-funded real-time AR task-guidance system, and ran usability and cognitive-load evaluations.}
+\newcommand{\UfPipelines}{Built scalable pipelines for video processing, model training, and inference across large-scale datasets.}
+\newcommand{\UfAnimal}{Surveyed action-recognition and pose-estimation methods for animal behavior (first-author arXiv survey, 2023), trained and tested existing methods, and began implementing semi-supervised adversarial approaches.}
+\newcommand{\UfAnimalShort}{Surveyed methods for classifying animal behavior from video (first-author arXiv survey) and tested existing models.}
+
+% ---- University of Florida: teaching ---------------------------------------------------
+\newcommand{\UfTeaching}{TA for Operating Systems, Data Structures and Algorithms, Analysis of Algorithms, Performant Programming in Python, and four other courses; developed automatic grading scripts and held office hours for hundreds of students.}
+
+% ---- projects --------------------------------------------------------------------------
+\newcommand{\ProjGossip}{\textbf{Gossip and Push-Sum Simulator} (F\#, Akka.NET): distributed-systems simulator modeling gossip and push-sum convergence across full, line, 3D, and imperfect-3D topologies, scaling past 2 million nodes.}
+\newcommand{\ProjTwitter}{\textbf{Distributed Twitter Clone} (F\#, Akka.NET, Suave; with one other student): actor-model service supporting registration, tweets, retweets, hashtags, and mentions.}
+\newcommand{\ProjPortfolio}{\textbf{Portfolio Website} (React, Vite): interactive career timeline with question answering that runs entirely in the browser (BM25 retrieval plus sentence embeddings), with no backend.}
+
+% ---- education -------------------------------------------------------------------------
+\newcommand{\EduPhd}{\resrow{\textbf{Ph.D. in Computer Science}, University of Florida}{Aug 2026}}
+\newcommand{\EduMs}{\resrow{\textbf{M.S. in Computer Science}, University of Florida}{May 2023}}
+\newcommand{\EduBs}{\resrow{\textbf{B.S. in Computer Science}, Florida Polytechnic University}{May 2020}}
+\newcommand{\EduMsBs}{\textbf{M.S. in Computer Science}, University of Florida, 2023 · \textbf{B.S. in Computer Science}, Florida Polytechnic University, 2020\par}
+\newcommand{\EduThesis}{Thesis: Efficient Video Action Detection. Co-supervisors: Dr. Jaime Ruiz and Dr. Daisy (Zhe) Wang.}
+
+% ---- publications ----------------------------------------------------------------------
+\newcommand{\PubCreleri}{\respub{CReLeRI: Explainable, Concept-centric, Representation, Learning, Reasoning, and Interaction Video Analysis System}{First author · ACM Multimedia 2025 · \href{https://doi.org/10.1145/3746027.3754479}{doi:10.1145/3746027.3754479}}}
+\newcommand{\PubMss}{\respub{Super-Resolution for Improving Vehicle Recognition at Large Stand-offs}{First author · Military Sensing Symposium (MSS) 2026}}
+\newcommand{\PubMssShort}{\respub{Super-Resolution for Improving Vehicle Recognition at Large Stand-offs}{First author · MSS 2026}}
+\newcommand{\PubMuchex}{\respub{MuCHEx: A Multimodal Conversational Debugging Tool for Interactive Visual Exploration of Hierarchical Object Classification}{Co-author · IEEE Computer Graphics and Applications, 2025 · \href{https://doi.org/10.1109/MCG.2025.3598204}{doi:10.1109/MCG.2025.3598204}}}
+\newcommand{\PubChi}{\textbf{The Effects of Multiple Companion Agents on User Experience and Mental Workload.}\\Co-author · under review at ACM CHI 2027\par\vspace{2.5pt}}
+\newcommand{\PubAnimal}{\respub{CNN-Based Action Recognition and Pose Estimation for Classifying Animal Behavior from Videos: A Survey}{First author · arXiv:2301.06187, 2023}}
+\newcommand{\PubEarlier}{Earlier: three journal articles on computer-assisted rhinoplasty planning and facial anthropometry (IJCARS 2020 and 2021; Aesthetic Surgery Journal 2021).}
+\newcommand{\PubSummary}{First-author papers at ACM Multimedia 2025 and the Military Sensing Symposium 2026; co-author, IEEE Computer Graphics and Applications (2025). Full list on Google Scholar.}
+
+% ---- honors, certification, service ----------------------------------------------------
+\newcommand{\FactCert}{CompTIA Security+ (2026)}
+\newcommand{\FactCertShort}{CompTIA Security+}
+\newcommand{\FactHonors}{L3Harris Graduate Fellowship (one of five UF CISE recipients, 2022); UF Graduate School Preeminence Award}
+\newcommand{\FactService}{Peer reviewer for ACM Multimedia, ACM ICMR, IEEE VR, and ICXR (2024 – 2026)}
+\newcommand{\FactServiceShort}{Peer reviewer for ACM Multimedia, ACM ICMR, IEEE VR, and ICXR}

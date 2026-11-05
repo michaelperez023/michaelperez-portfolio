@@ -79,6 +79,7 @@ const researchClips = RESEARCH.map(([item, t, key, extra]) => ({
   venue: item.venue || null,
   authors: item.authors || null,
   note: item.note || null,
+  summary: item.summary || null,
   year: item.year,
   link: item.link || null,
   file: item.file || null,

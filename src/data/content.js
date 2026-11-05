@@ -29,7 +29,7 @@ export const about = {
   paragraphs: [
     "I hold a Ph.D. in Computer Science from the University of Florida (August 2026), specializing in video understanding, computer vision, and real-time ML systems. I design and deploy end-to-end pipelines for video analysis, including detection, segmentation, and retrieval, across both real-time and offline settings.",
     "As a Senior Engineer at Raft from August to November 2026, I developed and integrated computer vision data exploration and analysis capabilities into production software. I also built ML data management and evaluation workflows for dataset curation, annotation review, model analysis, and debugging, and contributed to AI/ML development, testing, and integration.",
-    "My doctoral research spanned two DARPA-funded programs at the Ruiz HCI Lab: CReLeRI, an explainable long-video analysis system published at ACM Multimedia 2025, and ENKIx, a real-time AR task-guidance system. I also built scalable systems for processing and indexing large-scale video data.",
+    "My doctoral research spanned two DARPA-funded programs at the Ruiz HCI Lab: CReLeRI, an explainable long-video analysis system published at ACM Multimedia 2025, and ENKIx, a real-time AR task-guidance system. My thesis presents an online action-detection model that matches the strongest verified strictly-causal detector on THUMOS at roughly 60% of its parameters and 2.5–2.9× its throughput, in real time.",
   ],
   facts: [
     { label: "Focus", value: "Video understanding · Computer vision · Real-time ML" },
@@ -130,6 +130,8 @@ export const workingPapers = [
     id: 3,
     year: "2026",
     title: "Efficient Video Action Detection",
+    summary:
+      "A causal, online (streaming) action-detection model that matches the strongest verified strictly-causal detector on THUMOS at roughly 60% of its parameters and 2.5–2.9× its throughput, running in real time at 37.7 FPS.",
     note: "Ph.D. thesis work — first-author manuscript in preparation",
     link: null,
   },
@@ -243,8 +245,12 @@ export const workingExperience = [
         text: "Developed and evaluated ML models for action recognition, segmentation, and retrieval, and built scalable pipelines for video processing, training, and inference.",
       },
       {
+        label: "Ph.D. thesis",
+        text: "Designed a causal, online action-detection model that matches the strongest verified strictly-causal detector on THUMOS at roughly 60% of its parameters and 2.5–2.9× its throughput, running in real time at 37.7 FPS.",
+      },
+      {
         label: "DARPA programs",
-        text: "Worked across two DARPA-funded programs: CReLeRI, an explainable long-video analysis system (ACM Multimedia 2025), and ENKIx, a real-time AR task-guidance system that reached 34% F1 in a multi-team DARPA evaluation.",
+        text: "Worked across two DARPA-funded programs: CReLeRI, an explainable long-video analysis system (ACM Multimedia 2025), and ENKIx, a real-time AR task-guidance system tested in a multi-team DARPA evaluation.",
       },
       {
         label: "Cross-lab research",
@@ -406,6 +412,10 @@ export const honors = [
     title: "GenerationNext Grant",
     note: "Cohort-based support program for PhD students in the UF CISE department.",
   },
+];
+
+export const certifications = [
+  { id: 1, year: "2026", title: "CompTIA Security+", note: "Earned October 2026 · valid through October 2029" },
 ];
 
 export const service = [
