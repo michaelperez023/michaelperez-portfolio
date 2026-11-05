@@ -4,12 +4,12 @@
 #   sh documents/build.sh                      build every variant
 #   sh documents/build.sh research-scientist   build only the named variant(s)
 #
-# For each variant (ml-engineer, research-scientist, software-engineer) this writes to
+# For each variant (general, ml-engineer, research-scientist, software-engineer) this writes to
 # documents/out/<variant>/ (not committed):
 #   Michael_Perez_CV.pdf      the CV
 #   Michael_Perez_CV.docx     the same CV as a Word file, checked word-for-word against the PDF
 #   Michael_Perez_Resume.pdf  the one-page résumé (the build fails if it is not exactly one page)
-# The ml-engineer pair is also the one the website serves, so it is copied to public/files/.
+# The general pair is the one the website serves, so it is copied to public/files/.
 # documents/build.local (git-ignored) can name extra places to copy the results; see README.md.
 set -eu
 
@@ -19,11 +19,12 @@ out_root="$docs_dir/out"
 work_dir=$(mktemp -d "${TMPDIR:-/tmp}/portfolio-docs.XXXXXX")
 trap 'rm -rf "$work_dir"' EXIT HUP INT TERM
 
-all_variants="ml-engineer research-scientist software-engineer"
+all_variants="general ml-engineer research-scientist software-engineer"
 variants=${*:-$all_variants}
 
 folder_name() {
   case "$1" in
+    general) printf 'General' ;;
     ml-engineer) printf 'ML Engineer - Applied AI' ;;
     research-scientist) printf 'Research Scientist - Applied Scientist' ;;
     software-engineer) printf 'Software Engineer - ML Infrastructure' ;;
@@ -69,19 +70,19 @@ for variant in $variants; do
   printf '%-20s CV %s pages (PDF + Word, %s)   résumé 1 page\n' "$variant" "$cv_pages" "$(sed -n 's/^Checked: the Word file and the PDF contain //p' "$work_dir/docx.txt")"
 done
 
-# The website serves the ml-engineer pair. The old file names are kept as identical copies
+# The website serves the general pair. The old file names are kept as identical copies
 # so links to /files/CV.pdf and /files/Resume.pdf keep working.
-if [ -f "$out_root/ml-engineer/Michael_Perez_CV.pdf" ]; then
-  cp "$out_root/ml-engineer/Michael_Perez_CV.pdf" "$files_dir/Michael_Perez_CV.pdf"
-  cp "$out_root/ml-engineer/Michael_Perez_CV.pdf" "$files_dir/CV.pdf"
-  cp "$out_root/ml-engineer/Michael_Perez_Resume.pdf" "$files_dir/Michael_Perez_Resume.pdf"
-  cp "$out_root/ml-engineer/Michael_Perez_Resume.pdf" "$files_dir/Resume.pdf"
+if [ -f "$out_root/general/Michael_Perez_CV.pdf" ]; then
+  cp "$out_root/general/Michael_Perez_CV.pdf" "$files_dir/Michael_Perez_CV.pdf"
+  cp "$out_root/general/Michael_Perez_CV.pdf" "$files_dir/CV.pdf"
+  cp "$out_root/general/Michael_Perez_Resume.pdf" "$files_dir/Michael_Perez_Resume.pdf"
+  cp "$out_root/general/Michael_Perez_Resume.pdf" "$files_dir/Resume.pdf"
   printf 'Website copies updated in public/files/\n'
 fi
 
 # Optional local copies (documents/build.local):
 #   MASTERS_COPY_DIR  a folder that receives one sub-folder per variant
-#   CV_WORD_COPY      a path that receives the ml-engineer Word CV
+#   CV_WORD_COPY      a path that receives the general Word CV
 MASTERS_COPY_DIR=""
 CV_WORD_COPY=""
 if [ -f "$docs_dir/build.local" ]; then
@@ -95,7 +96,7 @@ if [ -n "$MASTERS_COPY_DIR" ]; then
   done
   printf 'Copied the masters to %s\n' "$MASTERS_COPY_DIR"
 fi
-if [ -n "$CV_WORD_COPY" ] && [ -f "$out_root/ml-engineer/Michael_Perez_CV.docx" ]; then
-  cp "$out_root/ml-engineer/Michael_Perez_CV.docx" "$CV_WORD_COPY"
+if [ -n "$CV_WORD_COPY" ] && [ -f "$out_root/general/Michael_Perez_CV.docx" ]; then
+  cp "$out_root/general/Michael_Perez_CV.docx" "$CV_WORD_COPY"
   printf 'Copied the Word CV to %s\n' "$CV_WORD_COPY"
 fi

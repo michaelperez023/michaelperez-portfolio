@@ -1,0 +1,55 @@
+% Résumé: General. The one to hand to anyone (friends forwarding it, the website); it says what kind
+% of role he is looking for because it travels without a cover letter.
+% Facts come from ../shared/resume-facts.tex; this file chooses which lines appear, their order,
+% the skills grouping, and the fit. It must be exactly one full page (the build enforces one page).
+\input{../shared/resume-preamble}
+\input{../shared/resume-facts}
+\hypersetup{pdftitle={Michael F. Pérez — ML and Computer Vision Engineer},pdfauthor={Michael F. Pérez}}
+% ---- fit: adjust these three, in this order of preference, after changing content ----
+\geometry{left=0.7in,right=0.7in,top=0.55in,bottom=0.55in}
+\renewcommand{\ResSectionGap}{9pt}
+\begin{document}
+\fontsize{10.5}{12.65}\selectfont
+\resheader{\textbf{ML \& Computer Vision Engineer} · Ph.D. in Computer Science · \ResWhere}
+Machine learning and computer vision engineer with a Ph.D. in Computer Science. I have integrated computer vision into production software, built ML data and evaluation workflows, and researched real-time video understanding. Open to ML and computer vision roles, in engineering or applied research.
+
+\ressection{Technical Skills}
+\resskill{ML \& computer vision}{PyTorch, TensorFlow, OpenCV, scikit-learn, Hugging Face, VLMs (LaViLa, LLaVA, Qwen)}
+\resskill{MLOps \& data tools}{Kubernetes, Airflow, MLflow, FiftyOne, Label Studio, Docker, SLURM/HPC}
+\resskill{Languages \& systems}{Python, C++, SQL, JavaScript, FastAPI, Flask, Celery, Redis, Linux, Git, NumPy, pandas, SciPy}
+
+\ressection{Experience}
+\RoleRaft
+\begin{itemize}
+\item \RaftExplore
+\item \RaftWorkflows
+\item \RaftIntegration
+\end{itemize}
+\RoleCovar
+\begin{itemize}
+\item \CovarSuperRes
+\item \CovarDetect
+\item \CovarEval
+\end{itemize}
+\RoleUfRa
+\begin{itemize}
+\item \UfThesis
+\item \UfCreleri
+\item \UfCreleriTool
+\item \UfEnkix
+\end{itemize}
+
+\ressection{Education}
+\EduPhd
+\EduMs
+\EduBs
+
+\ressection{Selected Publications}
+\PubCreleri
+\PubMssShort
+\PubMuchex
+
+\ressection{Honors, Service \& Certification}
+\textbf{Honors:} \FactHonors\par\vspace{1pt}
+\textbf{Service \& certification:} \FactServiceShort; \FactCertShort
+\end{document}

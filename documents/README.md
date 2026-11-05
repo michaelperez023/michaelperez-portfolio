@@ -1,10 +1,11 @@
 # CVs and résumés
 
-Three master sets, each a CV and a one-page résumé, built from one shared set of facts:
+Four master sets, each a CV and a one-page résumé, built from one shared set of facts:
 
 | Folder | For | Leads with |
 | --- | --- | --- |
-| `ml-engineer/` | ML Engineer / Applied AI | Industry experience, ML and MLOps skills. **This pair is also what the website serves.** |
+| `general/` | Anyone: friends forwarding it, recruiters, the website | The same content as the ML Engineer pair, plus a sentence saying which roles he is open to (it travels without a cover letter). **This pair is what the website serves.** |
+| `ml-engineer/` | ML Engineer / Applied AI | Industry experience, ML and MLOps skills |
 | `research-scientist/` | Research Scientist / Applied Scientist | Education, research experience, publications |
 | `software-engineer/` | Software Engineer / ML Infrastructure | Industry experience, languages and infrastructure, projects |
 
@@ -25,7 +26,7 @@ For each variant this writes to `documents/out/<variant>/` (not committed):
 
 The build stops with an error if a Word CV and its PDF do not contain the same words in the same order, or if a résumé is not exactly one page.
 
-The `ml-engineer` pair is copied to `public/files/` as `Michael_Perez_CV.pdf` and `Michael_Perez_Resume.pdf` (and as `CV.pdf` and `Resume.pdf`, so older links keep working). Run the build before `npm run deploy`.
+The `general` pair is copied to `public/files/` as `Michael_Perez_CV.pdf` and `Michael_Perez_Resume.pdf` (and as `CV.pdf` and `Resume.pdf`, so older links keep working). Run the build before `npm run deploy`.
 
 To also copy the results somewhere on your own machine, create `documents/build.local` (git-ignored):
 
