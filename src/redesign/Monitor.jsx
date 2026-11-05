@@ -251,7 +251,10 @@ function ProjectMedia({ clip }) {
     );
   }
   return (
-    <figure className={`cv-figure${vid ? " has-video" : ""}`}>
+    <figure
+      className={`cv-figure${vid ? " has-video" : ""}`}
+      style={clip.image ? { "--fig-bg": `url("${clip.image}")` } : undefined}
+    >
       {clip.image && <img src={clip.image} alt={clip.title} loading="lazy" />}
       {vid && (
         <button className="cv-playbtn" onClick={() => setPlaying(true)} aria-label={`Play ${clip.title} video`}>
@@ -263,6 +266,7 @@ function ProjectMedia({ clip }) {
 }
 
 function LinkRow({ clip }) {
+  if (!clip.link && !clip.file && !clip.githubLink) return null;
   const projLabel =
     clip.track === "projects" ? (ytId(clip.link) ? "Open on YouTube" : "Visit site") : "Read paper";
   return (
@@ -336,6 +340,7 @@ function ResearchCard({ clip }) {
       <TagChip className={`cv-kind ${clip.kind}`} label={kindLabel} />
       {clip.lead && <TagChip className="cv-tag lead" label="FIRST AUTHOR" />}
       {clip.upcoming && <span className="cv-tag up">ACCEPTED · TO APPEAR</span>}
+      {clip.review && <TagChip className="cv-tag up" label="UNDER REVIEW" />}
       <span className="cv-year">{clip.year}</span>
     </div>
   );
@@ -378,34 +383,32 @@ function ClipCard({ clip, dense, primary, rail, onFocus }) {
   if (clip.track === "experience") {
     return (
       <article className={`${base} cv-experience`} onClick={onCardClick}>
-        <div className="cv-meta">
-          <TagChip className="cv-kind exp" label="EXPERIENCE" />
-          {clip.tag && <TagChip className="cv-tag" label={clip.tag} />}
-          <span className="cv-year">{clip.year}</span>
-        </div>
-        <h2 className="cv-title">{clip.title}</h2>
-        <p className="cv-sub">{clip.company}{clip.location ? ` · ${clip.location}` : ""}</p>
-        {!rail && (
-          <>
-            {clip.highlights ? (
-              <ul className="cv-highlights">
-                {clip.highlights.map((h) => (
-                  <li key={h.label}><strong>{h.label}.</strong> {h.text}</li>
-                ))}
+        <div className="cv-exp">
+          <div className="cv-exp-head">
+            <div className="cv-meta">
+              <TagChip className="cv-kind exp" label="EXPERIENCE" />
+              {clip.tag && <TagChip className="cv-tag" label={clip.tag} />}
+              <span className="cv-year">{clip.year}</span>
+            </div>
+            <h2 className="cv-title">{clip.title}</h2>
+            <p className="cv-sub">{clip.company}{clip.location ? ` · ${clip.location}` : ""}</p>
+          </div>
+          {!rail && clip.highlights?.length > 0 && (
+            <ul className="cv-highlights">
+              {clip.highlights.map((h) => (
+                <li key={h.label}><strong>{h.label}.</strong> {h.text}</li>
+              ))}
+            </ul>
+          )}
+          {!rail && clip.tools?.length > 0 && (
+            <div className="cv-tools">
+              <p className="cv-tools-label">Tools &amp; practices</p>
+              <ul className="cv-tools-list" aria-label="Tools and practices used at this role">
+                {clip.tools.map((tool) => <li key={tool}>{tool}</li>)}
               </ul>
-            ) : (
-              <p className="cv-body">{clip.details}</p>
-            )}
-            {clip.tools?.length > 0 && (
-              <div className="cv-tools">
-                <p className="cv-tools-label">Tools &amp; practices</p>
-                <ul className="cv-tools-list" aria-label="Tools and practices used at this role">
-                  {clip.tools.map((tool) => <li key={tool}>{tool}</li>)}
-                </ul>
-              </div>
-            )}
-          </>
-        )}
+            </div>
+          )}
+        </div>
       </article>
     );
   }

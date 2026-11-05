@@ -1,10 +1,12 @@
 % General ML / computer vision resume, based on the current portfolio CV.
 % Facts are drawn from documents/cv/cv.tex, src/data/content.js, and the owner's
 % November 2026 Raft accomplishments and technology list. No proficiency inferred.
-\documentclass[10pt,letterpaper]{article}
+% Layout: 11pt body with margins and spacing sized so the content fills one letter
+% page. If content is added or removed, adjust the spacing here (see README.md).
+\documentclass[11pt,letterpaper]{article}
 \usepackage{fontspec}
 \setmainfont{Times New Roman}
-\usepackage[left=0.65in,right=0.65in,top=0.48in,bottom=0.48in]{geometry}
+\usepackage[left=0.75in,right=0.75in,top=0.6in,bottom=0.6in]{geometry}
 \usepackage{enumitem}
 \usepackage{needspace}
 \usepackage[hidelinks,unicode]{hyperref}
@@ -14,12 +16,12 @@
 \setlength{\parskip}{0pt}
 \setlength{\emergencystretch}{2em}
 \raggedright
-\setlist[itemize]{leftmargin=0.16in,labelsep=0.07in,itemsep=1pt,parsep=0pt,topsep=2pt,partopsep=0pt}
-\newcommand{\ressection}[1]{\par\addvspace{7pt}\needspace{3\baselineskip}\textbf{\MakeUppercase{#1}}\par\nobreak\vspace{1pt}\hrule height 0.5pt\vspace{3pt}}
+\setlist[itemize]{leftmargin=0.18in,labelsep=0.08in,itemsep=2pt,parsep=0pt,topsep=3pt,partopsep=0pt}
+\newcommand{\ressection}[1]{\par\addvspace{9pt}\needspace{3\baselineskip}\textbf{\MakeUppercase{#1}}\par\nobreak\vspace{1.5pt}\hrule height 0.5pt\vspace{5pt}}
 \newcommand{\resrow}[2]{\noindent #1\hfill\mbox{#2}\par}
-\newcommand{\resrole}[3]{\par\addvspace{3pt}\needspace{4\baselineskip}\resrow{\textbf{#1}}{#2}#3\par}
+\newcommand{\resrole}[3]{\par\addvspace{6pt}\needspace{4\baselineskip}\resrow{\textbf{#1}}{#2}#3\par}
 \begin{document}
-\fontsize{10.5}{12}\selectfont
+\fontsize{11}{13.3}\selectfont
 \begin{center}
 {\fontsize{18}{20}\selectfont\textbf{MICHAEL F. PÉREZ}}\\[2pt]
 \textbf{ML \& Computer Vision Engineer} \quad Tampa, FL · Open to relocation\\[2pt]
@@ -40,7 +42,6 @@ Ph.D. in Computer Science with experience integrating computer vision into produ
 \item Built ML data management and evaluation workflows for dataset curation, annotation review, model analysis, and debugging.
 \item Contributed to AI/ML development, testing, and integration, including object-detection experimentation and improvements to existing software systems.
 \end{itemize}
-\textit{Technologies used:} Kubernetes, MLOps, Airflow, MLflow, Label Studio, FiftyOne.
 
 \resrole{Machine Learning Engineer Intern · CoVar}{May 2025 – Aug 2025}{Durham, NC}
 \begin{itemize}

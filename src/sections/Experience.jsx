@@ -20,7 +20,14 @@ export default function Experience() {
                 <h3 className="exp-position">{exp.position}</h3>
                 <p className="exp-company">{exp.company}</p>
                 {exp.location && <p className="exp-location">{exp.location}</p>}
-                <p className="exp-details">{exp.details}</p>
+                <ul className="exp-details">
+                  {exp.highlights.map((highlight) => (
+                    <li key={highlight.label}><strong>{highlight.label}.</strong> {highlight.text}</li>
+                  ))}
+                </ul>
+                {exp.tools?.length > 0 && (
+                  <p className="exp-details"><strong>Tools &amp; practices:</strong> {exp.tools.join(", ")}</p>
+                )}
               </div>
             </Reveal>
           ))}

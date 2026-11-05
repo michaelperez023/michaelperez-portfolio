@@ -12,7 +12,7 @@ for pass in 1 2; do
   }
 done
 
-if rg -n 'Overfull|Missing character|LaTeX Warning' "$resume_build_dir/resume.log"; then
+if grep -nE 'Overfull|Missing character|LaTeX Warning' "$resume_build_dir/resume.log"; then
   printf '\nReview the resume build warnings above.\n' >&2
 fi
 

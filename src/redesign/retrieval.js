@@ -10,6 +10,8 @@ import { information, workingPapers } from "../data/content";
 
 const thesisPaper = workingPapers.find((p) => p.id === 3);
 const enkixPaper = workingPapers.find((p) => p.id === 1);
+const temporalPaper = workingPapers.find((p) => p.id === 2);
+const companionPaper = workingPapers.find((p) => p.id === 4);
 
 // Synonym map: a query token on the left counts as the canonical term on the
 // right, so phrasings we don't literally key on still hit the right topic.
@@ -87,6 +89,12 @@ const TOPICS = [
     attend: ["e-raft"],
   },
   {
+    keys: ["under review", "in review", "in preparation", "in prep", "working paper", "working papers", "manuscript", "manuscripts", "submitted", "chi", "companion agents"],
+    specific: true,
+    answer: `${companionPaper.title}: ${companionPaper.note} [[r-hai-prep]]. Three more manuscripts are in preparation: ${enkixPaper.title} [[r-enkix]], ${temporalPaper.title} [[r-temporal]], and ${thesisPaper.title} [[r-wacv]].`,
+    attend: ["r-hai-prep", "r-enkix", "r-temporal", "r-wacv"],
+  },
+  {
     keys: ["thesis", "dissertation"],
     specific: true,
     answer: `My Ph.D. thesis work includes ${enkixPaper.title} [[r-enkix]] and ${thesisPaper.title} [[r-wacv]]. Both are first-author manuscripts in preparation.`,
@@ -95,7 +103,7 @@ const TOPICS = [
   {
     keys: ["scale"],
     answer:
-      "Yes. I built a distributed gossip / push-sum simulator whose convergence I verified past 2,000,000 nodes across full, line, 3D and imperfect-3D topologies [[p-gossip]]. At the Ruiz HCI Lab I also build scalable pipelines for processing and indexing large-scale video data [[e-ruiz]].",
+      "Yes. I built a distributed gossip / push-sum simulator whose convergence I verified past 2,000,000 nodes across full, line, 3D and imperfect-3D topologies [[p-gossip]]. At the Ruiz HCI Lab I also built scalable pipelines for processing and indexing large-scale video data [[e-ruiz]].",
     attend: ["p-gossip", "e-ruiz"],
   },
   {
@@ -113,7 +121,7 @@ const TOPICS = [
   {
     keys: ["video"],
     answer:
-      "Video understanding is my thesis area. CReLeRI is an explainable, concept-centric long-video analysis system I first-authored at ACM Multimedia 2025 [[r-creleri]]. I also study temporal granularity as a design variable for zero-shot video retrieval [[r-temporal]], and built MuCHEx for interactive visual exploration of hierarchical classification [[r-muchex]].",
+      "Video understanding was the focus of my Ph.D. CReLeRI is an explainable, concept-centric long-video analysis system I first-authored at ACM Multimedia 2025 [[r-creleri]]. I also study temporal granularity as a design variable for zero-shot video retrieval [[r-temporal]], and built MuCHEx for interactive visual exploration of hierarchical classification [[r-muchex]].",
     attend: ["r-creleri", "r-temporal", "r-muchex"],
   },
   {
@@ -167,7 +175,7 @@ const TOPICS = [
   {
     keys: ["teaching"],
     answer:
-      "I've been a graduate teaching assistant since 2020 across algorithms, data structures, operating systems, Python and deep-learning-for-graphics courses — building automated grading tools and supporting 100+ students [[e-ta]].",
+      "I was a graduate teaching assistant from 2020 to 2026 across algorithms, data structures, operating systems, Python and deep-learning-for-graphics courses — building automated grading tools and supporting 100+ students [[e-ta]].",
     attend: ["e-ta"],
   },
   {
@@ -191,7 +199,7 @@ const TOPICS = [
   {
     keys: ["optimization"],
     answer:
-      "I dug into optimization directly — a study of ADAM, the stochastic optimization method, for an advanced ML course [[r-adam]] — and I train CV models day to day [[r-creleri]].",
+      "I dug into optimization directly — a study of ADAM, the stochastic optimization method, for an advanced ML course [[r-adam]] — and I trained CV models throughout my research [[r-creleri]].",
     attend: ["r-adam", "r-creleri"],
   },
   {
@@ -233,7 +241,7 @@ const TOPICS = [
   {
     keys: ["datascience"],
     answer:
-      "Day to day I work in NumPy, pandas, SciPy, MATLAB and Jupyter, building evaluation pipelines and analysis for my CV/ML research [[e-ruiz]], and I did offline CV metric analysis at CoVar [[e-covar]].",
+      "I work in NumPy, pandas, SciPy, MATLAB and Jupyter. I used them to build evaluation pipelines and analysis for my CV/ML research [[e-ruiz]], and for offline CV metric analysis at CoVar [[e-covar]].",
     attend: ["e-ruiz", "e-covar"],
   },
   {
@@ -281,7 +289,7 @@ const AUGMENT = {
   "p-brisal": "booking website astro villa rental hospitality travel dominican republic jarabacoa bilingual spanish",
   "e-raft": "raft senior engineer tampa florida industry production computer vision dataset visualization exploration analysis clustering filtering natural language querying geospatial analytics data management curation annotation review model evaluation debugging object detection experimentation testing integration kubernetes k8s mlops airflow mlflow label studio labelstudio fiftyone fifty one",
   "r-wacv": "efficient video action detection thesis dissertation first author manuscript in preparation benchmark map latency throughput memory flops",
-  "r-hai-prep": "human agent interaction companion agents user experience mental workload user study",
+  "r-hai-prep": "human agent interaction companion agents user experience mental workload user study chi under review submitted hci",
 };
 
 const STOP = new Set(
@@ -430,7 +438,7 @@ function generalSearch(raw, expanded) {
 
 // One line of grounding context for a cited clip in a composed answer.
 function clipContext(c) {
-  if (c.track === "research") return [c.venue || c.note, c.year].filter(Boolean).join(", ");
+  if (c.track === "research") return [c.venue || c.note, c.kind === "working" ? null : c.year].filter(Boolean).join(", ");
   if (c.track === "experience") return [c.company, c.year].filter(Boolean).join(", ");
   return [(c.tags || [])[0], c.year].filter(Boolean).join(", ");
 }

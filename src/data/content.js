@@ -105,7 +105,7 @@ export const publications = [
   },
 ];
 
-// Active manuscripts being revised for submission.
+// Manuscripts under review or in preparation.
 export const workingPapers = [
   {
     id: 1,
@@ -135,7 +135,7 @@ export const workingPapers = [
     year: "2026",
     title:
       "The Effects of Multiple Companion Agents on User Experience and Mental Workload",
-    note: "Manuscript in preparation",
+    note: "Under review at ACM CHI",
     link: null,
   },
 ];
@@ -183,22 +183,8 @@ export const preprints = [
   },
 ];
 
-const raftHighlights = [
-  {
-    label: "Data exploration",
-    text: "Developed and integrated dataset visualization, clustering, filtering, natural-language querying, and geospatial analytics into production computer vision software.",
-  },
-  {
-    label: "ML workflows",
-    text: "Built data management and evaluation workflows for dataset curation, annotation review, model analysis, and debugging.",
-  },
-  {
-    label: "AI/ML integration",
-    text: "Contributed to development, testing, and integration, including object-detection experiments and improvements to existing software systems.",
-  },
-];
-const raftTools = ["Kubernetes", "MLOps", "Airflow", "MLflow", "Label Studio", "FiftyOne"];
-
+// Every role uses the same shape: `highlights` (labeled bullets) plus optional
+// `tools`. The Raft bullets track the wording in documents/cv/cv.tex.
 export const workingExperience = [
   {
     id: 6,
@@ -206,9 +192,21 @@ export const workingExperience = [
     position: "Senior Engineer",
     company: "Raft",
     location: "Tampa, FL",
-    highlights: raftHighlights,
-    tools: raftTools,
-    details: `${raftHighlights.map((h) => h.text).join(" ")} Tools and practices: ${raftTools.join(", ")}.`,
+    highlights: [
+      {
+        label: "Data exploration",
+        text: "Developed and integrated computer vision data exploration and analysis capabilities into a larger production software system, including dataset visualization, clustering, filtering, natural-language querying, and geospatial analytics.",
+      },
+      {
+        label: "ML workflows",
+        text: "Built data management and evaluation workflows to support dataset curation, annotation review, model analysis, and debugging.",
+      },
+      {
+        label: "AI/ML integration",
+        text: "Contributed to development, testing, and integration, including object-detection experimentation and improvements to existing software systems.",
+      },
+    ],
+    tools: ["Kubernetes", "MLOps", "Airflow", "MLflow", "Label Studio", "FiftyOne"],
   },
   {
     id: 1,
@@ -216,8 +214,20 @@ export const workingExperience = [
     position: "Machine Learning Engineer Intern",
     company: "CoVar",
     location: "Durham, NC",
-    details:
-      "Applied infrared video super-resolution models to improve long-range object classification, published with CoVar collaborators at the Military Sensing Symposium 2026. Trained lightweight RGB object-detection models for real-time drone detection targeting resource-constrained, on-device use, and built offline computer-vision evaluation pipelines spanning preprocessing, model inference, metric computation, and efficiency analysis.",
+    highlights: [
+      {
+        label: "Infrared super-resolution",
+        text: "Applied infrared video super-resolution models to improve long-range object classification, published with CoVar collaborators at the Military Sensing Symposium 2026.",
+      },
+      {
+        label: "Real-time detection",
+        text: "Trained lightweight RGB object-detection models for real-time drone detection targeting resource-constrained, on-device use.",
+      },
+      {
+        label: "Evaluation pipelines",
+        text: "Built offline computer vision evaluation pipelines spanning preprocessing, model inference, metric computation, and efficiency analysis.",
+      },
+    ],
   },
   {
     id: 2,
@@ -225,8 +235,20 @@ export const workingExperience = [
     position: "Graduate Research Assistant",
     company: "Ruiz HCI Lab & Data Science Research Lab, University of Florida",
     location: "Gainesville, FL",
-    details:
-      "A single research-assistant role with membership in two labs — the Ruiz HCI Lab and the Data Science Research Lab. Develop and evaluate ML models for video understanding, including action recognition, segmentation, and retrieval, and build scalable pipelines for video processing, training, and inference. Across two DARPA-funded programs: CReLeRI, an explainable long-video analysis system (ACM Multimedia 2025), and ENKIx, a real-time AR task-guidance system that reached 34% F1 in a multi-team DARPA evaluation. Designed computer-vision systems for AR, web, and neuroscience applications.",
+    highlights: [
+      {
+        label: "Video understanding",
+        text: "Developed and evaluated ML models for action recognition, segmentation, and retrieval, and built scalable pipelines for video processing, training, and inference.",
+      },
+      {
+        label: "DARPA programs",
+        text: "Worked across two DARPA-funded programs: CReLeRI, an explainable long-video analysis system (ACM Multimedia 2025), and ENKIx, a real-time AR task-guidance system that reached 34% F1 in a multi-team DARPA evaluation.",
+      },
+      {
+        label: "Cross-lab research",
+        text: "Held a single research-assistant role with membership in both the Ruiz HCI Lab and the Data Science Research Lab, designing computer vision systems for AR, web, and neuroscience applications.",
+      },
+    ],
   },
   {
     id: 3,
@@ -234,8 +256,16 @@ export const workingExperience = [
     position: "Graduate Teaching Assistant",
     company: "CISE Department, University of Florida",
     location: "Gainesville, FL",
-    details:
-      "TA across algorithms, systems, and ML courses, including Analysis of Algorithms, Data Structures and Algorithms, Operating Systems, Performant Programming in Python, Deep Learning for Computer Graphics, and Computational Structures for Computer Graphics. Developed automated grading tools and supported 100+ students.",
+    highlights: [
+      {
+        label: "Teaching",
+        text: "Served as a TA across algorithms, systems, and ML courses, including Analysis of Algorithms, Data Structures and Algorithms, Operating Systems, Performant Programming in Python, Deep Learning for Computer Graphics, and Computational Structures for Computer Graphics.",
+      },
+      {
+        label: "Grading and support",
+        text: "Developed automated grading tools and supported 100+ students.",
+      },
+    ],
   },
   {
     id: 4,
@@ -243,8 +273,16 @@ export const workingExperience = [
     position: "Graduate Research Assistant",
     company: "Graphics, Imaging & Light Measurement Lab, University of Florida",
     location: "Gainesville, FL",
-    details:
-      "Developed and evaluated video-based action-recognition models for animal-behavior analysis (NSF-funded), exploring semi-supervised and adversarial approaches to model motion and behavior, with Dr. Corey Toler-Franklin and Dr. Darragh Devine (UF Psychology).",
+    highlights: [
+      {
+        label: "NSF-funded research",
+        text: "Developed and evaluated video-based action-recognition models for animal-behavior analysis.",
+      },
+      {
+        label: "Methods",
+        text: "Explored semi-supervised and adversarial approaches to modeling motion and behavior, with Dr. Corey Toler-Franklin and Dr. Darragh Devine (UF Psychology).",
+      },
+    ],
   },
   {
     id: 5,
@@ -252,10 +290,22 @@ export const workingExperience = [
     position: "Research Assistant",
     company: "Rhinoplasty Research Group, Florida Polytechnic University",
     location: "Lakeland, FL",
-    details:
-      "Surveyed 50+ papers documenting facial landmarks and measurements relevant to rhinoplasty, and helped build a web interface for importing, exporting, and displaying feature-point coordinates on 3D facial models.",
+    highlights: [
+      {
+        label: "Literature review",
+        text: "Surveyed 50+ papers documenting facial landmarks and measurements relevant to rhinoplasty.",
+      },
+      {
+        label: "3D web tool",
+        text: "Helped build a web interface for importing, exporting, and displaying feature-point coordinates on 3D facial models.",
+      },
+    ],
   },
-];
+].map((experience) => ({
+  ...experience,
+  // flat text for the search index
+  details: `${experience.highlights.map((h) => `${h.label}: ${h.text}`).join(" ")}${experience.tools?.length ? ` Tools and practices: ${experience.tools.join(", ")}.` : ""}`,
+}));
 
 export const education = [
   {
