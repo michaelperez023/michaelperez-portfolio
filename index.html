@@ -2,10 +2,12 @@
 <html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/jpeg" href="/images/headshot.jpg" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Michael Pérez · ML &amp; Computer Vision Researcher</title>
+    <title>Michael Pérez, Ph.D. · ML &amp; Computer Vision Engineer</title>
     <meta
       name="description"
       content="Michael Pérez is an ML and computer vision engineer with a Ph.D. in Computer Science from the University of Florida. Explore his research, projects, and production ML experience. Open to new opportunities and relocation."
@@ -18,7 +20,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Michael Pérez" />
     <meta property="og:url" content="https://www.michaelfperez.com/" />
-    <meta property="og:title" content="Michael Pérez · ML &amp; Computer Vision Researcher" />
+    <meta property="og:title" content="Michael Pérez, Ph.D. · ML &amp; Computer Vision Engineer" />
     <meta
       property="og:description"
       content="ML & computer vision engineer · Ph.D. in Computer Science (University of Florida) · video understanding and production ML systems. Open to new opportunities and relocation. Explore my research, projects, and experience."
@@ -29,12 +31,46 @@
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Michael Pérez · ML &amp; Computer Vision Researcher" />
+    <meta name="twitter:title" content="Michael Pérez, Ph.D. · ML &amp; Computer Vision Engineer" />
     <meta
       name="twitter:description"
       content="ML & computer vision engineer · Ph.D. in Computer Science · open to new opportunities and relocation. Explore an interactive timeline of my research, projects, and experience."
     />
     <meta name="twitter:image" content="https://www.michaelfperez.com/og-image.jpg" />
+
+    <!-- Fonts: preconnect + stylesheet link (was a render-blocking @import in the CSS) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;0,800&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap"
+    />
+
+    <!-- Structured data so search engines can show who this is -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Michael Pérez",
+        "alternateName": ["Michael F. Pérez", "Michael Francis Pérez", "Michael Perez"],
+        "honorificSuffix": "Ph.D.",
+        "url": "https://www.michaelfperez.com/",
+        "image": "https://www.michaelfperez.com/images/headshot-web.jpg",
+        "jobTitle": "ML & Computer Vision Engineer",
+        "description": "ML and computer vision engineer with a Ph.D. in Computer Science from the University of Florida, specializing in video understanding and real-time ML systems.",
+        "address": { "@type": "PostalAddress", "addressLocality": "Tampa", "addressRegion": "FL", "addressCountry": "US" },
+        "alumniOf": [
+          { "@type": "CollegeOrUniversity", "name": "University of Florida" },
+          { "@type": "CollegeOrUniversity", "name": "Florida Polytechnic University" }
+        ],
+        "knowsAbout": ["Machine learning", "Computer vision", "Video understanding", "MLOps", "PyTorch"],
+        "sameAs": [
+          "https://www.linkedin.com/in/michaelperez023/",
+          "https://github.com/michaelperez023",
+          "https://scholar.google.com/citations?user=fCzyXhUAAAAJ"
+        ]
+      }
+    </script>
 
     <!-- Avoid a light/dark flash before React mounts -->
     <script>
@@ -50,10 +86,28 @@
         } catch (e) {}
       })();
     </script>
-    <script type="module" crossorigin src="/assets/index-Dm9A-xVw.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-D8HuKKVo.css">
+    <script type="module" crossorigin src="/assets/index-L72MIiQD.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DxZhlTE7.css">
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <main style="max-width: 44rem; margin: 3rem auto; padding: 0 1.25rem; font-family: system-ui, sans-serif; line-height: 1.6">
+        <h1>Michael Pérez, Ph.D.</h1>
+        <p>
+          ML and computer vision engineer with a Ph.D. in Computer Science from the University of Florida, specializing in
+          video understanding and real-time ML systems. Open to new roles in machine learning and computer vision, and open
+          to relocation.
+        </p>
+        <p>This site is an interactive timeline and needs JavaScript. Everything is also in these documents and profiles:</p>
+        <ul>
+          <li><a href="/files/Michael_Perez_Resume.pdf">Résumé (PDF)</a></li>
+          <li><a href="/files/Michael_Perez_CV.pdf">Curriculum vitae (PDF)</a></li>
+          <li><a href="https://www.linkedin.com/in/michaelperez023/">LinkedIn</a></li>
+          <li><a href="https://github.com/michaelperez023">GitHub</a></li>
+          <li><a href="https://scholar.google.com/citations?user=fCzyXhUAAAAJ&amp;hl=en">Google Scholar</a></li>
+        </ul>
+      </main>
+    </noscript>
   </body>
 </html>
