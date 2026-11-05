@@ -25,9 +25,6 @@ export default function Experience() {
                     <li key={highlight.label}><strong>{highlight.label}.</strong> {highlight.text}</li>
                   ))}
                 </ul>
-                {exp.tools?.length > 0 && (
-                  <p className="exp-details"><strong>Tools &amp; practices:</strong> {exp.tools.join(", ")}</p>
-                )}
               </div>
             </Reveal>
           ))}

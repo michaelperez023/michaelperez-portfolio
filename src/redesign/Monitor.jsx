@@ -9,6 +9,7 @@ import {
   FiPlay,
   FiDownload,
   FiLinkedin,
+  FiMail,
 } from "react-icons/fi";
 import { SiGooglescholar } from "react-icons/si";
 import { useStore, isPanel } from "./storeCore";
@@ -400,14 +401,6 @@ function ClipCard({ clip, dense, primary, rail, onFocus }) {
               ))}
             </ul>
           )}
-          {!rail && clip.tools?.length > 0 && (
-            <div className="cv-tools">
-              <p className="cv-tools-label">Tools &amp; practices</p>
-              <ul className="cv-tools-list" aria-label="Tools and practices used at this role">
-                {clip.tools.map((tool) => <li key={tool}>{tool}</li>)}
-              </ul>
-            </div>
-          )}
         </div>
       </article>
     );
@@ -517,14 +510,24 @@ function Panel({ id }) {
 }
 
 function IntroPanel() {
+  const { social, email, resumeFile } = information;
   return (
     <div className="intro">
       <div className="intro-text">
-        <p className="intro-eyebrow">{information.role.toUpperCase()}</p>
+        <div className="intro-top">
+          <p className="intro-eyebrow">{information.role.toUpperCase()}</p>
+          <p className="intro-status"><span className="intro-status-dot" aria-hidden="true" />{information.status}</p>
+        </div>
         <h1 className="intro-name">
           Michael <span className="acc">Pérez</span>
         </h1>
         <p className="intro-tag">{information.tagline}</p>
+        <div className="intro-cta">
+          <a className="contact-btn primary" href={resumeFile} target="_blank" rel="noreferrer"><FiDownload size={15} /> Résumé</a>
+          <a className="contact-btn" href={social.linkedin} target="_blank" rel="noreferrer"><FiLinkedin size={15} /> LinkedIn</a>
+          <a className="contact-btn" href={social.github} target="_blank" rel="noreferrer"><FiGithub size={15} /> GitHub</a>
+          <a className="contact-btn" href={`mailto:${email}`}><FiMail size={15} /> Email</a>
+        </div>
         <div className="intro-facts">
           {about.facts.map((f) => (
             <div key={f.label} className="intro-fact">
@@ -567,7 +570,7 @@ function AboutPanel() {
 
 function SkillsPanel() {
   return (
-    <div className="panel">
+    <div className="panel wide">
       <h2 className="panel-h">Skills</h2>
       <div className="mixer">
         {skillGroups.map((g) => (

@@ -1,14 +1,15 @@
-% General ML / computer vision resume, based on the current portfolio CV.
-% Facts are drawn from documents/cv/cv.tex, src/data/content.js, and the owner's
-% November 2026 Raft accomplishments and technology list. No proficiency inferred.
-% Layout: 11pt body with margins and spacing sized so the content fills one letter
-% page. If content is added or removed, adjust the spacing here (see README.md).
-\documentclass[11pt,letterpaper]{article}
+% One-page general ML / computer vision résumé (website: public/files/Michael_Perez_Resume.pdf).
+% Every fact comes from documents/cv/cv.tex, src/data/content.js, or the owner's
+% job-agent experience bank (~/Desktop/job-agent/bank). No proficiency is inferred.
+%
+% Layout: the type size, leading, and gaps below are tuned so the content fills
+% exactly one letter page. After editing, rebuild and check the page count; the
+% knobs to re-fit are listed in README.md.
+\documentclass[10pt,letterpaper]{article}
 \usepackage{fontspec}
 \setmainfont{Times New Roman}
-\usepackage[left=0.75in,right=0.75in,top=0.6in,bottom=0.6in]{geometry}
+\usepackage[left=0.7in,right=0.7in,top=0.55in,bottom=0.55in]{geometry}
 \usepackage{enumitem}
-\usepackage{needspace}
 \usepackage[hidelinks,unicode]{hyperref}
 \hypersetup{pdftitle={Michael F. Pérez — ML and Computer Vision Engineer},pdfauthor={Michael F. Pérez}}
 \pagestyle{empty}
@@ -16,53 +17,66 @@
 \setlength{\parskip}{0pt}
 \setlength{\emergencystretch}{2em}
 \raggedright
-\setlist[itemize]{leftmargin=0.18in,labelsep=0.08in,itemsep=2pt,parsep=0pt,topsep=3pt,partopsep=0pt}
-\newcommand{\ressection}[1]{\par\addvspace{9pt}\needspace{3\baselineskip}\textbf{\MakeUppercase{#1}}\par\nobreak\vspace{1.5pt}\hrule height 0.5pt\vspace{5pt}}
+\hyphenpenalty=10000 % never split a word across lines: keeps copy-paste and ATS text extraction clean
+\setlist[itemize]{leftmargin=0.17in,labelsep=0.07in,itemsep=1.5pt,parsep=0pt,topsep=2.5pt,partopsep=0pt}
+
+\newcommand{\ressection}[1]{\par\addvspace{9pt}\textbf{\MakeUppercase{#1}}\par\nobreak\vspace{1.5pt}\hrule height 0.5pt\nobreak\vspace{4.5pt}}
 \newcommand{\resrow}[2]{\noindent #1\hfill\mbox{#2}\par}
-\newcommand{\resrole}[3]{\par\addvspace{6pt}\needspace{4\baselineskip}\resrow{\textbf{#1}}{#2}#3\par}
+% \resrole{title}{employer, place}{dates}
+\newcommand{\resrole}[3]{\par\addvspace{5pt}\resrow{\textbf{#1}, #2}{#3}}
+% \resskill{label}{items}
+\newcommand{\resskill}[2]{\textbf{#1:} #2\par\vspace{1pt}}
+% \respub{title}{role, venue, link}
+\newcommand{\respub}[2]{\textbf{#1.} #2\par\vspace{2.5pt}}
+
 \begin{document}
-\fontsize{11}{13.3}\selectfont
+\fontsize{10.5}{12.9}\selectfont
 \begin{center}
-{\fontsize{18}{20}\selectfont\textbf{MICHAEL F. PÉREZ}}\\[2pt]
-\textbf{ML \& Computer Vision Engineer} \quad Tampa, FL · Open to relocation\\[2pt]
-\href{mailto:michaelperez023@gmail.com}{michaelperez023@gmail.com} | (954) 882-5069 | \href{https://www.michaelfperez.com}{michaelfperez.com} | \href{https://github.com/michaelperez023}{GitHub} | \href{https://scholar.google.com/citations?user=fCzyXhUAAAAJ\&hl=en}{Google Scholar}
+{\fontsize{19}{22}\selectfont\textbf{MICHAEL F. PÉREZ}}\\[3pt]
+\textbf{ML \& Computer Vision Engineer} · Ph.D. in Computer Science · Tampa, FL (open to relocation)\\[1.5pt]
+\href{mailto:michaelperez023@gmail.com}{michaelperez023@gmail.com} | (954) 882-5069 | \href{https://www.michaelfperez.com}{michaelfperez.com}\\[1.5pt]
+\href{https://www.linkedin.com/in/michaelperez023/}{linkedin.com/in/michaelperez023} | \href{https://github.com/michaelperez023}{github.com/michaelperez023} | \href{https://scholar.google.com/citations?user=fCzyXhUAAAAJ\&hl=en}{Google Scholar}
 \end{center}
-\vspace{-5pt}
-Ph.D. in Computer Science with experience integrating computer vision into production software, building ML data and evaluation workflows, and researching video understanding and real-time ML systems.
+\vspace{-4pt}
+ML and computer vision engineer (Ph.D. in Computer Science, University of Florida, 2026) with experience integrating computer vision into production software, building ML data and evaluation workflows, and researching video understanding across two DARPA-funded programs.
 
 \ressection{Technical Skills}
-\textbf{ML \& computer vision:} PyTorch, TensorFlow, OpenCV, scikit-learn, Hugging Face, FiftyOne, Label Studio\par
-\textbf{MLOps \& systems:} Kubernetes, MLOps, Airflow, MLflow, Docker, FastAPI, Flask, Linux, SLURM\par
-\textbf{Languages \& data:} Python, C++, SQL, JavaScript, NumPy, pandas, SciPy, Git
+\resskill{ML \& computer vision}{PyTorch, TensorFlow, OpenCV, scikit-learn, Hugging Face, VLMs (LaViLa, LLaVA, Qwen)}
+\resskill{MLOps \& data tools}{Kubernetes, Airflow, MLflow, FiftyOne, Label Studio, Docker, SLURM/HPC}
+\resskill{Languages \& systems}{Python, C++, SQL, JavaScript, FastAPI, Flask, Celery, Redis, Linux, Git, NumPy, pandas, SciPy}
 
 \ressection{Experience}
-\resrole{Senior Engineer · Raft}{Aug 2026 – Nov 2026}{Tampa, FL}
+\resrole{Senior Engineer}{Raft · Tampa, FL}{Aug 2026 – Nov 2026}
 \begin{itemize}
-\item Developed and integrated computer vision data exploration into production software, including dataset visualization, clustering, filtering, natural-language querying, and geospatial analytics.
+\item Developed and integrated computer vision data exploration and analysis capabilities into a larger production software system, including dataset visualization, clustering, filtering, natural-language querying, and geospatial analytics.
 \item Built ML data management and evaluation workflows for dataset curation, annotation review, model analysis, and debugging.
-\item Contributed to AI/ML development, testing, and integration, including object-detection experimentation and improvements to existing software systems.
+\item Contributed to the development, testing, and integration of AI/ML capabilities, including object-detection experimentation and improvements to existing software systems.
 \end{itemize}
-
-\resrole{Machine Learning Engineer Intern · CoVar}{May 2025 – Aug 2025}{Durham, NC}
+\resrole{Machine Learning Engineer Intern}{CoVar · Durham, NC}{May 2025 – Aug 2025}
 \begin{itemize}
-\item Applied infrared video super-resolution to long-range object classification; published with CoVar collaborators at the Military Sensing Symposium 2026.
-\item Trained lightweight RGB object-detection models for real-time drone detection targeting resource-constrained, on-device use.
+\item Applied infrared video super-resolution to long-range object classification; first-author paper at the 2026 Military Sensing Symposium (MSS).
+\item Trained lightweight RGB object-detection models targeting real-time, on-device drone detection.
 \item Built offline computer vision evaluation pipelines spanning preprocessing, inference, metrics, and efficiency analysis.
 \end{itemize}
-
-\resrole{Graduate Research Assistant · University of Florida}{Aug 2020 – Aug 2026}{Gainesville, FL}
+\resrole{Graduate Research Assistant}{University of Florida · Gainesville, FL}{Aug 2020 – Aug 2026}
 \begin{itemize}
-\item Developed and evaluated video understanding models and scalable processing pipelines across the Ruiz HCI Lab, Data Science Research Lab, and Graphics, Imaging \& Light Measurement Lab.
-\item Contributed to DARPA-funded CReLeRI and ENKIx systems, including UI and image/video analysis APIs, action segmentation, and real-time AR task guidance. Trained and tested ENKIx action-recognition models; the system reached 34\% F1 in a multi-team evaluation. ENKIx is Ph.D. thesis work and a first-author manuscript in preparation.
-\item Built a video action-detection benchmark covering mAP, latency, throughput, memory, and FLOPs; first-author manuscript in preparation.
+\item Built UI and image/video analysis APIs and trained action-segmentation models for CReLeRI, a DARPA-funded explainable long-video analysis system; first author of its ACM Multimedia 2025 paper.
+\item Built CReLeRI's long-video analysis web tool: FastAPI backend with Celery and Redis background tasks, containerized with Docker, with GPU compute offloaded to UF's HiPerGator cluster.
+\item Trained and tested action-recognition models, including fine-tuning the video-language model LaViLa, for ENKIx, a DARPA-funded real-time AR task-guidance system, and ran usability and cognitive-load evaluations.
+\item Ph.D. thesis: developed efficient action-detection models for long videos and built a unified framework benchmarking detectors across mAP, latency, throughput, memory, and FLOPs; first-author manuscript in preparation.
 \end{itemize}
 
 \ressection{Education}
-\resrow{\textbf{Ph.D. in Computer Science} · University of Florida}{Aug 2026}
-\resrow{\textbf{M.S. in Computer Science} · University of Florida}{May 2023}
-\resrow{\textbf{B.S. in Computer Science} · Florida Polytechnic University}{May 2020}
+\resrow{\textbf{Ph.D. in Computer Science}, University of Florida}{Aug 2026}
+\resrow{\textbf{M.S. in Computer Science}, University of Florida}{May 2023}
+\resrow{\textbf{B.S. in Computer Science}, Florida Polytechnic University}{May 2020}
 
 \ressection{Selected Publications}
-\textbf{CReLeRI: Explainable, Concept-centric Representation, Learning, Reasoning, and Interaction Video Analysis System.} First author · ACM Multimedia, 2025. \href{https://doi.org/10.1145/3746027.3754479}{doi:10.1145/3746027.3754479}\par\vspace{2pt}
-\textbf{Super-Resolution for Improving Vehicle Recognition at Large Stand-offs.} With CoVar · Military Sensing Symposium, 2026.
+\respub{CReLeRI: Explainable, Concept-centric, Representation, Learning, Reasoning, and Interaction Video Analysis System}{First author · ACM Multimedia 2025 · \href{https://doi.org/10.1145/3746027.3754479}{doi:10.1145/3746027.3754479}}
+\respub{Super-Resolution for Improving Vehicle Recognition at Large Stand-offs}{First author · MSS 2026}
+\respub{MuCHEx: A Multimodal Conversational Debugging Tool for Interactive Visual Exploration of Hierarchical Object Classification}{Co-author · IEEE Computer Graphics and Applications, 2025 · \href{https://doi.org/10.1109/MCG.2025.3598204}{doi:10.1109/MCG.2025.3598204}}
+
+\ressection{Honors \& Service}
+\textbf{Honors:} L3Harris Graduate Fellowship (one of five UF CISE recipients, 2022); UF Graduate School Preeminence Award\par\vspace{1pt}
+\textbf{Service:} Peer reviewer for ACM Multimedia, ACM ICMR, IEEE VR, and ICXR (2024 – 2026)
 \end{document}
