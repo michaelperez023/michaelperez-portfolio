@@ -1,0 +1,28 @@
+% Shared preamble for every résumé variant: layout commands only.
+% Each résumé must fill exactly one page, so each sets its own fit after loading this file:
+% \geometry{...} for margins, \renewcommand{\ResSectionGap}{...}, and \fontsize in the body.
+\documentclass[10pt,letterpaper]{article}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage[left=0.7in,right=0.7in,top=0.55in,bottom=0.55in]{geometry}
+\usepackage{enumitem}
+\usepackage[hidelinks,unicode]{hyperref}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{2em}
+\raggedright
+\hyphenpenalty=10000 % never split a word across lines: keeps copy-paste and ATS text extraction clean
+\setlist[itemize]{leftmargin=0.17in,labelsep=0.07in,itemsep=1.5pt,parsep=0pt,topsep=2.5pt,partopsep=0pt}
+
+\newcommand{\ResSectionGap}{9pt}
+\newcommand{\ressection}[1]{\par\addvspace{\ResSectionGap}\textbf{\MakeUppercase{#1}}\par\nobreak\vspace{1.5pt}\hrule height 0.5pt\nobreak\vspace{4.5pt}}
+\newcommand{\resrow}[2]{\noindent #1\hfill\mbox{#2}\par}
+% \resrole{title}{employer · place}{dates}
+\newcommand{\resrole}[3]{\par\addvspace{5pt}\resrow{\textbf{#1}, #2}{#3}}
+% \resskill{label}{items}
+\newcommand{\resskill}[2]{\textbf{#1:} #2\par\vspace{1pt}}
+% \respub{title}{role · venue · link}
+\newcommand{\respub}[2]{\textbf{#1.} #2\par\vspace{2.5pt}}
+% \resheader{title line under the name}: name, title line, and the shared contact lines
+\newcommand{\resheader}[1]{\begin{center}{\fontsize{19}{22}\selectfont\textbf{MICHAEL F. PÉREZ}}\\[3pt]#1\\[1.5pt]\ResContactA\\[1.5pt]\ResContactB\end{center}\vspace{-4pt}}

@@ -1,0 +1,56 @@
+% Résumé: Software Engineer / ML Infrastructure.
+% Facts come from ../shared/resume-facts.tex; this file chooses which lines appear, their order,
+% the skills grouping, and the fit. It must be exactly one full page (the build enforces one page).
+\input{../shared/resume-preamble}
+\input{../shared/resume-facts}
+\hypersetup{pdftitle={Michael F. Pérez — Software Engineer, Machine Learning Systems},pdfauthor={Michael F. Pérez}}
+% ---- fit: adjust these three, in this order of preference, after changing content ----
+\geometry{left=0.7in,right=0.7in,top=0.55in,bottom=0.55in}
+\renewcommand{\ResSectionGap}{8.5pt}
+\begin{document}
+\fontsize{10.5}{12.5}\selectfont
+\resheader{\textbf{Software Engineer, Machine Learning Systems} · Ph.D. in Computer Science · \ResWhere}
+Software engineer with a Ph.D. in Computer Science, focused on the systems around machine learning: integrating ML capabilities into production software, data and evaluation workflows, backend services, and training and inference pipelines.
+
+\ressection{Technical Skills}
+\resskill{Languages}{Python, C++, SQL, JavaScript, Java, C\#, F\#}
+\resskill{Infrastructure \& backend}{Docker, Kubernetes, Airflow, MLflow, FastAPI, Flask, Celery, Redis, Linux, Bash, SLURM/HPC, Git, CMake}
+\resskill{ML \& data}{PyTorch, TensorFlow, OpenCV, scikit-learn, NumPy, pandas, FiftyOne, Label Studio}
+\resskill{Certification}{\FactCert}
+
+\ressection{Experience}
+\RoleRaft
+\begin{itemize}
+\item \RaftExplore
+\item \RaftWorkflows
+\item \RaftIntegration
+\end{itemize}
+\RoleCovar
+\begin{itemize}
+\item \CovarEval
+\item \CovarDetectMeasured
+\end{itemize}
+\RoleUfRa
+\begin{itemize}
+\item \UfCreleriTool
+\item \UfPipelines
+\item \UfBenchmarkInfra
+\item \UfThesisEfficiency
+\end{itemize}
+
+\ressection{Projects}
+\begin{itemize}
+\item \ProjGossip
+\item \ProjTwitter
+\item \ProjPortfolio
+\end{itemize}
+
+\ressection{Education}
+\EduPhd
+\EduMs
+\EduBs
+
+\ressection{Publications \& Honors}
+\textbf{Publications:} \PubSummary\par\vspace{1pt}
+\textbf{Honors:} \FactHonors
+\end{document}

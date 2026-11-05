@@ -16,7 +16,7 @@ import { useStore, isPanel } from "./storeCore";
 import { allClips, clipById, barActiveAt, eras, clipsMatchingTag } from "./timelineData";
 import { examples } from "./retrieval";
 import { prewarm } from "./semantic";
-import { information, about, skillGroups, honors, education } from "../data/content";
+import { information, about, skillGroups, honors, certifications, education } from "../data/content";
 
 const COINCIDE_W = 0.25; // ~3 months (a quarter): a tight cluster shows together, but
 // distinct work from another season doesn't bleed in.
@@ -349,6 +349,7 @@ function ResearchCard({ clip }) {
     <>
       {clip.venue && <p className="cv-venue">{clip.venue}</p>}
       {clip.authors && <p className="cv-authors">{withMe(clip.authors)}</p>}
+      {clip.summary && <p className="cv-body">{clip.summary}</p>}
       {clip.note && <p className="cv-note">{clip.note}</p>}
       <LinkRow clip={clip} />
     </>
@@ -562,6 +563,12 @@ function AboutPanel() {
       <ul className="panel-list">
         {honors.map((h) => (
           <li key={h.id}><span className="mono-dim">{h.year}</span> {h.title}</li>
+        ))}
+      </ul>
+      <h3 className="panel-sub">Certifications</h3>
+      <ul className="panel-list">
+        {certifications.map((c) => (
+          <li key={c.id}><span className="mono-dim">{c.year}</span> {c.title}</li>
         ))}
       </ul>
     </div>

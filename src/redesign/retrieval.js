@@ -72,13 +72,13 @@ const TOPICS = [
   {
     keys: ["enkix", "intelligent ar task guidance"],
     specific: true,
-    answer: `${enkixPaper.title}: ${enkixPaper.note} [[r-enkix]]. The system provides real-time AR task guidance with cognitive-load-adaptive behavior and reached 34% F1 in a multi-team DARPA evaluation.`,
+    answer: `${enkixPaper.title}: ${enkixPaper.note} [[r-enkix]]. The system provides real-time AR task guidance with cognitive-load-adaptive behavior. Recognizing task steps live is a difficult problem: in DARPA's multi-team evaluation our models reached 34% F1, a mid-range result among the performer teams.`,
     attend: ["r-enkix"],
   },
   {
-    keys: ["efficient video action detection", "wacv"],
+    keys: ["efficient video action detection", "wacv", "action detection", "online action", "streaming", "thumos", "mamba", "state-space"],
     specific: true,
-    answer: `${thesisPaper.title}: ${thesisPaper.note} [[r-wacv]].`,
+    answer: `My Ph.D. thesis, ${thesisPaper.title}, presents a causal, online action-detection model. On THUMOS it matches the strongest verified strictly-causal detector at roughly 60% of its parameters and 2.5–2.9× its throughput, and it runs in real time at 37.7 FPS [[r-wacv]]. A first-author manuscript is in preparation.`,
     attend: ["r-wacv"],
   },
   {
@@ -95,6 +95,12 @@ const TOPICS = [
     attend: ["r-hai-prep", "r-enkix", "r-temporal", "r-wacv"],
   },
   {
+    keys: ["certification", "certifications", "certified", "certificate", "security+", "comptia", "security plus"],
+    specific: true,
+    answer: "I hold the CompTIA Security+ certification, earned in October 2026 and valid through October 2029. It is listed with my education and honors in the About section.",
+    attend: [],
+  },
+  {
     keys: ["llm", "llms", "vlm", "vlms", "vision-language", "vision language", "multimodal", "generative ai", "genai", "langchain", "llava", "qwen", "llama", "lavila", "large language model", "large language models", "foundation model", "foundation models"],
     specific: true,
     answer:
@@ -104,7 +110,7 @@ const TOPICS = [
   {
     keys: ["thesis", "dissertation"],
     specific: true,
-    answer: `My Ph.D. thesis work includes ${enkixPaper.title} [[r-enkix]] and ${thesisPaper.title} [[r-wacv]]. Both are first-author manuscripts in preparation.`,
+    answer: `My Ph.D. thesis, ${thesisPaper.title}, presents a causal, online action-detection model that matches the strongest verified strictly-causal detector on THUMOS at roughly 60% of its parameters and 2.5–2.9× its throughput, in real time [[r-wacv]]. ${enkixPaper.title} is also thesis work [[r-enkix]]. Both are first-author manuscripts in preparation.`,
     attend: ["r-enkix", "r-wacv"],
   },
   {
@@ -116,8 +122,8 @@ const TOPICS = [
   {
     keys: ["real-time"],
     answer:
-      "Real-time is the core of my work. ENKIx is a cognitive-load-adaptive AR task-guidance system that runs live and reached 34% F1 in a multi-team DARPA evaluation [[r-enkix]]. At CoVar I trained lightweight RGB detectors targeting real-time, on-device drone detection [[e-covar]].",
-    attend: ["r-enkix", "e-covar"],
+      "Real-time is the core of my work. My Ph.D. thesis model detects actions online at 37.7 FPS [[r-wacv]]. ENKIx is a cognitive-load-adaptive AR task-guidance system that runs live and was tested in a multi-team DARPA evaluation [[r-enkix]]. At CoVar I trained lightweight RGB detectors targeting real-time, on-device drone detection [[e-covar]].",
+    attend: ["r-wacv", "r-enkix", "e-covar"],
   },
   {
     keys: ["deploy"],
@@ -224,7 +230,7 @@ const TOPICS = [
   {
     keys: ["augmented reality"],
     answer:
-      "ENKIx is Ph.D. thesis work and a first-author manuscript in preparation. It is an intelligent AR task-guidance system with cognitive-load-adaptive HUD behavior, running in real time; it reached 34% F1 in a multi-team DARPA evaluation [[r-enkix]].",
+      "ENKIx is Ph.D. thesis work and a first-author manuscript in preparation. It is an intelligent AR task-guidance system with cognitive-load-adaptive HUD behavior, running in real time and tested in a multi-team DARPA evaluation [[r-enkix]].",
     attend: ["r-enkix"],
   },
   {
@@ -295,7 +301,7 @@ const AUGMENT = {
   "r-temporal": "video retrieval zero-shot temporal granularity",
   "p-brisal": "booking website astro villa rental hospitality travel dominican republic jarabacoa bilingual spanish",
   "e-raft": "raft senior engineer tampa florida industry production computer vision dataset visualization exploration analysis clustering filtering natural language querying geospatial analytics data management curation annotation review model evaluation debugging object detection experimentation testing integration kubernetes k8s mlops airflow mlflow label studio labelstudio fiftyone fifty one",
-  "r-wacv": "efficient video action detection thesis dissertation first author manuscript in preparation benchmark map latency throughput memory flops",
+  "r-wacv": "efficient video action detection thesis dissertation first author manuscript in preparation benchmark map latency throughput memory flops online streaming causal state-space mamba thumos real-time fps parameters efficiency",
   "r-hai-prep": "human agent interaction companion agents user experience mental workload user study chi under review submitted hci",
 };
 

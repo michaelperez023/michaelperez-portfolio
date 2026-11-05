@@ -1,14 +1,14 @@
 #!/usr/bin/env node
-// Builds the Word version of the CV from cv.tex, the single master source, so the
-// Word file and the PDF always carry the same content.
+// Builds the Word version of a CV from its LaTeX source, so the Word file and the PDF
+// always carry the same content.
 //
-//   node documents/cv/build-docx.mjs [out.docx] [--check cv.pdf]
+//   node documents/build-docx.mjs <cv.tex> <out.docx> [--check cv.pdf]
 //
-// cv.tex is read line by line. Only the commands handled below are understood;
-// anything else stops the build and names the offending line, so content can never
-// be dropped silently. `--check` compares every word in the finished .docx with the
-// PDF built from the same source (needs `unzip` and `pdftotext`) and fails on any
-// difference.
+// The source is read line by line, following \input{...} into the shared files. Only
+// the commands handled below are understood; anything else stops the build and names
+// the offending line, so content can never be dropped silently. `--check` compares
+// every word in the finished .docx with the PDF built from the same source (needs
+// `unzip` and `pdftotext`) and fails on any difference.
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
@@ -32,35 +32,51 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const argv = process.argv.slice(2);
 const checkAt = argv.indexOf("--check");
 const checkPdf = checkAt === -1 ? null : path.resolve(argv[checkAt + 1] ?? "");
-const positional = argv.filter((a, i) => !a.startsWith("--") && i !== checkAt + 1);
-const outPath = path.resolve(positional[0] ?? path.join(here, "Michael_Perez_CV.docx"));
-
-const source = path.join(here, "cv.tex");
-const tex = fs.readFileSync(source, "utf8");
+const positional = argv.filter((a, i) => !a.startsWith("--") && (checkAt === -1 || i !== checkAt + 1));
 const fail = (message) => {
   console.error(`build-docx: ${message}`);
   process.exit(1);
 };
+if (positional.length !== 2) fail("usage: node documents/build-docx.mjs <cv.tex> <out.docx> [--check cv.pdf]");
+const source = path.resolve(positional[0]);
+const outPath = path.resolve(positional[1]);
+
+// Flatten the source: every line, with \input{file} replaced by that file's lines.
+// Each line remembers where it came from for error messages.
+function flatten(file, seen = []) {
+  if (seen.includes(file)) fail(`\\input loop through ${file}`);
+  if (!fs.existsSync(file)) fail(`cannot read ${file}`);
+  const out = [];
+  fs.readFileSync(file, "utf8").split("\n").forEach((text, i) => {
+    const input = /^\s*\\input\{([^}]+)\}\s*$/.exec(text);
+    if (!input) return out.push({ text, at: `${path.relative(here, file)} line ${i + 1}` });
+    const target = path.resolve(path.dirname(file), input[1].endsWith(".tex") ? input[1] : `${input[1]}.tex`);
+    out.push(...flatten(target, [...seen, file]));
+  });
+  return out;
+}
+const lines = flatten(source);
+const tex = lines.map((l) => l.text).join("\n");
 
 // ---------------------------------------------------------------- layout
 // Page geometry and type size come straight from the LaTeX preamble; the spacing
-// values below mirror the \cv... command definitions in cv.tex.
+// values below mirror the \cv... command definitions in shared/cv-preamble.tex.
 const geometry = /\\usepackage\[left=([\d.]+)in,right=([\d.]+)in,top=([\d.]+)in,bottom=([\d.]+)in\]\{geometry\}/.exec(tex);
 const basePt = Number(/\\documentclass\[(\d+)pt/.exec(tex)?.[1]);
 const LEADING = { 10: 12, 11: 13.6, 12: 14.5 }[basePt]; // article-class baseline skip
-if (!geometry || !LEADING) fail("could not read the page geometry or font size from cv.tex");
+if (!geometry || !LEADING) fail("could not read the page geometry or font size from the source");
 const [marginL, marginR, marginT, marginB] = geometry.slice(1).map(Number);
 const inch = (n) => Math.round(n * 1440); // twips
 const pt = (n) => Math.round(n * 20); // twentieths of a point
 const PAGE = { width: inch(8.5), height: inch(11) };
 const TEXT_WIDTH = PAGE.width - inch(marginL) - inch(marginR);
 const FONT = "Times New Roman";
-const GAP = { summary: 9, section: 11, afterRule: 5, subsection: 7, role: 5, service: 4, skill: 1.5, bulletFirst: 2, bullet: 1, number: 3 };
+const GAP = { title: 3, summary: 9, section: 11, afterRule: 5, subsection: 7, role: 5, service: 4, skill: 1.5, bulletFirst: 2, bullet: 1, number: 3 };
 const LIST_INDENT = { bullets: { left: inch(0.3), hanging: inch(0.17) }, numbers: { left: inch(0.3), hanging: inch(0.22) } };
 
 // ---------------------------------------------------------------- LaTeX reading
-let lineNo = 0;
-const where = () => `cv.tex line ${lineNo}`;
+let current = "the source";
+const where = () => current;
 
 // src[i] must open a {group}; returns [contents, index after the closing brace].
 function readGroup(src, i) {
@@ -145,16 +161,28 @@ function inline(src, fmt = {}) {
 }
 
 // \command{..}{..} lines -> elements. ARITY doubles as the list of supported commands.
-const ARITY = { cvname: 1, cvcontact: 1, cvsummary: 1, cvsection: 1, cvsubsection: 1, cvrole: 4, cvaward: 2, cvservice: 3, cvskill: 2, cvref: 5 };
+const ARITY = { cvname: 1, cvtitle: 1, cvcontact: 1, cvsummary: 1, cvsection: 1, cvsubsection: 1, cvrole: 4, cvaward: 2, cvservice: 3, cvskill: 2, cvref: 5 };
+
+// One-line text macros defined before \begin{document}, e.g. \newcommand{\SkillML}{\cvskill{..}{..}}.
+// A body line that is just such a macro is replaced by its definition.
+const begin = lines.findIndex((l) => l.text.trim() === "\\begin{document}");
+const finish = lines.findIndex((l) => l.text.trim() === "\\end{document}");
+if (begin === -1 || finish === -1) fail("the source has no \\begin{document} ... \\end{document}");
+const macros = new Map();
+for (const { text } of lines.slice(0, begin)) {
+  const def = /^\\newcommand\{\\([A-Za-z]+)\}\{(.*)\}\s*$/.exec(text);
+  if (def && !(def[1] in ARITY) && !(def[1] in INLINE)) macros.set(def[1], def[2]);
+}
+
 const elements = [];
 let list = null;
 let numberedLists = 0;
-const body = tex.slice(tex.indexOf("\\begin{document}"), tex.indexOf("\\end{document}"));
-lineNo = tex.slice(0, tex.indexOf("\\begin{document}")).split("\n").length;
-for (const raw of body.split("\n").slice(1)) {
-  lineNo++;
-  const line = raw.trim();
+for (const { text, at } of lines.slice(begin + 1, finish)) {
+  current = at;
+  let line = text.trim();
   if (!line || line.startsWith("%")) continue;
+  const macro = /^\\([A-Za-z]+)$/.exec(line)?.[1];
+  if (macro && macros.has(macro)) line = macros.get(macro);
   if (line === "\\begin{itemize}") list = { kind: "bullets", count: 0 };
   else if (line === "\\begin{enumerate}") list = { kind: "numbers", count: 0, instance: ++numberedLists };
   else if (line === "\\end{itemize}" || line === "\\end{enumerate}") list = null;
@@ -205,6 +233,9 @@ elements.forEach((el, index) => {
   switch (el.type) {
     case "cvname":
       paragraphs.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: pt(2) }, children: runs(inline(a[0]), { bold: true, size: 36 }) }));
+      break;
+    case "cvtitle":
+      paragraphs.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: pt(GAP.title) }, children: runs(inline(a[0]), { size: 24 }) }));
       break;
     case "cvcontact":
       paragraphs.push(new Paragraph({ alignment: AlignmentType.CENTER, children: plain(a[0]) }));
@@ -269,7 +300,7 @@ const author = /pdfauthor=\{([^}]*)\}/.exec(tex)?.[1] ?? "";
 const doc = new Document({
   creator: author,
   title,
-  description: "Generated from documents/cv/cv.tex by build-docx.mjs",
+  description: `Generated from ${path.relative(path.dirname(here), source)} by build-docx.mjs`,
   styles: {
     default: {
       document: {

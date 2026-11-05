@@ -10,6 +10,7 @@ import {
   education,
   skillGroups,
   honors,
+  certifications,
   service,
   projects,
 } from "../data/content";
@@ -65,7 +66,7 @@ export default function ListView() {
             ))}
           </ul>
           <h3>Working papers</h3>
-          <ul>{workingPapers.map((p) => <li key={p.id}><span className="lv-y">{p.year}</span> {p.title} — <em>{p.note}</em></li>)}</ul>
+          <ul>{workingPapers.map((p) => <li key={p.id}><span className="lv-y">{p.year}</span> {p.title} — <em>{p.note}</em>{p.summary && <div className="lv-auth">{p.summary}</div>}</li>)}</ul>
           <h3>Preprints & reports</h3>
           <ul>{preprints.map((p) => <li key={p.id}><span className="lv-y">{p.year}</span> {p.link ? <a href={p.link}>{p.title}</a> : p.title} — <em>{p.note}</em></li>)}</ul>
         </section>
@@ -107,6 +108,11 @@ export default function ListView() {
         <section>
           <h2>Education</h2>
           <ul>{education.map((e) => <li key={e.id}><span className="lv-y">{e.year}</span> {e.degree} · {e.school}</li>)}</ul>
+        </section>
+
+        <section>
+          <h2>Certifications</h2>
+          <ul>{certifications.map((c) => <li key={c.id}><span className="lv-y">{c.year}</span> {c.title} — {c.note}</li>)}</ul>
         </section>
 
         <section>

@@ -1,0 +1,61 @@
+% Résumé: Research Scientist / Applied Scientist.
+% Facts come from ../shared/resume-facts.tex; this file chooses which lines appear, their order,
+% the skills grouping, and the fit. It must be exactly one full page (the build enforces one page).
+\input{../shared/resume-preamble}
+\input{../shared/resume-facts}
+\hypersetup{pdftitle={Michael F. Pérez — Machine Learning Researcher},pdfauthor={Michael F. Pérez}}
+% ---- fit: adjust these three, in this order of preference, after changing content ----
+\geometry{left=0.7in,right=0.7in,top=0.5in,bottom=0.5in}
+\renewcommand{\ResSectionGap}{8.5pt}
+\begin{document}
+\fontsize{10.4}{12.7}\selectfont
+\resheader{\textbf{Machine Learning Researcher} · Video Understanding \& Computer Vision · \ResWhere}
+Researcher in video understanding (action recognition, temporal action detection, segmentation, retrieval) with a Ph.D. in Computer Science and industry experience integrating computer vision into production software.
+
+\ressection{Education}
+\EduPhd
+\EduThesis\par\vspace{1pt}
+\EduMsBs
+
+\ressection{Research Experience}
+\resrole{Ph.D. Thesis: Efficient Video Action Detection}{University of Florida}{2025 – 2026}
+\begin{itemize}
+\item \UfThesisScores
+\item \UfBenchmark
+\end{itemize}
+\resrole{CReLeRI, DARPA ECOLE Program}{Ruiz HCI Lab and Data Science Research Lab}{Jul 2023 – May 2025}
+\begin{itemize}
+\item \UfCreleri
+\item \UfCreleriVlm
+\end{itemize}
+\resrole{ENKIx, DARPA PTG Program}{Ruiz HCI Lab}{Jul 2023 – Dec 2024}
+\begin{itemize}
+\item \UfEnkix
+\end{itemize}
+\resrole{Animal Behavior Recognition (NSF-funded)}{Graphics, Imaging \& Light Measurement Lab}{Aug 2020 – Jul 2023}
+\begin{itemize}
+\item \UfAnimalShort
+\end{itemize}
+
+\ressection{Industry Experience}
+\RoleRaft
+\begin{itemize}
+\item \RaftExplore
+\end{itemize}
+\RoleCovar
+\begin{itemize}
+\item \CovarSuperRes
+\end{itemize}
+
+\ressection{Publications}
+\PubCreleri
+\PubMssShort
+\PubMuchex
+\PubChi
+
+\ressection{Skills, Honors \& Service}
+\resskill{Research}{PyTorch, Hugging Face, OpenCV, VLMs (LaViLa, LLaVA, Qwen), multi-GPU training on SLURM/HPC}
+\resskill{Engineering}{Python, C++, SQL, scikit-learn, Docker, FastAPI, Kubernetes, Airflow, MLflow, FiftyOne, Label Studio}
+\textbf{Honors:} \FactHonors\par\vspace{1pt}
+\textbf{Service \& certification:} \FactServiceShort; \FactCertShort
+\end{document}

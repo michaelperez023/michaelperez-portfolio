@@ -1,0 +1,42 @@
+% Shared preamble for every CV variant: page layout and the \cv... commands.
+% build-docx.mjs mirrors these commands one-to-one to produce the Word files, and reads
+% the page geometry and type size from this file.
+\documentclass[11pt,letterpaper]{article}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage[left=0.9in,right=0.9in,top=0.75in,bottom=0.75in]{geometry}
+\usepackage{enumitem}
+\usepackage{needspace}
+\usepackage[hidelinks,unicode]{hyperref}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{2em}
+\raggedright
+\widowpenalty=10000
+\clubpenalty=10000
+\hyphenpenalty=10000 % never split a word across lines: keeps copy-paste and ATS text extraction clean
+\setlist[itemize]{leftmargin=0.3in,labelsep=0.1in,itemsep=1pt,parsep=0pt,topsep=2pt,partopsep=0pt}
+\setlist[enumerate]{leftmargin=0.3in,labelsep=0.08in,itemsep=3pt,parsep=0pt,topsep=3pt,partopsep=0pt}
+
+% --- layout commands (mirrored one-to-one by build_docx.py) ---
+\newcommand{\cvname}[1]{\begin{center}{\fontsize{18}{22}\selectfont\textbf{#1}}\end{center}\vspace{-9pt}}
+% \cvtitle{professional title shown under the name}
+\newcommand{\cvtitle}[1]{{\centering\fontsize{12}{15}\selectfont #1\par}\vspace{3pt}}
+\newcommand{\cvcontact}[1]{{\centering #1\par}}
+\newcommand{\cvsummary}[1]{\par\vspace{9pt}#1\par}
+\newcommand{\cvsection}[1]{\par\addvspace{11pt}\Needspace{5\baselineskip}{\fontsize{12}{14}\selectfont\textbf{\MakeUppercase{#1}}}\par\nobreak\vspace{2pt}\hrule height 0.6pt\nobreak\vspace{5pt}}
+\newcommand{\cvsubsection}[1]{\par\addvspace{7pt}\Needspace{4\baselineskip}\textbf{#1}\par\nobreak\vspace{1pt}}
+\newcommand{\cvrow}[2]{\noindent #1\hfill\mbox{#2}\par}
+% \cvrole{title}{dates}{organisation}{location}
+\newcommand{\cvrole}[4]{\par\addvspace{5pt}\Needspace{4\baselineskip}\cvrow{\textbf{#1}}{#2}\cvrow{#3}{#4}}
+% \cvaward{name}{dates}
+\newcommand{\cvaward}[2]{\par\addvspace{5pt}\Needspace{3\baselineskip}\cvrow{\textbf{#1}}{#2}}
+% \cvservice{role}{organisation}{dates}
+\newcommand{\cvservice}[3]{\par\addvspace{4pt}\Needspace{2\baselineskip}\cvrow{\textbf{#1}, #2}{#3}}
+% \cvskill{label}{comma-separated items}
+\newcommand{\cvskill}[2]{\textbf{#1:} #2\par\vspace{1.5pt}}
+% \cvref{name}{title}{email}{department, institution}{city}
+\newcommand{\cvref}[5]{\par\addvspace{5pt}\Needspace{2\baselineskip}\cvrow{\textbf{#1}, #2}{\href{mailto:#3}{#3}}\cvrow{#4}{#5}}
+\newcommand{\pubtitle}[1]{\textbf{#1}}
+\newcommand{\me}{\underline{M. F. Pérez}}
