@@ -7,6 +7,7 @@ import {
   clipCenter,
   clipById,
   clipsByTime,
+  resolveClipId,
 } from "./timelineData";
 import { tokenize } from "./retrieval";
 
@@ -94,7 +95,9 @@ export function reducer(state, action) {
     }
     case "GOTO_SECTION": {
       const s = action.section;
-      const playhead = s.clipId ? clipCenter(clipById[s.clipId]) : s.t;
+      const clip = s.clipId ? clipById[s.clipId] : null;
+      if (s.clipId && !clip) return state;
+      const playhead = clip ? clipCenter(clip) : s.t;
       return moved(state, playhead, {
         activeId: s.panel || s.clipId,
         mode: "scrub",
@@ -186,12 +189,14 @@ export function reducer(state, action) {
     case "QUERY_RESULT": {
       if (!state.pending) return state; // user scrubbed away while resolving
       const res = action.res;
+      // citations by a renamed clip id still point at the clip
+      const tokens = tokenize(res.answer).map((t) => (t.type === "cite" ? { ...t, id: resolveClipId(t.id) } : t));
       return {
         ...state,
         mode: "query",
         pending: false,
         answer: {
-          tokens: tokenize(res.answer),
+          tokens,
           attend: res.attend,
           matched: res.matched,
           tier: res.tier,
@@ -206,6 +211,8 @@ export function reducer(state, action) {
         ? state
         : { ...state, attended: [...state.attended, action.id] };
     case "ESCAPE":
+      // With the List view open, Escape only closes it; the view behind it stays as it was.
+      if (state.listView) return { ...state, listView: false };
       return { ...state, mode: "scrub", playing: false, answer: null, attended: [], query: "", tagFilter: null, pending: false };
     case "TOGGLE_LISTVIEW":
       return { ...state, listView: !state.listView, playing: false };

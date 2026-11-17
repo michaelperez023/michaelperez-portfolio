@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useStore } from "./storeCore";
 import {
   START,
@@ -15,7 +15,7 @@ import {
 
 const FULL = END - START;
 const ASSUMED_W = 1312; // assumed timeline width (px) for label-width estimates
-const CHROME = 168; // approx non-lane vertical overhead in the timeline panel
+const CHROME = 179; // approx non-lane vertical overhead in the timeline panel
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 // Ruler ticks: years when zoomed out, months once the window is short enough.
@@ -62,6 +62,40 @@ function activeIntervals(t0, t1, pauses) {
   return out;
 }
 
+// Compact dots are 9px wide, and a track's sub-rows can sit only a few px apart,
+// so dots at (nearly) the same time would cover one another and the one on top
+// would take every click. Each group of dots closer than DOT_GAP is spread
+// sideways around where the group sits, kept inside the lane (width px).
+// Returns clip id -> shift in px.
+const DOT_GAP = 11;
+function spreadDots(points, width) {
+  // points: [{ id, x }] in px, any order
+  const groups = [...points].sort((a, b) => a.x - b.x).map((p) => ({ ids: [p.id], sum: p.x }));
+  const first = (g) => {
+    const n = g.ids.length;
+    const mid = g.sum / n;
+    const x = mid - ((n - 1) / 2) * DOT_GAP;
+    // a group scrolled out of view (zoomed in) stays where it is
+    if (n < 2 || mid < 0 || mid > width) return x;
+    return Math.max(DOT_GAP / 2, Math.min(width - DOT_GAP / 2 - (n - 1) * DOT_GAP, x));
+  };
+  for (let i = 0; i + 1 < groups.length; ) {
+    const a = groups[i];
+    const b = groups[i + 1];
+    if (first(a) + a.ids.length * DOT_GAP > first(b)) {
+      groups.splice(i, 2, { ids: [...a.ids, ...b.ids], sum: a.sum + b.sum });
+      i = Math.max(0, i - 1); // the merged group can now reach the one before it
+    } else i += 1;
+  }
+  const at = new Map(points.map((p) => [p.id, p.x]));
+  const shift = new Map();
+  for (const g of groups) {
+    if (g.ids.length < 2) continue;
+    g.ids.forEach((id, k) => shift.set(id, first(g) + k * DOT_GAP - at.get(id)));
+  }
+  return shift;
+}
+
 // Secondary line shown in a clip's hover tooltip.
 function tipMeta(c) {
   if (c.track === "research") return [c.year, c.venue].filter(Boolean).join(" · ");
@@ -73,6 +107,17 @@ export default function Timeline() {
   const { state, actions } = useStore();
   const areaRef = useRef(null);
   const dragging = useRef(false);
+  // the scrub area's width in px (for spacing compact dots)
+  const [areaW, setAreaW] = useState(ASSUMED_W);
+  useEffect(() => {
+    const el = areaRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(([entry]) => {
+      if (entry.contentRect.width > 0) setAreaW(entry.contentRect.width);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   // visible time window (zoom + pan)
   const viewSpan = FULL / state.zoom;
@@ -106,13 +151,17 @@ export default function Timeline() {
     dragging.current = false;
   };
 
+  // stopPropagation: the arrow keys scrub the playhead here, so the page-wide
+  // handler must not also step to the next clip.
   const onHandleKey = (e) => {
     const STEP = viewSpan / 96;
     if (e.key === "ArrowLeft") {
       e.preventDefault();
+      e.stopPropagation();
       actions.seek(state.playhead - STEP);
     } else if (e.key === "ArrowRight") {
       e.preventDefault();
+      e.stopPropagation();
       actions.seek(state.playhead + STEP);
     }
   };
@@ -158,6 +207,13 @@ export default function Timeline() {
   const sumRows = layouts.reduce((a, l) => a + l.rows, 0);
   const bandH = (state.tlHeight - CHROME) / sumRows;
   const compact = bandH < 17; // bands too short for legible labels -> dots
+  const dotShift = compact
+    ? new Map(
+        layouts.flatMap(({ byRow }) =>
+          [...spreadDots(byRow.flat().filter((c) => c.point).map((c) => ({ id: c.id, x: vpos(c.t0) * areaW })), areaW)]
+        )
+      )
+    : null;
   // The experience track is weighted heavier; show its bar labels only when that
   // band is tall enough (otherwise clean thin bars + tooltips).
   const expRows = layouts.find((l) => l.track.key === "experience")?.rows || 1;
@@ -183,11 +239,12 @@ export default function Timeline() {
     if (c.point) {
       const left = vpos(c.t0) * 100;
       if (!showLabel) {
+        const shift = dotShift?.get(c.id);
         return (
           <button
             key={c.id}
-            className={`tl-dot k-${c.kind || "project"}${isActive ? " active" : ""}${isLit ? " lit" : ""}${c.upcoming ? " upcoming" : ""}`}
-            style={{ left: `${left}%` }}
+            className={`tl-dot k-${c.kind || "project"}${isActive ? " active" : ""}${isLit ? " lit" : ""}`}
+            style={{ left: shift ? `calc(${left}% + ${shift.toFixed(1)}px)` : `${left}%` }}
             onPointerDown={(e) => e.stopPropagation()}
             onClick={() => actions.selectClip(c.id)}
             aria-label={c.title}
@@ -202,7 +259,7 @@ export default function Timeline() {
       return (
         <button
           key={c.id}
-          className={`tl-clip${isActive ? " active" : ""}${isLit ? " lit" : ""} k-${c.kind || "project"}${c.upcoming ? " upcoming" : ""}${anchor}`}
+          className={`tl-clip${isActive ? " active" : ""}${isLit ? " lit" : ""} k-${c.kind || "project"}${anchor}`}
           style={{ left: `${left}%` }}
           onPointerDown={(e) => e.stopPropagation()}
           onClick={() => actions.selectClip(c.id)}

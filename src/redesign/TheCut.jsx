@@ -5,9 +5,13 @@ import Monitor from "./Monitor";
 import Timeline from "./Timeline";
 import TransportBar from "./TransportBar";
 import ListView from "./ListView";
-import { START, END, sections } from "./timelineData";
+import { START, END, sections, resolveClipId } from "./timelineData";
 
 const PANEL_KEYS = ["about", "skills", "contact", "intro"];
+
+// Smallest timeline the auto-sizing allows: 180 px, or less in a short window
+// (a phone held sideways) so the selected card still has room above it.
+const minTimelineHeight = () => Math.min(180, Math.max(120, Math.round(window.innerHeight * 0.34)));
 
 // Parse the URL hash into a restorable view intent (deep links).
 function readHashIntent() {
@@ -15,7 +19,12 @@ function readHashIntent() {
   if (!h) return null;
   const slash = h.indexOf("/");
   const head = slash === -1 ? h : h.slice(0, slash);
-  const arg = slash === -1 ? "" : decodeURIComponent(h.slice(slash + 1));
+  let arg = "";
+  try {
+    arg = slash === -1 ? "" : decodeURIComponent(h.slice(slash + 1));
+  } catch {
+    return null; // a mangled link (bad %-escape) opens the default view
+  }
   if (head === "tag" && arg) return { type: "tag", value: arg };
   if (head === "q" && arg) return { type: "q", value: arg };
   if (head === "clip" && arg) return { type: "clip", value: arg };
@@ -55,21 +64,27 @@ export default function TheCut() {
     }
   }, []);
 
-  // Deep links: restore the view from the URL hash on load...
+  // Deep links: restore the view from the URL hash on load, and again whenever
+  // the hash changes in an open tab (a pasted link, back/forward)...
   useEffect(() => {
-    const intent = readHashIntent();
-    if (!intent) return;
-    if (intent.type === "tag") actions.setTagFilter(intent.value);
-    else if (intent.type === "q") {
-      actions.setQuery(intent.value);
-      actions.submitQuery(intent.value);
-    } else if (intent.type === "clip") actions.selectClip(intent.value);
-    else if (intent.type === "panel") {
-      const s = sections.find((x) => x.key === intent.value);
-      if (s) actions.gotoSection(s);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const apply = () => {
+      const intent = readHashIntent();
+      if (!intent) return;
+      if (stateRef.current.listView) actions.toggleListView(); // show what the link points to
+      if (intent.type === "tag") actions.setTagFilter(intent.value);
+      else if (intent.type === "q") {
+        actions.setQuery(intent.value);
+        actions.submitQuery(intent.value);
+      } else if (intent.type === "clip") actions.selectClip(resolveClipId(intent.value)); // old ids still open
+      else if (intent.type === "panel") {
+        const s = sections.find((x) => x.key === intent.value);
+        if (s) actions.gotoSection(s);
+      }
+    };
+    apply();
+    window.addEventListener("hashchange", apply);
+    return () => window.removeEventListener("hashchange", apply);
+  }, [actions]);
 
   // ...and keep the hash in sync with the current view (debounced; replaceState
   // so scrubbing doesn't spam history). The address bar is always shareable.
@@ -121,7 +136,7 @@ export default function TheCut() {
         parseFloat(cs.paddingBottom) +
         6;
       const avail = window.innerHeight - topbar.offsetHeight - transport.offsetHeight - needed;
-      const tl = Math.min(Math.round(window.innerHeight * 0.78), Math.max(180, Math.round(avail)));
+      const tl = Math.min(Math.round(window.innerHeight * 0.78), Math.max(minTimelineHeight(), Math.round(avail)));
       if (Math.abs(tl - stateRef.current.tlHeight) > 2) actions.setTlHeight(tl);
     };
     compute();
@@ -133,7 +148,7 @@ export default function TheCut() {
     const r = resizing.current;
     if (!r) return;
     const max = Math.round(window.innerHeight * 0.62);
-    const next = Math.min(max, Math.max(168, r.startH + (r.startY - e.clientY)));
+    const next = Math.min(max, Math.max(Math.min(168, minTimelineHeight()), r.startH + (r.startY - e.clientY)));
     actions.setTlHeight(next);
   };
   const onResizeUp = () => {
@@ -143,6 +158,14 @@ export default function TheCut() {
   // global keyboard transport
   useEffect(() => {
     const onKey = (e) => {
+      // The List view is a modal: Escape closes it, and every other key keeps its
+      // normal meaning there (scrolling, links) instead of driving the hidden timeline.
+      if (stateRef.current.listView) {
+        if (e.key === "Escape") actions.escape();
+        return;
+      }
+      // Browser shortcuts (Ctrl/Cmd + and − to zoom the page, Alt+Left to go back) stay the browser's.
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
       const el = document.activeElement;
       const typing = el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA");
       if (e.key === "Escape") {
@@ -156,6 +179,8 @@ export default function TheCut() {
         return;
       }
       if (typing) return;
+      // The monitor's scroll area, when it has focus, keeps the keys that scroll it.
+      if (el?.classList?.contains("mon-stage") && (e.key === " " || e.key === "Home" || e.key === "End")) return;
       if (e.key === " ") {
         if (el && (el.tagName === "BUTTON" || el.tagName === "A")) return;
         e.preventDefault();
@@ -173,7 +198,7 @@ export default function TheCut() {
         e.preventDefault();
         actions.edge(1);
       } else if (/^[1-7]$/.test(e.key)) {
-        const s = sections[parseInt(e.key, 10) - 1];
+        const s = sections.find((x) => x.num === Number(e.key));
         if (s) actions.gotoSection(s);
       } else if (e.key === "+" || e.key === "=") {
         e.preventDefault();
@@ -287,75 +312,78 @@ export default function TheCut() {
   }, [state.playing, actions]);
 
   return (
-    <div
-      className={`cut-root${firstVisit ? " onboarding" : ""}`}
-      style={{ gridTemplateRows: `auto minmax(0, 1fr) ${state.tlCollapsed ? 34 : state.tlHeight}px auto` }}
-    >
-      <header className="cut-topbar">
-        <button className="cut-brand" onClick={() => actions.gotoSection(sections.find((s) => s.key === "intro"))}>
-          MICHAEL&nbsp;PÉREZ
-        </button>
-        <span className="cut-brand-sub">video understanding · in real time</span>
-        <nav className="cut-nav">
-          {["about", "skills", "contact"].map((k) => {
-            const s = sections.find((x) => x.key === k);
-            return (
-              <button
-                key={k}
-                className={`cut-nav-link${state.activeId === s.panel ? " on" : ""}`}
-                onClick={() => actions.gotoSection(s)}
-              >
-                {s.label}
-              </button>
-            );
-          })}
-          <button
-            className={`cut-nav-link nav-lv${state.listView ? " on" : ""}`}
-            onClick={() => actions.toggleListView()}
-            title="Everything as a plain, scrollable CV"
-          >
-            <FiList size={13} /> List<span className="lv-ext"> view</span>
-          </button>
-        </nav>
-      </header>
-      <main className="cut-monitor">
-        <Monitor />
-      </main>
-      <section
-        className={`cut-timeline${state.tlCollapsed ? " collapsed" : ""}`}
-        ref={timelineWrapRef}
-        aria-label="Career timeline (scrub to explore)"
+    <>
+      <div
+        className={`cut-root${firstVisit ? " onboarding" : ""}`}
+        style={{ gridTemplateRows: `auto minmax(0, 1fr) ${state.tlCollapsed ? 34 : state.tlHeight}px auto` }}
       >
-        {state.tlCollapsed ? (
-          <button className="tl-show" onClick={() => actions.toggleTlCollapse()}>
-            <FiChevronUp size={15} /> Show timeline
+        <header className="cut-topbar">
+          <button className="cut-brand" onClick={() => actions.gotoSection(sections.find((s) => s.key === "intro"))}>
+            MICHAEL&nbsp;PÉREZ
           </button>
-        ) : (
-          <>
-            <div
-              className="tl-resize"
-              role="separator"
-              aria-orientation="horizontal"
-              aria-label="Drag to resize the timeline"
-              title="Drag to resize"
-              onPointerDown={onResizeDown}
-              onPointerMove={onResizeMove}
-              onPointerUp={onResizeUp}
-              onPointerCancel={onResizeUp}
+          <span className="cut-brand-sub">video understanding · in real time</span>
+          <nav className="cut-nav">
+            {["about", "skills", "contact"].map((k) => {
+              const s = sections.find((x) => x.key === k);
+              return (
+                <button
+                  key={k}
+                  className={`cut-nav-link${state.activeId === s.panel ? " on" : ""}`}
+                  onClick={() => actions.gotoSection(s)}
+                >
+                  {s.label}
+                </button>
+              );
+            })}
+            <button
+              className={`cut-nav-link nav-lv${state.listView ? " on" : ""}`}
+              onClick={() => actions.toggleListView()}
+              title="Everything as a plain, scrollable CV"
             >
-              <span className="tl-resize-grip" />
-            </div>
-            <div className="tl-zoom" role="group" aria-label="Timeline zoom">
-              <button onClick={() => actions.setZoom(state.zoom / 1.5)} disabled={state.zoom <= 1.01} aria-label="Zoom out" title="Zoom out (−)">−</button>
-              <button className="tl-zoom-val" onClick={() => actions.setZoom(1)} title="Reset zoom (0)">{state.zoom.toFixed(1)}×</button>
-              <button onClick={() => actions.setZoom(state.zoom * 1.5)} aria-label="Zoom in" title="Zoom in (+)">+</button>
-            </div>
-            <Timeline />
-          </>
-        )}
-      </section>
-      <TransportBar />
+              <FiList size={13} /> List<span className="lv-ext"> view</span>
+            </button>
+          </nav>
+        </header>
+        <main className="cut-monitor">
+          <Monitor />
+        </main>
+        <section
+          className={`cut-timeline${state.tlCollapsed ? " collapsed" : ""}`}
+          ref={timelineWrapRef}
+          aria-label="Career timeline (scrub to explore)"
+        >
+          {state.tlCollapsed ? (
+            <button className="tl-show" onClick={() => actions.toggleTlCollapse()}>
+              <FiChevronUp size={15} /> Show timeline
+            </button>
+          ) : (
+            <>
+              <div
+                className="tl-resize"
+                role="separator"
+                aria-orientation="horizontal"
+                aria-label="Drag to resize the timeline"
+                title="Drag to resize"
+                onPointerDown={onResizeDown}
+                onPointerMove={onResizeMove}
+                onPointerUp={onResizeUp}
+                onPointerCancel={onResizeUp}
+              >
+                <span className="tl-resize-grip" />
+              </div>
+              <div className="tl-zoom" role="group" aria-label="Timeline zoom">
+                <button onClick={() => actions.setZoom(state.zoom / 1.5)} disabled={state.zoom <= 1.01} aria-label="Zoom out" title="Zoom out (−)">−</button>
+                <button className="tl-zoom-val" onClick={() => actions.setZoom(1)} title="Reset zoom (0)">{state.zoom.toFixed(1)}×</button>
+                <button onClick={() => actions.setZoom(state.zoom * 1.5)} aria-label="Zoom in" title="Zoom in (+)">+</button>
+              </div>
+              <Timeline />
+            </>
+          )}
+        </section>
+        <TransportBar />
+      </div>
+      {/* outside .cut-root, which is made inert while the List view is open */}
       {state.listView && <ListView />}
-    </div>
+    </>
   );
 }

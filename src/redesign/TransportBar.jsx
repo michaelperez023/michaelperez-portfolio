@@ -23,7 +23,7 @@ export default function TransportBar() {
     : clipById[state.activeId]?.title || "—";
 
   return (
-    <div className="transport">
+    <section className="transport" aria-label="Timeline controls">
       <div className="tp-left">
         <span className="tp-tc">{fmtTime(state.playhead)}</span>
         <span className="tp-active" title={activeLabel}>{activeLabel}</span>
@@ -48,19 +48,20 @@ export default function TransportBar() {
       </div>
 
       <div className="tp-right">
+        {/* .tp-label text is hidden in short, narrow windows; the aria-labels keep the names */}
         <button
           className="tp-link"
           onClick={() => actions.toggleTlCollapse()}
           aria-label={state.tlCollapsed ? "Show timeline" : "Hide timeline"}
         >
           {state.tlCollapsed ? (
-            <><FiChevronUp size={14} /> Timeline</>
+            <><FiChevronUp size={14} /> <span className="tp-label">Timeline</span></>
           ) : (
-            <><FiChevronDown size={14} /> Hide</>
+            <><FiChevronDown size={14} /> <span className="tp-label">Hide</span></>
           )}
         </button>
-        <button className="tp-link" onClick={() => actions.toggleListView()}>
-          <FiList size={14} /> List<span className="lv-ext"> view</span>
+        <button className="tp-link" onClick={() => actions.toggleListView()} aria-label="List view">
+          <FiList size={14} /> <span className="tp-label">List<span className="lv-ext"> view</span></span>
         </button>
         <a className="tp-link" href={information.resumeFile} target="_blank" rel="noreferrer" aria-label="Download résumé (PDF)">
           <FiDownload size={14} /> Résumé
@@ -69,9 +70,9 @@ export default function TransportBar() {
           <FiDownload size={14} /> CV
         </a>
         <button className="tp-link" onClick={copyLink} aria-label="Copy a shareable link to this view">
-          {copied ? <><FiCheck size={14} /> Copied</> : <><FiLink size={14} /> Share</>}
+          {copied ? <><FiCheck size={14} /> <span className="tp-label">Copied</span></> : <><FiLink size={14} /> <span className="tp-label">Share</span></>}
         </button>
       </div>
-    </div>
+    </section>
   );
 }

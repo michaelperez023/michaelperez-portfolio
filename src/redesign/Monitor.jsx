@@ -13,10 +13,13 @@ import {
 } from "react-icons/fi";
 import { SiGooglescholar } from "react-icons/si";
 import { useStore, isPanel } from "./storeCore";
-import { allClips, clipById, barActiveAt, eras, clipsMatchingTag } from "./timelineData";
+import { allClips, clipById, barActiveAt, eras, clipsMatchingTag, kindLabel } from "./timelineData";
 import { examples } from "./retrieval";
 import { prewarm } from "./semantic";
 import { information, about, skillGroups, honors, certifications, education } from "../data/content";
+
+// The console's placeholder suggests the first example question, so the two never disagree.
+const PLACEHOLDER_EXAMPLE = examples[0] ? `${examples[0].charAt(0).toLowerCase()}${examples[0].slice(1)}` : "ask about my work";
 
 const COINCIDE_W = 0.25; // ~3 months (a quarter): a tight cluster shows together, but
 // distinct work from another season doesn't bleed in.
@@ -107,8 +110,15 @@ export default function Monitor() {
     ? eras.filter((e) => state.playhead >= e.t0 && state.playhead <= e.t1)
     : [];
 
+  // The intro's name is the page's main heading; every other view gets one too.
+  const introShown = !state.tagFilter && !answering && state.activeId === "intro";
+  // The About and Skills panels are text that can be taller than the monitor and
+  // hold nothing focusable, so their scroll area takes focus itself.
+  const textPanel = !state.tagFilter && !answering && (state.activeId === "about" || state.activeId === "skills");
+
   return (
     <div className="mon">
+      {!introShown && <h1 className="visually-hidden">{information.name}</h1>}
       {/* console */}
       <div className="mon-console">
         <span className="mon-prompt">ask&nbsp;my&nbsp;work</span>
@@ -120,7 +130,7 @@ export default function Monitor() {
           onChange={(e) => actions.setQuery(e.target.value)}
           onKeyDown={onKey}
           onFocus={() => prewarm()}
-          placeholder="e.g. can you scale?  ( press /  to focus )"
+          placeholder={`e.g. ${PLACEHOLDER_EXAMPLE}  ( press /  to focus )`}
           aria-label="Query Michael's work"
           data-query-input
         />
@@ -146,13 +156,16 @@ export default function Monitor() {
         <div className="mon-hud" aria-hidden="true">
           <span className="dot" /> {tier === "semantic" ? "in-browser embeddings · local" : "local retrieval · no LLM"}
           <span className="sep">·</span> {latency < 1 ? "<1" : latency.toFixed(1)}ms
-          <span className="sep">·</span> match: <b>{tier}</b>
+          <span className="sep">·</span> <span className="hud-match">match: <b>{tier}</b></span>
           <span className="sep">·</span> {revealed >= total ? "done" : "rendering"}
         </div>
       )}
 
       {/* main panel */}
-      <div className="mon-stage">
+      <div
+        className="mon-stage"
+        {...(textPanel ? { tabIndex: 0, role: "region", "aria-label": state.activeId === "about" ? "About" : "Skills" } : {})}
+      >
         {state.tagFilter ? (
           <TagFiltered />
         ) : answering ? (
@@ -267,7 +280,7 @@ function ProjectMedia({ clip }) {
 }
 
 function LinkRow({ clip }) {
-  if (!clip.link && !clip.file && !clip.githubLink) return null;
+  if (!clip.link && !clip.file && !clip.githubLink && !clip.links?.length) return null;
   const projLabel =
     clip.track === "projects" ? (ytId(clip.link) ? "Open on YouTube" : "Visit site") : clip.demo ? "Read demo" : "Read paper";
   return (
@@ -287,6 +300,11 @@ function LinkRow({ clip }) {
           <FiGithub size={13} /> Code
         </a>
       )}
+      {clip.links?.map((l, i) => (
+        <a key={`${i}-${l.href}`} className="cv-link" href={l.href} target="_blank" rel="noreferrer">
+          {l.label} <FiArrowUpRight size={14} />
+        </a>
+      ))}
     </div>
   );
 }
@@ -307,7 +325,7 @@ function PaperPreview({ clip }) {
     <figure className={`cv-figure paper${pdf ? " has-pdf" : ""}`}>
       <img src={clip.thumb} alt={`First page of ${clip.title}`} loading="lazy" />
       {pdf && (
-        <button className="cv-pdfbtn" onClick={() => setOpen(true)} aria-label={`Open the PDF of ${clip.title}`}>
+        <button className="cv-pdfbtn" onClick={() => setOpen(true)} aria-label={`View PDF: ${clip.title}`}>
           <span className="cv-pdftag"><FiFileText size={12} /> View PDF</span>
         </button>
       )}
@@ -335,13 +353,12 @@ function TagChip({ label, value = label, className }) {
 }
 
 function ResearchCard({ clip }) {
-  const kindLabel = clip.kind === "working" ? "WORKING PAPER" : clip.kind === "preprint" ? "PREPRINT" : "PUBLICATION";
+  const kind = kindLabel(clip); // e.g. PUBLICATION, PREPRINT, CLASS REPORT; none if the entry names no kind
   const meta = (
     <div className="cv-meta">
-      <TagChip className={`cv-kind ${clip.kind}`} label={kindLabel} />
+      {kind && <TagChip className={`cv-kind ${clip.kind}`} label={kind} />}
       {clip.lead && <TagChip className="cv-tag lead" label="FIRST AUTHOR" />}
       {clip.demo && <TagChip className="cv-tag" label="DEMO" />}
-      {clip.upcoming && <span className="cv-tag up">ACCEPTED · TO APPEAR</span>}
       {clip.review && <TagChip className="cv-tag up" label="UNDER REVIEW" />}
       <span className="cv-year">{clip.year}</span>
     </div>
@@ -621,7 +638,7 @@ function ContactPanel() {
           <a className="contact-btn" href={cvFile} target="_blank" rel="noreferrer"><FiDownload size={15} /> Download CV</a>
           <a className="contact-btn" href={social.github} target="_blank" rel="noreferrer"><FiGithub size={15} /> GitHub</a>
           <a className="contact-btn" href={social.linkedin} target="_blank" rel="noreferrer"><FiLinkedin size={15} /> LinkedIn</a>
-          <a className="contact-btn" href={social.scholar} target="_blank" rel="noreferrer"><SiGooglescholar size={15} /> Scholar</a>
+          <a className="contact-btn" href={social.scholar} target="_blank" rel="noreferrer"><SiGooglescholar size={15} aria-hidden="true" /> Scholar</a>
         </div>
       </div>
     </div>

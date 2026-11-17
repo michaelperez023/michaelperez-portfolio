@@ -56,10 +56,23 @@ a { color: inherit; }
 
 .cut-topbar {
   display: flex;
+  flex-wrap: wrap; /* with a large default font the nav moves to a second line */
   align-items: baseline;
-  gap: 1rem;
+  gap: 0.4rem 1rem;
   padding: 0.7rem 1.4rem;
   border-bottom: 1px solid var(--line);
+}
+/* for headings that screen readers need but the layout already shows */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 .cut-brand {
   font-weight: 800;
@@ -128,6 +141,7 @@ a { color: inherit; }
 .mon-caret { color: var(--signal); font-family: var(--mono); }
 .mon-input {
   flex: 1;
+  min-width: 0; /* shrink instead of pushing the run button off screen */
   background: transparent;
   border: none;
   outline: none;
@@ -166,8 +180,9 @@ a { color: inherit; }
 
 .mon-hud {
   display: flex;
+  flex-wrap: wrap; /* a narrow phone gets two lines rather than a sideways scroll */
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.2rem 0.5rem;
   margin-top: 0.6rem;
   font-family: var(--mono);
   font-size: 0.72rem;
@@ -176,6 +191,7 @@ a { color: inherit; }
 .mon-hud .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 8px var(--signal); }
 .mon-hud .sep { color: var(--faint); }
 .mon-hud b { color: var(--signal); }
+.mon-hud .hud-match { white-space: nowrap; } /* "match: curated" wraps as one piece */
 
 .mon-stage {
   flex: 1;
@@ -184,6 +200,7 @@ a { color: inherit; }
   margin-top: 0.9rem;
   padding-right: 0.4rem;
 }
+.mon-stage:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; border-radius: 4px; }
 
 /* ---------- answer (query-and-attend) ---------- */
 .mon-answer {
@@ -252,7 +269,7 @@ a { color: inherit; }
   color: var(--dim);
 }
 .cv-kind.pub { color: var(--signal); border-color: rgba(57, 224, 208, 0.4); }
-.cv-kind.working, .cv-kind.preprint { color: var(--indigo); border-color: rgba(125, 139, 255, 0.4); }
+.cv-kind.working, .cv-kind.preprint, .cv-kind.class-report { color: var(--indigo); border-color: rgba(125, 139, 255, 0.4); }
 .cv-kind.exp { color: var(--amber); border-color: rgba(242, 179, 61, 0.4); }
 .cv-kind.proj { color: var(--violet); border-color: rgba(192, 139, 242, 0.4); }
 .cv-year { font-family: var(--mono); font-size: 0.78rem; color: var(--faint); }
@@ -693,10 +710,11 @@ kbd {
   flex-direction: column;
   touch-action: none; /* we handle scrub + pinch-zoom ourselves (don't let mobile browsers hijack) */
 }
-/* zoom controls (top-right of the timeline) */
+/* zoom controls (top-right of the timeline), inside the resize strip so they
+   never cover the ruler or its NOW flag */
 .tl-zoom {
   position: absolute;
-  top: 3px;
+  top: 1px;
   right: 1.4rem;
   z-index: 6;
   display: flex;
@@ -720,10 +738,10 @@ kbd {
 .tl-zoom button:hover:not(:disabled) { color: var(--signal); border-color: var(--signal); }
 .tl-zoom button:disabled { opacity: 0.4; cursor: default; }
 .tl-zoom-val { font-size: 0.72rem !important; min-width: 38px !important; color: var(--fg) !important; }
-/* drag handle to resize the timeline taller/shorter */
+/* drag handle to resize the timeline taller/shorter; tall enough to hold the zoom controls */
 .tl-resize {
   flex: 0 0 auto;
-  height: 13px;
+  height: 24px;
   margin: 0 -1.4rem 2px;
   display: grid;
   place-items: center;
@@ -851,9 +869,8 @@ kbd {
 .tl-clip-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex: none; }
 .tl-clip-label { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .tl-clip.k-pub { color: var(--signal); }
-.tl-clip.k-working, .tl-clip.k-preprint { color: var(--indigo); }
+.tl-clip.k-working, .tl-clip.k-preprint, .tl-clip.k-class-report, .tl-clip.k-report { color: var(--indigo); }
 .tl-clip.k-project { color: var(--violet); }
-.tl-clip.upcoming { border-style: dashed; opacity: 0.85; }
 .tl-clip:hover { border-color: currentColor; background: var(--panel); z-index: 25; }
 .tl-clip.active {
   border-color: var(--signal);
@@ -881,9 +898,8 @@ kbd {
   transition: transform 0.12s, box-shadow 0.12s;
 }
 .tl-dot.k-pub { background: var(--signal); }
-.tl-dot.k-working, .tl-dot.k-preprint { background: var(--indigo); }
+.tl-dot.k-working, .tl-dot.k-preprint, .tl-dot.k-class-report, .tl-dot.k-report { background: var(--indigo); }
 .tl-dot.k-project { background: var(--violet); }
-.tl-dot.upcoming { opacity: 0.7; }
 .tl-dot:hover { transform: translate(-50%, -50%) scale(1.55); z-index: 25; }
 .tl-dot.active { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--signal), 0 0 10px var(--signal-glow); z-index: 5; }
 .tl-dot.lit { box-shadow: 0 0 0 2px var(--bg), 0 0 10px var(--signal); z-index: 4; }
@@ -988,20 +1004,27 @@ kbd {
 }
 .cut-root.onboarding .tl-playhead-handle { animation: ph-pulse 1.5s ease-out 4; }
 
-/* ---------- transport ---------- */
+/* ---------- transport ----------
+   Timecode and clip title on the left, playback in the middle, links on the
+   right. The two sides share the spare width equally, so playback stays centered
+   while there is room; when there is not, the links keep their full width and the
+   clip title gives way. At 840px and narrower the bar becomes two rows, except in
+   windows 600px tall or less, where some links become icons to keep it to one
+   (see the media queries); it wraps rather than letting one control draw over another. */
 .transport {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 1rem;
+  gap: 0.45rem 1rem;
   padding: 0.55rem 1.4rem;
   border-top: 1px solid var(--line);
   background: var(--panel);
 }
-.tp-left { display: flex; align-items: center; gap: 0.8rem; min-width: 0; }
-.tp-tc { font-family: var(--mono); font-size: 0.84rem; color: var(--signal); white-space: nowrap; }
-.tp-active { color: var(--dim); font-size: 0.82rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
-.tp-center { display: flex; align-items: center; gap: 0.3rem; justify-self: center; }
+.tp-left { flex: 1 1 0; display: flex; align-items: center; gap: 0.8rem; }
+.tp-tc { flex: none; font-family: var(--mono); font-size: 0.84rem; color: var(--signal); white-space: nowrap; }
+/* width 0 + grow: the title fills what is left and never pushes the controls */
+.tp-active { flex: 1 1 auto; width: 0; min-width: 0; color: var(--dim); font-size: 0.82rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tp-center { flex: none; display: flex; align-items: center; gap: 0.3rem; }
 .tp-btn {
   display: inline-grid;
   place-items: center;
@@ -1017,7 +1040,7 @@ kbd {
 .tp-btn.play { background: var(--signal); color: #04201d; border-color: var(--signal); width: 34px; height: 34px; }
 .tp-speed { width: auto; min-width: 38px; padding: 0 0.5rem; font-family: var(--mono); font-size: 0.72rem; }
 .tp-btn.play:hover { background: var(--signal-deep); color: #04201d; }
-.tp-right { display: flex; align-items: center; gap: 0.5rem; justify-self: end; min-width: 0; }
+.tp-right { flex: 1 1 0; display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; }
 .tp-link {
   display: inline-flex;
   align-items: center;
@@ -1029,6 +1052,7 @@ kbd {
   padding: 0.35rem 0.7rem;
   font-size: 0.8rem;
   font-weight: 600;
+  white-space: nowrap;
   text-decoration: none;
   cursor: pointer;
 }
@@ -1056,6 +1080,7 @@ kbd {
 .lv-close:hover { border-color: var(--signal); color: var(--signal); }
 .lv-doc { overflow: auto; padding: 2rem 1.4rem 4rem; max-width: 60rem; margin: 0 auto; width: 100%; }
 .lv-head h1 { font-size: 2rem; margin: 0 0 0.3rem; }
+.lv-head h1:focus { outline: none; } /* focus lands here when the view opens; it is not a control */
 .lv-head p { color: var(--dim); margin: 0.2rem 0; }
 .lv-head .lv-avail { color: var(--signal); font-weight: 600; }
 .lv-links a { color: var(--signal); text-decoration: none; }
@@ -1076,8 +1101,8 @@ kbd {
   .cut-monitor { padding: 0.9rem 1rem 0.3rem; }
   .ans-body { font-size: 1.08rem; }
   .cv-title { font-size: 1.45rem; }
-  .tp-active { display: none; }
   .cut-timeline { padding: 0.5rem 1rem 0.6rem; }
+  .tl-zoom { top: calc(0.5rem + 1px); right: 1rem; }
   .tl-resize { margin-left: -1rem; margin-right: -1rem; }
   .tl-clip { max-width: 96px; }
 }
@@ -1096,6 +1121,14 @@ kbd {
   .cv .cv-title { font-size: 1.5rem; }
   .cv.dense .cv-title { font-size: 1.05rem; }
   .cv-stack.multi .cv { padding: 0.7rem 0.8rem 0.8rem; }
+  .tp-active { display: none; } /* too little room left for the clip title to be useful */
+}
+/* the transport as two rows: timecode + playback, then the links centered */
+@media (max-width: 840px) {
+  .transport { gap: 0.45rem 0.6rem; padding: 0.5rem 0.7rem; }
+  .tp-left { flex: 0 0 auto; }
+  .tp-center { flex: 1 1 auto; justify-content: center; }
+  .tp-right { flex: 1 1 100%; flex-wrap: wrap; justify-content: center; gap: 0.45rem; }
 }
 @media (max-width: 640px) {
   .cut-topbar { flex-wrap: wrap; gap: 0.5rem; padding: 0.55rem 0.9rem; }
@@ -1109,17 +1142,7 @@ kbd {
   .cv .cv-title, .cv-title { font-size: 1.3rem; }
   .cv-authors, .cv-body { font-size: 0.9rem; }
   .contact-btn { padding: 0.5rem 0.7rem; font-size: 0.85rem; }
-  /* reflow the transport: timecode + controls on row 1, links centered on row 2 */
-  .transport {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.45rem 0.6rem;
-    padding: 0.5rem 0.7rem;
-  }
-  .tp-left { flex: 0 0 auto; }
-  .tp-center { flex: 1 1 auto; justify-content: center; }
-  .tp-right { flex: 1 1 100%; flex-wrap: wrap; justify-content: center; gap: 0.45rem; }
+  /* phones: bigger transport tap targets (the bar is already two rows) */
   .tp-btn { width: 34px; height: 34px; }
   .tp-btn.play { width: 38px; height: 38px; }
   .tp-link { padding: 0.45rem 0.7rem; font-size: 0.78rem; }
@@ -1133,6 +1156,41 @@ kbd {
   .intro-facts { order: 3; }
   .intro-hint { order: 4; }
   .intro-name { margin-bottom: 0.8rem; }
+}
+
+/* short windows (a phone held sideways): tighter chrome so the selected card
+   keeps room above the timeline, which TheCut also lets shrink here */
+@media (max-height: 500px) {
+  .cut-topbar { padding-top: 0.35rem; padding-bottom: 0.35rem; }
+  .cut-monitor { padding-top: 0.5rem; }
+  .mon-console { padding-top: 0.3rem; padding-bottom: 0.3rem; }
+  .mon-examples { display: none; }
+  .mon-stage { margin-top: 0.5rem; }
+  .cut-timeline { padding-bottom: 0.4rem; }
+  .tl-eras { display: none; } /* the degree in progress is still listed with the cards */
+  .tl-track { margin-bottom: 4px; }
+  .transport { padding-top: 0.35rem; padding-bottom: 0.35rem; }
+}
+/* short and narrow (a phone held sideways, a small window): the same tighter
+   chrome up to 600px tall, the "N at this moment" line hidden, and the
+   transport kept to one row, with Hide, List view and Share shown as icons
+   (their aria-labels keep the names). Two rows there would leave the selected
+   card only its chips. */
+@media (max-width: 840px) and (max-height: 600px) {
+  .cut-topbar { padding-top: 0.35rem; padding-bottom: 0.35rem; }
+  .cut-monitor { padding-top: 0.5rem; }
+  .mon-console { padding-top: 0.3rem; padding-bottom: 0.3rem; }
+  .mon-examples { display: none; }
+  .mon-stage { margin-top: 0.5rem; }
+  .cv-stack-head { display: none; }
+  .cut-timeline { padding-bottom: 0.4rem; }
+  .tl-eras { display: none; }
+  .tl-track { margin-bottom: 4px; }
+  .transport { gap: 0.5rem; padding-top: 0.35rem; padding-bottom: 0.35rem; } /* still wraps if one row cannot fit */
+  .tp-left, .tp-center { flex: none; }
+  .tp-right { flex: 1 1 auto; flex-wrap: nowrap; justify-content: flex-end; gap: 0.35rem; min-width: 0; }
+  .tp-link { padding: 0.35rem 0.55rem; }
+  .tp-label { display: none; }
 }
 
 /* ---------- reduced motion ---------- */

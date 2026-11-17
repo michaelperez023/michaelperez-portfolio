@@ -1,5 +1,7 @@
+import { useEffect, useRef } from "react";
 import { FiX } from "react-icons/fi";
 import { useStore } from "./storeCore";
+import { kindName, extraLinks } from "./timelineData";
 import {
   information,
   about,
@@ -15,6 +17,15 @@ import {
   projects,
 } from "../data/content";
 
+// "Class report · Advanced Machine Learning": what the entry is, then its note,
+// without repeating the kind when the note already says it ("arXiv preprint").
+function kindAndNote(p) {
+  const kind = kindName(p.kind);
+  const note = p.note || "";
+  const showKind = kind && !note.toLowerCase().includes(kind.toLowerCase());
+  return [showKind ? kind : null, note].filter(Boolean).join(" · ");
+}
+
 const ME = "Michael Pérez";
 function withMe(authors) {
   if (!authors || !authors.includes(ME)) return authors;
@@ -23,11 +34,43 @@ function withMe(authors) {
   );
 }
 
+// Links here are lowercase ("code · demo"); an extra link's label follows suit
+// unless its first word is a name ("GitHub", "YouTube").
+const listLabel = (s) => (/^[A-Z][a-z]+\b/.test(s) ? s[0].toLowerCase() + s.slice(1) : s);
+
+// " · report (PDF) · code": the files an entry links to, after its title,
+// followed by any extra links the entry lists in content.js.
+function EntryLinks({ links, entry }) {
+  const more = extraLinks(entry).map((l) => [l.href, listLabel(l.label)]);
+  return [...links, ...more]
+    .filter(([href]) => href)
+    .map(([href, text], i) => (
+      <span key={`${i}-${href}`}>
+        {" · "}
+        <a href={href}>{text}</a>
+      </span>
+    ));
+}
+
 // Plain, fully semantic, recruiter/screen-reader-friendly fallback document.
+// It is a modal dialog: the page behind it is inert while it is open, focus
+// moves to its title, and closing it (button or Escape) returns focus to the
+// control that opened it.
 export default function ListView() {
   const { actions } = useStore();
+  const titleRef = useRef(null);
+  useEffect(() => {
+    const opener = document.activeElement;
+    const page = document.querySelector(".cut-root");
+    if (page) page.inert = true;
+    titleRef.current?.focus();
+    return () => {
+      if (page) page.inert = false;
+      if (opener && opener !== document.body && opener.isConnected) opener.focus?.();
+    };
+  }, []);
   return (
-    <div className="lv" role="dialog" aria-label="Plain résumé view">
+    <div className="lv" role="dialog" aria-modal="true" aria-label="Plain résumé view">
       <div className="lv-bar">
         <span>Plain view — everything, in order</span>
         <button className="lv-close" onClick={() => actions.toggleListView()} aria-label="Close list view">
@@ -35,8 +78,8 @@ export default function ListView() {
         </button>
       </div>
       <div className="lv-doc">
-        <header className="lv-head">
-          <h1>{information.fullName}</h1>
+        <div className="lv-head">
+          <h1 ref={titleRef} tabIndex={-1}>{information.fullName}</h1>
           <p>{information.role} · {information.location}</p>
           <p className="lv-avail">{information.availability}</p>
           <p className="lv-links">
@@ -47,7 +90,7 @@ export default function ListView() {
             <a href={information.resumeFile}>Résumé</a> ·{" "}
             <a href={information.cvFile}>CV</a>
           </p>
-        </header>
+        </div>
 
         <section>
           <h2>About</h2>
@@ -68,7 +111,16 @@ export default function ListView() {
           <h3>Working papers</h3>
           <ul>{workingPapers.map((p) => <li key={p.id}><span className="lv-y">{p.year}</span> {p.title} — <em>{p.note}</em>{p.summary && <div className="lv-auth">{p.summary}</div>}</li>)}</ul>
           <h3>Preprints & reports</h3>
-          <ul>{preprints.map((p) => <li key={p.id}><span className="lv-y">{p.year}</span> {p.link ? <a href={p.link}>{p.title}</a> : p.title} — <em>{p.note}</em></li>)}</ul>
+          <ul>
+            {preprints.map((p) => (
+              <li key={p.id}>
+                <span className="lv-y">{p.year}</span>{" "}
+                {p.link ? <a href={p.link}>{p.title}</a> : p.title} — <em>{kindAndNote(p)}</em>
+                <EntryLinks links={[[p.file, "report (PDF)"], [p.githubLink, "code"]]} entry={p} />
+                {p.summary && <div className="lv-auth">{p.summary}</div>}
+              </li>
+            ))}
+          </ul>
         </section>
 
         <section>
@@ -93,8 +145,7 @@ export default function ListView() {
             {projects.map((p) => (
               <li key={p.id}>
                 <strong>{p.title}</strong> — {p.subtitle}
-                {p.githubLink && <> · <a href={p.githubLink}>code</a></>}
-                {p.url && <> · <a href={p.url}>demo</a></>}
+                <EntryLinks links={[[p.githubLink, "code"], [p.url, "demo"], [p.report, "report (PDF)"]]} entry={p} />
               </li>
             ))}
           </ul>

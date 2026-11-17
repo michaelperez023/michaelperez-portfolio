@@ -29,7 +29,7 @@ export const about = {
   paragraphs: [
     "I hold a Ph.D. in Computer Science from the University of Florida (August 2026), specializing in video understanding, computer vision, and real-time ML systems. I design and deploy end-to-end pipelines for video analysis, including detection, segmentation, and retrieval, across both real-time and offline settings.",
     "As a Senior Engineer at Raft from August to November 2026, I developed and integrated computer vision data exploration and analysis capabilities into production software. I also built ML data management and evaluation workflows for dataset curation, annotation review, model analysis, and debugging, and contributed to AI/ML development, testing, and integration.",
-    "My doctoral research spanned two DARPA-funded programs at the Ruiz HCI Lab: CReLeRI, an explainable long-video analysis system (first-author demo, ACM Multimedia 2025), and ENKIx, a real-time AR task-guidance system. My thesis presents an online action-detection model that matches the strongest verified strictly-causal detector on THUMOS at roughly 60% of its parameters and 2.5–2.9× its throughput, in real time.",
+    "My doctoral research spanned two DARPA-funded programs at the Ruiz HCI Lab: CReLeRI, an explainable long-video analysis system (first-author demo, ACM Multimedia 2025), and ENKIx, a real-time AR task-guidance system. My thesis presents an online action-detection model that matches the strongest verified strictly-causal detector on THUMOS at roughly 60% of its parameters and 2.4× its throughput, in real time.",
   ],
   facts: [
     { label: "Focus", value: "Video understanding · Computer vision · Real-time ML" },
@@ -133,7 +133,7 @@ export const workingPapers = [
     year: "2026",
     title: "Efficient Video Action Detection",
     summary:
-      "A causal, online (streaming) action-detection model that matches the strongest verified strictly-causal detector on THUMOS at roughly 60% of its parameters and 2.5–2.9× its throughput, running in real time at 37.7 FPS.",
+      "A causal, online (streaming) action-detection model that matches the strongest verified strictly-causal detector on THUMOS at roughly 60% of its parameters and 2.4× its throughput, running in real time at 37.7 FPS.",
     note: "Ph.D. thesis work — first-author manuscript in preparation",
     link: null,
   },
@@ -147,10 +147,13 @@ export const workingPapers = [
   },
 ];
 
-// Preprints and class projects, secondary, with downloadable reports.
+// The arXiv preprint and my class reports, secondary, with downloadable reports.
+// `kind` is "preprint" (only the arXiv survey) or "class-report" (a course report, never
+// called a preprint); the cards show it as a PREPRINT or CLASS REPORT chip.
 export const preprints = [
   {
     id: 0,
+    kind: "preprint",
     year: "2023",
     title:
       "CNN-Based Action Recognition and Pose Estimation for Classifying Animal Behavior from Videos: A Survey",
@@ -159,30 +162,40 @@ export const preprints = [
   },
   {
     id: 1,
+    kind: "class-report",
     year: "2023",
     title: "Abstractive Urdu Summarization for News Article Dataset",
-    note: "Natural Language Processing",
+    summary:
+      "Despite the title, the task is writing a news article's headline from its short summary, not summarizing the full article. My part was mainly the report and the presentation.",
+    note: "Natural Language Processing · with Ammar Amjad, Mohammad Uzair Fasih, and Mohammad Anas",
     file: "/files/Urdu_Summarization_Report.pdf",
     githubLink: "https://github.com/michaelperez023/urdu-abstractive-summarization",
   },
   {
     id: 2,
+    kind: "class-report",
     year: "2022",
     title: "An Investigation of ADAM: A Stochastic Optimization Method",
+    summary:
+      "Corrected results are in the repository: rerun with five seeds and tested with dropout off, Adam leads AdaMax on average only for logistic regression.",
     note: "Advanced Machine Learning",
     file: "/files/ADAM_Investigation_Report.pdf",
     githubLink: "https://github.com/michaelperez023/ADAM",
   },
   {
     id: 3,
+    kind: "class-report",
     year: "2022",
     title: "Investigation of VideoGAN for Video Generation and Recognition",
+    summary:
+      "The repository corrects this report: the GAN was trained on golf-course videos, not on UCF-101 as the abstract says, and the report's fine-tuning accuracies should not be relied on.",
     note: "Machine Learning",
     file: "/files/VideoGAN_Investigation_Report.pdf",
     githubLink: "https://github.com/michaelperez023/VideoGAN",
   },
   {
     id: 5,
+    kind: "class-report",
     year: "2020",
     title: "Survey of the k-Means Clustering Problem",
     note: "Analysis of Algorithms",
@@ -191,7 +204,7 @@ export const preprints = [
 ];
 
 // Every role uses the same shape: `highlights` (labeled bullets). Tools are listed
-// under skillGroups, not per role. The Raft bullets track documents/cv/cv.tex.
+// under skillGroups, not per role. The Raft bullets track documents/shared/cv-employment.tex.
 export const workingExperience = [
   {
     id: 6,
@@ -248,7 +261,7 @@ export const workingExperience = [
       },
       {
         label: "Ph.D. thesis",
-        text: "Designed a causal, online action-detection model that matches the strongest verified strictly-causal detector on THUMOS at roughly 60% of its parameters and 2.5–2.9× its throughput, running in real time at 37.7 FPS.",
+        text: "Designed a causal, online action-detection model that matches the strongest verified strictly-causal detector on THUMOS at roughly 60% of its parameters and 2.4× its throughput, running in real time at 37.7 FPS.",
       },
       {
         label: "DARPA programs",
@@ -456,11 +469,11 @@ export const projects = [
   },
   {
     id: 1,
-    title: "Video Analysis Website",
+    title: "CReLeRI Video Analysis System",
     subtitle:
-      "Long-video analysis tool for CReLeRI: HTML/JS/CSS front end and a FastAPI backend with Celery and Redis background tasks, containerized with Docker.",
+      "The system behind my first-author ACM Multimedia 2025 demo, developed with my co-authors: it finds the actions in long, untrimmed videos and shows the evidence for each one. I designed its architecture (model services, a FastAPI + Celery/Redis job queue, and a Flask web UI); the lab deployment was containerized with Docker.",
     image: "/images/creleri-screenshot.jpg",
-    url: "https://youtu.be/XDCue9EYNTU",
+    url: "https://www.youtube.com/watch?v=2v0DDpFEq14",
     githubLink: "https://github.com/michaelperez023/creleri-video",
     tags: ["FastAPI", "Web", "Video"],
   },
@@ -468,7 +481,7 @@ export const projects = [
     id: 11,
     title: "Gossip & Push-Sum Simulator",
     subtitle:
-      "Distributed-systems simulator modeling gossip and push-sum convergence across full, line, 3D, and imperfect-3D topologies, scaling past 2M nodes.",
+      "Simulator for two gossip protocols, rumor spreading and push-sum averaging, written in F# with Blas Kojusner: one Akka.NET actor per node, on full, line, 3D, and imperfect-3D topologies.",
     image: "/images/gossip-simulator.svg",
     url: null,
     githubLink: "https://github.com/michaelperez023/gossip-simulator",
@@ -476,18 +489,21 @@ export const projects = [
   },
   {
     id: 2,
-    title: "Mario Graphics Game",
-    subtitle: "2.5D Mario-style game built with WebGL, HTML, and JavaScript.",
+    title: "Escape the Maze",
+    subtitle:
+      "First-person maze game with Mario characters, written in WebGL and JavaScript for a computer graphics course, starting from the course's WebGL starter code. A fan project, not affiliated with Nintendo.",
     image: "/images/mario-game-square.jpg",
     url: "https://www.youtube.com/watch?v=5lfsQRtfBVY",
     githubLink: "https://github.com/michaelperez023/escape-the-maze",
+    // Extra links beyond url (the video) and githubLink, each { label, url }.
+    links: [{ label: "Play in browser", url: "https://michaelperez023.github.io/escape-the-maze/" }],
     tags: ["WebGL", "Graphics"],
   },
   {
     id: 3,
     title: "From Here to There: 3D Audio Experience",
     subtitle:
-      "2D-visual, 3D-audio children's experience built with OpenGL, OpenAL, and GLFW in Java.",
+      "2D-visual, 3D-audio experience for children, made with Troy Lapensee and Lauren Newman in Java with OpenGL, OpenAL, and GLFW.",
     image: "/images/audio-game-square.jpg",
     url: "https://www.youtube.com/watch?v=ztOUkMKE2qs",
     report: "/files/Visual_3D_Audio_Project_Report.pdf",
@@ -497,10 +513,11 @@ export const projects = [
     id: 4,
     title: "Twitter Clone",
     subtitle:
-      "Twitter clone using the Akka.NET actor model and Suave web framework in F#.",
+      "Twitter-like service in F#, written with Blas Kojusner. Part I runs the engine and a load simulator as Akka.NET actor systems that talk over Akka.Remote; Part II adds a Suave web interface with a JSON API and live WebSocket feeds.",
     image: "/images/twitter-clone-square.jpg",
     url: "https://youtube.com/watch?v=-I0TTJJyyog",
-    githubLink: "https://github.com/michaelperez023/twitter-clone-part2",
+    githubLink: "https://github.com/michaelperez023/twitter-clone-part2", // Part II
+    links: [{ label: "Part I code", url: "https://github.com/michaelperez023/twitter-clone" }],
     tags: ["F#", "Akka.NET"],
   },
   {
@@ -515,9 +532,9 @@ export const projects = [
     id: 6,
     title: "Hermes Tracker App",
     subtitle:
-      "Flutter app for tracking mail and packages at Florida Poly's mail center.",
+      "Flutter app for tracking mail and packages at a university mail center, a 2020 student team project at Florida Poly by Adam Ghaffarian, Michael Pérez, and Jared Fuller. I wrote the Letters menu and the Scan button, which the live demo runs in the browser with made-up data.",
     image: "/images/hermes-app-square.jpg",
-    url: null,
+    url: "https://michaelperez023.github.io/hermes-tracker/",
     githubLink: "https://github.com/michaelperez023/hermes-tracker",
     tags: ["Flutter", "Mobile"],
   },
@@ -535,7 +552,7 @@ export const projects = [
     title: "DR Villas Booking Website",
     subtitle: "Dominican Republic villa-booking site built with WordPress.",
     image: "/images/dominican-go-square.jpg",
-    url: "https://govacationvillas.com",
+    url: null,
     tags: ["WordPress", "Web"],
   },
   {

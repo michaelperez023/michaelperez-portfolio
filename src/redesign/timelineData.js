@@ -47,28 +47,64 @@ const slug = (s) =>
 const short = (title, n = 22) =>
   title.length > n ? title.slice(0, n - 1).trimEnd() + "…" : title;
 
+// Extra links an entry lists in content.js beyond url/link, githubLink and its
+// report, e.g. links: [{ label: "Play in browser", url: "https://…" }]
+// (href works in place of url). Returned as [{ label, href }].
+export const extraLinks = (item) =>
+  Array.isArray(item?.links)
+    ? item.links.map((l) => ({ label: l?.label, href: l?.url ?? l?.href })).filter((l) => l.label && l.href)
+    : [];
+
+// Content entries are looked up by their id in content.js, never by position,
+// so adding or reordering entries there cannot move a clip onto the wrong item.
+function entry(list, id, listName) {
+  const item = list.find((x) => x.id === id);
+  if (!item && import.meta.env.DEV) console.warn(`timelineData: ${listName} has no entry with id ${id}`);
+  return item;
+}
+const pub = (id) => entry(publications, id, "publications");
+const working = (id) => entry(workingPapers, id, "workingPapers");
+const report = (id) => entry(preprints, id, "preprints");
+const job = (id) => entry(workingExperience, id, "workingExperience");
+
+// What each kind of research item is called; the card chip shows it in capitals.
+// An entry of the preprints list says what it is in content.js (kind: "preprint"
+// or "class-report"); one that does not say gets no chip.
+const KIND_NAMES = {
+  pub: "Publication",
+  working: "Working paper",
+  preprint: "Preprint",
+  "class-report": "Class report",
+};
+export const kindName = (kind) => KIND_NAMES[kind] ?? null;
+export const kindLabel = (clip) =>
+  clip.track === "research" ? kindName(clip.kind)?.toUpperCase() ?? null : null;
+const reportKind = (item) =>
+  item.kind === "preprint" || item.kind === "class-report" ? item.kind : "report";
+
 // --- research track (publications + working papers + preprints) ------------
 // [contentItem, decimalYear, key, extra]  — `key` gives a stable clip id
 const RESEARCH = [
-  [publications[0], 2025.79, "creleri", { kind: "pub", lead: true, tag: "ACM MM · first author" }],
-  [publications[2], 2025.42, "muchex", { kind: "pub", tag: "IEEE CG&A" }],
-  [publications[1], 2026.25, "superres", { kind: "pub", tag: "MSS · with CoVar" }],
+  [pub(1), 2025.79, "creleri", { kind: "pub", lead: true, tag: "ACM MM · first author" }],
+  [pub(2), 2025.42, "muchex", { kind: "pub", tag: "IEEE CG&A" }],
+  [pub(8), 2026.25, "superres", { kind: "pub", tag: "MSS · with CoVar" }],
   // Active manuscripts follow the present so they do not age out of the monitor's time window.
-  [workingPapers[0], NOW, "enkix", { kind: "working", tag: "in prep" }],
-  [workingPapers[1], NOW, "temporal", { kind: "working", tag: "in prep" }],
-  [workingPapers[2], NOW, "wacv", { kind: "working", tag: "Thesis · in prep" }], // Keep the existing clip ID for shared links.
-  [workingPapers[3], NOW, "hai-prep", { kind: "working", tag: "under review", review: true }], // Keep the existing clip ID for shared links.
-  [preprints[0], 2023.06, "animal", { kind: "preprint", tag: "arXiv survey", thumb: "/images/papers/animal.jpg", pdf: "/files/Animal_Behavior_Survey.pdf" }],
-  [preprints[1], 2023.25, "urdu", { kind: "preprint", tag: "NLP", thumb: "/images/papers/urdu.jpg" }],
-  [preprints[2], 2022.92, "adam", { kind: "preprint", tag: "Adv. ML", thumb: "/images/papers/adam.jpg" }],
-  [preprints[3], 2022.25, "videogan", { kind: "preprint", tag: "ML", thumb: "/images/papers/videogan.jpg" }],
-  [preprints[4], 2020.92, "kmeans", { kind: "preprint", tag: "Algorithms", thumb: "/images/papers/kmeans.jpg" }],
-  [publications[3], 2021.42, "rhino-eval", { kind: "pub", tag: "IJCARS" }],
-  [publications[4], 2021.25, "rhino-anthro", { kind: "pub", tag: "Aesthetic Surgery J." }],
-  [publications[5], 2020.83, "rhino-digit", { kind: "pub", tag: "IJCARS" }],
+  [working(1), NOW, "enkix", { kind: "working", tag: "in prep" }],
+  [working(2), NOW, "temporal", { kind: "working", tag: "in prep" }],
+  [working(3), NOW, "thesis", { kind: "working", tag: "Thesis · in prep" }], // renamed; its old id still opens it (CLIP_ALIASES)
+  [working(4), NOW, "hai-prep", { kind: "working", tag: "under review", review: true }], // Keep the existing clip ID for shared links.
+  // Preprints and class reports take their kind from content.js.
+  [report(0), 2023.06, "animal", { tag: "arXiv survey", thumb: "/images/papers/animal.jpg", pdf: "/files/Animal_Behavior_Survey.pdf" }],
+  [report(1), 2023.25, "urdu", { tag: "NLP", thumb: "/images/papers/urdu.jpg" }],
+  [report(2), 2022.92, "adam", { tag: "Adv. ML", thumb: "/images/papers/adam.jpg" }],
+  [report(3), 2022.25, "videogan", { tag: "ML", thumb: "/images/papers/videogan.jpg" }],
+  [report(5), 2020.92, "kmeans", { tag: "Algorithms", thumb: "/images/papers/kmeans.jpg" }],
+  [pub(3), 2021.42, "rhino-eval", { kind: "pub", tag: "IJCARS" }],
+  [pub(4), 2021.25, "rhino-anthro", { kind: "pub", tag: "Aesthetic Surgery J." }],
+  [pub(6), 2020.83, "rhino-digit", { kind: "pub", tag: "IJCARS" }],
 ];
 
-const researchClips = RESEARCH.map(([item, t, key, extra]) => ({
+const researchClips = RESEARCH.filter(([item]) => item).map(([item, t, key, extra]) => ({
   id: `r-${key}`,
   track: "research",
   t0: t,
@@ -85,6 +121,8 @@ const researchClips = RESEARCH.map(([item, t, key, extra]) => ({
   link: item.link || null,
   file: item.file || null,
   githubLink: item.githubLink || null,
+  links: extraLinks(item),
+  kind: reportKind(item),
   ...extra,
 }));
 
@@ -93,15 +131,15 @@ const COVAR_RANGE = [2025.33, 2025.62]; // CoVar internship — UF roles paused 
 const GRAD = 2026.6; // Ph.D. completed August 7, 2026 — UF roles end here
 const RAFT_END = 2026 + (10 + 1 / 31) / 12; // November 2, 2026; same decimal-year convention as NOW
 const EXP = [
-  [workingExperience[0], 2026.61, RAFT_END, "raft", { tag: "Industry" }], // Raft — Aug 10 to Nov 2, 2026
-  [workingExperience[1], COVAR_RANGE[0], COVAR_RANGE[1], "covar", { tag: "Internship" }],
-  [workingExperience[2], 2023.0, GRAD, "ruiz", { tag: "DARPA", hub: true, pauses: [COVAR_RANGE] }],
-  [workingExperience[3], 2020.6, GRAD, "ta", { tag: "Teaching", pauses: [COVAR_RANGE] }],
-  [workingExperience[4], 2020.6, 2023.0, "gilm", { tag: "NSF · GILM Lab" }],
-  [workingExperience[5], 2019.0, 2020.5, "rhino-ra", { tag: "Florida Poly" }],
+  [job(6), 2026.61, RAFT_END, "raft", { tag: "Industry" }], // Raft — Aug 10 to Nov 2, 2026
+  [job(1), COVAR_RANGE[0], COVAR_RANGE[1], "covar", { tag: "Internship" }],
+  [job(2), 2023.0, GRAD, "ruiz", { tag: "DARPA", hub: true, pauses: [COVAR_RANGE] }],
+  [job(3), 2020.6, GRAD, "ta", { tag: "Teaching", pauses: [COVAR_RANGE] }],
+  [job(4), 2020.6, 2023.0, "gilm", { tag: "NSF · GILM Lab" }],
+  [job(5), 2019.0, 2020.5, "rhino-ra", { tag: "Florida Poly" }],
 ];
 
-const experienceClips = EXP.map(([item, t0, t1, key, extra]) => ({
+const experienceClips = EXP.filter(([item]) => item).map(([item, t0, t1, key, extra]) => ({
   id: `e-${key}`,
   track: "experience",
   t0,
@@ -120,9 +158,9 @@ const experienceClips = EXP.map(([item, t0, t1, key, extra]) => ({
 // --- projects track (approximate placements — easy to edit) ----------------
 // keyed by project id: [decimalYear, stableKey]
 const PROJECT_META = {
-  1: [2025.3, "creleri-site"], // Video Analysis Website (CReLeRI)
+  1: [2025.3, "creleri-site"], // CReLeRI Video Analysis System
   11: [2021.75, "gossip", true], // Gossip & Push-Sum Simulator — Oct 2021
-  2: [2020.33, "mario", true], // Mario Graphics Game — May 2020
+  2: [2020.33, "mario", true], // Escape the Maze — May 2020
   3: [2021.25, "audio3d", true], // From Here to There: 3D Audio — April 2021
   4: [2021.92, "twitter", true], // Twitter Clone — Dec 2021
   5: [2021.83, "graphics", true], // Advanced Graphics Scene — Nov 2021
@@ -150,6 +188,7 @@ const projectClips = projects.map((p) => {
     link: p.url || null,
     githubLink: p.githubLink || null,
     file: p.report || null,
+    links: extraLinks(p),
     tags: p.tags || [],
     approx: !exact,
   };
@@ -216,13 +255,25 @@ function packTrack(clips) {
 tracks.forEach((t) => packTrack(t.clips));
 
 export const allClips = tracks.flatMap((t) => t.clips);
-export const clipById = Object.fromEntries(allClips.map((c) => [c.id, c]));
+// No prototype, so an id taken from a URL (e.g. #clip/constructor) finds nothing.
+export const clipById = Object.assign(
+  Object.create(null),
+  Object.fromEntries(allClips.map((c) => [c.id, c]))
+);
+
+// Clip ids that were renamed, mapped to their current id, so links that were
+// already shared (#clip/<old id>) still open the clip.
+const CLIP_ALIASES = new Map([
+  ["r-wacv", "r-thesis"],
+]);
+export const resolveClipId = (id) => (clipById[id] ? id : CLIP_ALIASES.get(id) ?? id);
 
 // Tag/skill chips associated with a clip — powers the click-a-tag-to-filter feature.
 export function clipTags(clip) {
   const out = new Set();
   if (clip.track === "research") {
-    out.add(clip.kind === "working" ? "WORKING PAPER" : clip.kind === "preprint" ? "PREPRINT" : "PUBLICATION");
+    const kind = kindLabel(clip);
+    if (kind) out.add(kind);
   } else if (clip.track === "experience") {
     out.add("EXPERIENCE");
   } else if (clip.track === "projects") {
@@ -275,17 +326,19 @@ export const clipsByTime = [...allClips].sort(
   (a, b) => clipCenter(a) - clipCenter(b)
 );
 
-// --- section markers on the ruler (also the keyboard chapters 1..7) --------
+// --- sections: the nav panels and the keyboard chapters 1..7 ----------------
+// A chapter opens a panel at the present, or a clip named by its id.
 export const sections = [
   { key: "intro", label: "Intro", t: NOW, panel: "intro", num: 1 },
   { key: "about", label: "About", t: NOW, panel: "about", num: 2 },
-  { key: "research", label: "Research", t: 2025.79, clipId: researchClips[0].id, num: 3 },
-  { key: "experience", label: "Experience", t: 2024.2, clipId: experienceClips[1].id, num: 4 },
-  { key: "projects", label: "Projects", t: 2025.3, clipId: projectClips[0].id, num: 5 },
+  { key: "research", label: "Research", clipId: "r-creleri", num: 3 }, // the CReLeRI demo (ACM MM 2025)
+  { key: "experience", label: "Experience", clipId: "e-ruiz", num: 4 }, // the Ruiz-lab research role
+  { key: "projects", label: "Projects", clipId: "p-creleri-site", num: 5 }, // the CReLeRI video analysis system
   { key: "skills", label: "Skills", t: NOW, panel: "skills", num: 6 },
   { key: "contact", label: "Contact", t: NOW, panel: "contact", num: 7 },
 ];
-
-// year ticks for the ruler
-export const yearTicks = [];
-for (let y = 2019; y <= 2026; y++) yearTicks.push(y);
+if (import.meta.env.DEV) {
+  for (const s of sections) {
+    if (s.clipId && !clipById[s.clipId]) console.warn(`timelineData: chapter ${s.num} names a missing clip, ${s.clipId}`);
+  }
+}
