@@ -17,15 +17,17 @@ export function StoreProvider({ children }) {
       pause: () => dispatch({ type: "PAUSE" }),
       togglePlay: () => dispatch({ type: "TOGGLE_PLAY" }),
       setQuery: (value) => dispatch({ type: "SET_QUERY", value }),
-      // Resolve a query: curated (sync) wins; otherwise try the in-browser
-      // semantic layer (bounded wait), falling back to BM25 / overview.
+      // Resolve a query: a curated answer, or a keyword match that covers every
+      // word of the question, stands. Otherwise try the in-browser semantic layer
+      // (bounded wait), keeping the partial keyword match or the overview if it
+      // has nothing closer.
       submitQuery: async (q) => {
         const query = (q ?? "").trim();
         if (!query) return;
         dispatch({ type: "QUERY_PENDING" });
         const t0 = performance.now();
         let res = runQuery(query);
-        if (res.tier !== "curated") {
+        if (res.tier === "overview" || (res.tier === "keyword" && !res.matched)) {
           const sem = await semanticQuery(query).catch(() => null);
           if (sem) res = sem;
         }

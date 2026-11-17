@@ -19,7 +19,6 @@ let clipVecs = null;
 // after person rewriting; unrelated queries stay ≤ ~0.18).
 const TOPIC_SIM = 0.32; // close enough to a curated topic to serve its answer
 const CLIP_SIM = 0.2; // minimum for a clip to count as related at all
-const STRONG_SIM = 0.3; // confident enough for "Yes —" phrasing
 
 // The site's documents all speak in first person; visitors ask in second or
 // third person ("do you know…", "has he built…"). Rewriting the query into
@@ -48,8 +47,18 @@ export function prewarm() {
     const { pipeline } = await import("@huggingface/transformers");
     const extractor = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2", { dtype: "q8" });
     embed = async (texts) => (await extractor(texts, { pooling: "mean", normalize: true })).tolist();
-    topicVecs = await embed(topicDocs.map((d) => d.text));
-    clipVecs = await embed(clipDocs.map((d) => d.text));
+    // The corpus is embedded one text at a time, handing the page back between texts.
+    // As one batch it is padded to its longest text and blocks the page until it is done.
+    const embedEach = async (texts) => {
+      const out = [];
+      for (const t of texts) {
+        out.push((await embed([t]))[0]);
+        await new Promise((r) => setTimeout(r, 0));
+      }
+      return out;
+    };
+    topicVecs = await embedEach(topicDocs.map((d) => d.text));
+    clipVecs = await embedEach(clipDocs.map((d) => d.text));
     status = "ready";
   })().catch((e) => {
     status = "failed";
@@ -106,7 +115,9 @@ export async function semanticQuery(raw, waitMs = 2500) {
     return { answer: t.answer, attend: t.attend, matched: true, tier: "semantic" };
   }
 
-  // 2) otherwise compose from the semantically nearest clips
+  // 2) otherwise compose from the semantically nearest clips. The question's words
+  // were not all found in my work (or the keyword tier would have answered), so a
+  // close clip is only ever presented as a close match, never as a "yes".
   const scored = clipVecs
     .map((v, i) => ({ id: clipDocs[i].id, s: dot(qv, v) }))
     .filter((x) => x.s >= CLIP_SIM && clipById[x.id])
@@ -114,6 +125,6 @@ export async function semanticQuery(raw, waitMs = 2500) {
     .slice(0, 3);
   if (!scored.length) return null;
   const ids = scored.map((x) => x.id);
-  const res = composeGeneral(raw, ids, scored[0].s >= STRONG_SIM ? 1 : 0.6);
+  const res = composeGeneral(raw, ids, 0);
   return { ...res, tier: "semantic" };
 }
