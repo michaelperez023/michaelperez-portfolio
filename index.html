@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
@@ -70,21 +70,6 @@
           "https://scholar.google.com/citations?user=fCzyXhUAAAAJ"
         ]
       }
-    </script>
-
-    <!-- Avoid a light/dark flash before React mounts -->
-    <script>
-      (function () {
-        try {
-          var t = localStorage.getItem("theme");
-          if (!t) {
-            t = window.matchMedia("(prefers-color-scheme: light)").matches
-              ? "light"
-              : "dark";
-          }
-          document.documentElement.setAttribute("data-theme", t);
-        } catch (e) {}
-      })();
     </script>
   </head>
   <body>
