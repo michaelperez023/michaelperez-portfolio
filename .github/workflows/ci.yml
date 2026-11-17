@@ -1,0 +1,38 @@
+name: CI
+
+# Lint and build only. The site is published from a local machine with
+# `npm run deploy` (gh-pages branch), so this workflow never deploys.
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Lint and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # onnxruntime-node, a Node-only dependency of transformers.js, would
+      # otherwise download its CUDA libraries (over 200 MB) on Linux. The site
+      # runs ONNX Runtime in the browser and never uses them.
+      - name: Install dependencies
+        run: npm ci
+        env:
+          ONNXRUNTIME_NODE_INSTALL: skip
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
