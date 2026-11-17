@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
@@ -71,23 +71,8 @@
         ]
       }
     </script>
-
-    <!-- Avoid a light/dark flash before React mounts -->
-    <script>
-      (function () {
-        try {
-          var t = localStorage.getItem("theme");
-          if (!t) {
-            t = window.matchMedia("(prefers-color-scheme: light)").matches
-              ? "light"
-              : "dark";
-          }
-          document.documentElement.setAttribute("data-theme", t);
-        } catch (e) {}
-      })();
-    </script>
-    <script type="module" crossorigin src="/assets/index-DOw32oTi.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DxZhlTE7.css">
+    <script type="module" crossorigin src="/assets/index-Ca3NqjJR.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BzBDQjwe.css">
   </head>
   <body>
     <div id="root"></div>
